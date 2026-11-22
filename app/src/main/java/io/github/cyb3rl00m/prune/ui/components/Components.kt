@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.components
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.pm.PackageManager
 import android.util.LruCache
 import androidx.compose.animation.animateContentSize
@@ -249,18 +251,18 @@ fun KeyValue(key: String, value: String, modifier: Modifier = Modifier) {
 fun formatDuration(ms: Long): String {
     val m = ms / 60_000
     return when {
-        m < 1 -> "<1 min"
-        m < 60 -> "$m min"
-        else -> "${m / 60} h ${m % 60} min"
+        m < 1 -> str(R.string.fmt_less_than_min)
+        m < 60 -> str(R.string.fmt_min, m)
+        else -> str(R.string.fmt_h_min, m / 60, m % 60)
     }
 }
 
 fun daysAgo(time: Long?): String {
-    if (time == null || time <= 0) return "never (in the last 90 days)"
+    if (time == null || time <= 0) return str(R.string.fmt_never)
     val d = (System.currentTimeMillis() - time) / (24L * 60 * 60 * 1000)
     return when (d) {
-        0L -> "today"
-        1L -> "yesterday"
-        else -> "$d days ago"
+        0L -> str(R.string.fmt_today)
+        1L -> str(R.string.fmt_yesterday)
+        else -> str(R.string.fmt_days_ago, d)
     }
 }

@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,13 +60,13 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
     val plan by vm.draft.collectAsStateWithLifecycle()
     val exec by vm.exec.collectAsStateWithLifecycle()
     val access by vm.access.collectAsStateWithLifecycle()
-    val exporter = rememberTextExporter { ok -> vm.say(if (ok) "Script saved." else "Could not save the script.") }
+    val exporter = rememberTextExporter { ok -> vm.say(str(if (ok) R.string.review_script_saved else R.string.review_script_not_saved)) }
     val p = plan
     var confirmedHigh by rememberSaveable(p?.createdAt) { mutableStateOf(false) }
 
     when (val e = exec) {
         is ExecState.Running -> {
-            ScreenScaffold("Applying changes", null, "applying") {
+            ScreenScaffold(str(R.string.review_applying), null, "applying") {
                 item {
                     PruneCard {
                         Text("${e.progress.done} of ${e.progress.total}", style = MaterialTheme.typography.headlineMedium)
@@ -73,7 +75,7 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
                         LinearProgressIndicator(progress = { if (e.progress.total == 0) 0f else e.progress.done.toFloat() / e.progress.total },
                             modifier = Modifier.fillMaxWidth())
                         Spacer(Modifier.height(8.dp))
-                        Text("Don't close Prune until it is finished.", style = MaterialTheme.typography.bodySmall)
+                        Text(str(R.string.review_dont_close), style = MaterialTheme.typography.bodySmall)
                     }
                 }
                 item { LogCard(e.progress.log.takeLast(60)) }
@@ -83,11 +85,11 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
         is ExecState.Done -> {
             val ok = e.batch.entries.count { it.success == true }
             val failed = e.batch.entries.filter { it.success != true }
-            ScreenScaffold("Finished", nav, "result",
+            ScreenScaffold(str(R.string.review_finished), nav, "result",
                 bottom = {
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        OutlinedButton(onClick = { vm.undoBatch(e.batch) }, modifier = Modifier.weight(1f).testTag("undo_all")) { Text("Undo all") }
-                        Button(onClick = { vm.resetExec(); nav.back() }, modifier = Modifier.weight(1f).testTag("done")) { Text("Done") }
+                        OutlinedButton(onClick = { vm.undoBatch(e.batch) }, modifier = Modifier.weight(1f).testTag("undo_all")) { Text(str(R.string.review_undo_all)) }
+                        Button(onClick = { vm.resetExec(); nav.back() }, modifier = Modifier.weight(1f).testTag("done")) { Text(str(R.string.review_done)) }
                     }
                 }) {
                 item {
@@ -98,15 +100,15 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
                                 modifier = Modifier.size(32.dp))
                             Spacer(Modifier.width(12.dp))
                             Column {
-                                Text("$ok of ${e.batch.entries.size} changes applied", style = MaterialTheme.typography.titleMedium)
-                                Text("Verified by reading the state back from Android. Saved in Restore → History.",
+                                Text(str(R.string.review_n_of_m_applied, ok, e.batch.entries.size), style = MaterialTheme.typography.titleMedium)
+                                Text(str(R.string.review_verified),
                                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     }
                 }
                 if (failed.isNotEmpty()) {
-                    item { SectionHeader("Not applied (${failed.size})") }
+                    item { SectionHeader(str(R.string.review_not_applied_n, failed.size)) }
                     items(failed, key = { it.id }) { f ->
                         PruneCard {
                             Text(f.change.label, style = MaterialTheme.typography.titleSmall)
@@ -115,12 +117,12 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
                         }
                     }
                 }
-                item { SectionHeader("Applied") }
+                item { SectionHeader(str(R.string.review_applied)) }
                 items(e.batch.entries.filter { it.success == true }, key = { "ok" + it.id }) { s ->
                     Row(Modifier.padding(horizontal = 4.dp, vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.CheckCircle, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text(s.change.label + (if (s.message != "Done.") " — ${s.message}" else ""), style = MaterialTheme.typography.bodySmall)
+                        Text(s.change.label + (if (s.message != str(R.string.exec_done)) " — ${s.message}" else ""), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
@@ -130,8 +132,8 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
     }
 
     if (p == null || p.changes.isEmpty()) {
-        ScreenScaffold("Review", nav, "review") {
-            item { Banner("Nothing to review.", BannerKind.INFO) }
+        ScreenScaffold(str(R.string.review_title_short), nav, "review") {
+            item { Banner(str(R.string.review_nothing), BannerKind.INFO) }
         }
         return
     }
@@ -140,16 +142,16 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
     val canApply = access.privileged && (high == 0 || confirmedHigh)
 
     ScreenScaffold(
-        title = "Review changes", nav = nav, tag = "review", subtitle = p.title,
+        title = str(R.string.review_title), nav = nav, tag = "review", subtitle = p.title,
         bottom = {
             Column {
                 if (access.privileged) {
                     Button(onClick = { vm.apply() }, enabled = canApply, modifier = Modifier.fillMaxWidth().testTag("apply")) {
-                        Text("Apply ${p.changes.size} change${if (p.changes.size == 1) "" else "s"} via ${access.active.label}")
+                        Text(str(if (p.changes.size == 1) R.string.review_apply_one else R.string.review_apply_many, p.changes.size, access.active.label))
                     }
                 } else {
                     Button(onClick = { nav.go(Routes.SETUP) }, modifier = Modifier.fillMaxWidth().testTag("review_setup")) {
-                        Text("Set up Shizuku to apply")
+                        Text(str(R.string.review_setup_shizuku))
                     }
                 }
                 Spacer(Modifier.height(6.dp))
@@ -162,28 +164,28 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
                 ) {
                     Icon(Icons.Outlined.Terminal, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Export as ADB script")
+                    Text(str(R.string.review_export_script))
                 }
             }
         },
     ) {
         item {
             PruneCard {
-                Text("${p.changes.size} change${if (p.changes.size == 1) "" else "s"}", style = MaterialTheme.typography.headlineMedium)
-                Text("Nothing has been changed yet. Read the list, remove anything you want to keep, then apply.",
+                Text(str(if (p.changes.size == 1) R.string.review_n_change else R.string.review_n_changes, p.changes.size), style = MaterialTheme.typography.headlineMedium)
+                Text(str(R.string.review_nothing_changed_yet),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(10.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Risk.entries.filter { it != Risk.LOCKED }.forEach { r ->
                         val n = p.changes.count { it.risk == r }
-                        if (n > 0) Pill("$n ${r.label.lowercase()}", LocalRiskColors.current.of(r))
+                        if (n > 0) Pill(str(R.string.review_n_risk, n, r.label.lowercase()), LocalRiskColors.current.of(r))
                     }
-                    if (warned > 0) Pill("$warned with warnings", MaterialTheme.colorScheme.secondary)
+                    if (warned > 0) Pill(str(R.string.review_n_warned, warned), MaterialTheme.colorScheme.secondary)
                 }
             }
         }
         if (!access.privileged) item {
-            Banner("Prune has no privileged access right now. Set up Shizuku (or root) to apply directly, or export the plan as an ADB script to run from a computer.",
+            Banner(str(R.string.review_no_access),
                 BannerKind.WARNING)
         }
         if (high > 0) item {
@@ -191,7 +193,7 @@ fun ReviewScreen(vm: AppViewModel, nav: Nav) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(confirmedHigh, { confirmedHigh = it }, modifier = Modifier.testTag("confirm_high"))
                     Spacer(Modifier.width(8.dp))
-                    Text("I understand that $high high-risk or unknown change${if (high == 1) "" else "s"} can break features of this phone, and that I can undo them in Restore.",
+                    Text(str(if (high == 1) R.string.review_confirm_one else R.string.review_confirm_many, high),
                         style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onErrorContainer)
                 }
             }
@@ -214,11 +216,11 @@ private fun ChangeCard(vm: AppViewModel, c: PlannedChange, onRemove: () -> Unit)
                 Spacer(Modifier.height(4.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     c.risk?.let { RiskBadge(it) }
-                    if (!c.type.reversible) Pill("Not reversible", MaterialTheme.colorScheme.error)
-                    if (c.fallbackUninstall) Pill("Fallback: uninstall for user", MaterialTheme.colorScheme.secondary)
+                    if (!c.type.reversible) Pill(str(R.string.review_not_reversible), MaterialTheme.colorScheme.error)
+                    if (c.fallbackUninstall) Pill(str(R.string.review_fallback), MaterialTheme.colorScheme.secondary)
                 }
             }
-            IconButton(onClick = onRemove) { Icon(Icons.Outlined.Close, "Remove from plan") }
+            IconButton(onClick = onRemove) { Icon(Icons.Outlined.Close, str(R.string.cd_remove_from_plan)) }
         }
         c.warnings.forEach { w ->
             Spacer(Modifier.height(8.dp))
@@ -237,7 +239,7 @@ private fun ChangeCard(vm: AppViewModel, c: PlannedChange, onRemove: () -> Unit)
             }
         } else {
             TextButton(onClick = { expanded = true }, contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)) {
-                Text("What this does and the exact command", style = MaterialTheme.typography.labelMedium)
+                Text(str(R.string.review_what_this_does), style = MaterialTheme.typography.labelMedium)
             }
         }
     }

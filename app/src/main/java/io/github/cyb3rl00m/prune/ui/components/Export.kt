@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
 
-/** Lets the user save text (scripts, history) with the system file picker, or share it to another app. */
+/** テキスト (スクリプト、履歴) をシステムのファイル選択で保存したり、別のアプリに共有したりできるようにする。 */
 class TextExporter(private val context: Context, private val launch: (String) -> Unit, private val pending: androidx.compose.runtime.MutableState<String?>) {
     fun save(fileName: String, text: String) {
         pending.value = text

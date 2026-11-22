@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import io.github.cyb3rl00m.prune.ui.Nav
 
 /**
- * Standard screen layout: a title bar (with back arrow for sub-screens), a scrolling list, and an optional
- * bottom action area that stays above the navigation bar.
+ * 標準の画面レイアウト: タイトルバー (サブ画面では戻る矢印付き)、スクロールするリスト、
+ * ナビゲーションバーの上に固定される任意の下部操作エリア。
  */
 @Composable
 fun ScreenScaffold(
@@ -57,7 +59,7 @@ fun ScreenScaffold(
         ) {
             if (nav != null) {
                 IconButton(onClick = { nav.back() }, modifier = Modifier.testTag("back")) {
-                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Outlined.ArrowBack, str(R.string.cd_back))
                 }
                 Spacer(Modifier.width(4.dp))
             }

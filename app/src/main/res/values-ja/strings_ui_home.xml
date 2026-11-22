@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cd_back">戻る</string>
+    <string name="cd_scan_again">再スキャン</string>
+    <string name="cd_settings">設定</string>
+
+    <string name="fmt_less_than_min">1 分未満</string>
+    <string name="fmt_min">%1$d 分</string>
+    <string name="fmt_h_min">%1$d 時間 %2$d 分</string>
+    <string name="fmt_never">なし (過去 90 日間)</string>
+    <string name="fmt_today">今日</string>
+    <string name="fmt_yesterday">昨日</string>
+    <string name="fmt_days_ago">%1$d 日前</string>
+
+    <string name="home_subtitle">Android の不要アプリ整理 &amp; 最適化</string>
+    <string name="home_detecting_device">端末を検出中…</string>
+    <string name="home_reading_device">端末情報を読み込み中…</string>
+    <string name="home_banner_experimental">%1$s: 試験的サポートです。このブランド専用のルールがありますが、実機ではまだテストされていません。すべての変更を確認してください。</string>
+    <string name="home_banner_generic">%1$s: 汎用互換です。このブランドには汎用の Android ルールとコミュニティデータベースを使います。すべての変更を確認してください。</string>
+    <string name="home_compat_report">互換性レポート</string>
+    <string name="home_stat_installed">インストール済みパッケージ</string>
+    <string name="home_stat_system">システムパッケージ</string>
+    <string name="home_stat_removable">削除可能 (レベル 1〜3)</string>
+    <string name="home_stat_changed">無効化・削除済み</string>
+    <string name="home_progress_title">スリム化の進捗</string>
+    <string name="home_progress_desc">このレベルの任意パッケージのうち、すでにオフになっている割合です。</string>
+    <string name="home_progress_value">%2$d 個中 %1$d 個 (%3$d %%)</string>
+    <string name="home_choose_level">スリム化のレベルを選ぶ</string>
+    <string name="home_duplicates">複数インストールされているアプリの種類: %1$d</string>
+    <string name="home_recommendations">最適化のおすすめ</string>
+    <string name="home_scanning">スキャン中…</string>
+    <string name="home_no_recommendations">現在おすすめはありません。</string>
+    <string name="home_scan_failed">スキャンに失敗しました: %1$s</string>
+    <string name="home_scanning_packages">パッケージをスキャン中…</string>
+    <string name="home_last_scan">最終スキャン %1$s · データベース %2$s</string>
+    <string name="home_access">アクセス: %1$s</string>
+    <string name="home_limited_access">アクセス制限あり</string>
+    <string name="home_access_full">Prune はシステムパッケージの無効化・削除・復元ができます。</string>
+    <string name="home_access_limited_desc">Prune はすべてをスキャンして説明できます。システムパッケージを変更するには Shizuku を設定してください (root 不要)。</string>
+    <string name="home_set_up">設定する</string>
+</resources>

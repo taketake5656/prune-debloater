@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restore_saved">保存しました。</string>
+    <string name="restore_not_saved">ファイルを保存できませんでした。</string>
+    <string name="restore_subtitle">履歴、取り消し、復旧</string>
+    <string name="restore_tab_history">履歴</string>
+    <string name="restore_tab_device">この端末 (%1$d)</string>
+    <string name="restore_tab_tools">ツール</string>
+    <string name="restore_no_changes">まだ変更はありません</string>
+    <string name="restore_no_changes_desc">Prune による変更はすべて、変更前の状態とともにここに記録され、取り消すことができます。</string>
+    <string name="restore_device_desc">現在このユーザーで無効化・削除されているシステムパッケージです (Prune によるものも、他のツールによるものも含みます)。</string>
+    <string name="restore_all_on">すべてのシステムパッケージが有効です</string>
+    <string name="restore_nothing">復元するものはありません。</string>
+    <string name="restore_all_n">%1$d 個すべてを復元…</string>
+    <string name="restore_btn">復元</string>
+    <string name="restore_originals_desc">Prune が変更したすべてのパッケージを、Prune が最初に触れたときの状態に戻します (記録済み: %1$d 個)。</string>
+    <string name="restore_review">復元内容を確認…</string>
+    <string name="restore_emergency">緊急復元スクリプト</string>
+    <string name="restore_emergency_desc">無効化・削除されたすべてのシステムパッケージを再有効化する ADB スクリプトです。パソコンにコピーを保存しておいてください。Prune や Shizuku が使えない状態でも動作します。</string>
+    <string name="restore_save">保存</string>
+    <string name="restore_share">共有</string>
+    <string name="restore_export_history">履歴を書き出す</string>
+    <string name="restore_export_history_desc">すべての変更を元の状態とともに JSON で書き出します。</string>
+    <string name="restore_save_history">履歴を保存</string>
+    <string name="restore_help_banner">変更後に端末の動作がおかしい場合: 復元 → 履歴 → 取り消し を開いてください。端末を通常どおり使えない場合は、パソコンに接続して緊急復元スクリプトを実行するか、次を実行してください: adb shell pm install-existing &lt;パッケージ名&gt;</string>
+    <string name="restore_n_applied">適用 %1$d</string>
+    <string name="restore_n_failed">失敗 %1$d</string>
+    <string name="restore_n_pending">未確認 %1$d</string>
+    <string name="restore_n_undone">取り消し済み %1$d</string>
+    <string name="restore_batch">バッチ</string>
+    <string name="restore_not_found">見つかりません。</string>
+    <string name="restore_check_results">結果を確認</string>
+    <string name="restore_undo">取り消し</string>
+    <string name="restore_origin">実行元: %1$s · 方法: %2$s</string>
+    <string name="restore_undone">取り消し済み</string>
+    <string name="restore_before_after">変更前: %1$s   変更後: %2$s</string>
+</resources>

@@ -32,7 +32,7 @@
 
     <string name="method_disable">無効化</string>
     <string name="method_disable_explanation">このユーザーに対してアプリをオフにします。動作が止まり、アプリ一覧から消えますが、データは残ります。Prune、ADB、設定からいつでも元に戻せます。</string>
-    <string name="method_uninstall_user">このユーザーからアンインストール</string>
+    <string name="method_uninstall_user">ユーザーから削除</string>
     <string name="method_uninstall_user_explanation">このユーザーからアプリとそのデータを削除します。元のコピーはシステム領域に残るため、いつでも再インストールでき (Prune の復元、または `pm install-existing`)、初期化すると元に戻ります。</string>
 
     <string name="change_disable">無効化</string>

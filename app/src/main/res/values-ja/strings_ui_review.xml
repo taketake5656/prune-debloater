@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="review_script_saved">スクリプトを保存しました。</string>
+    <string name="review_script_not_saved">スクリプトを保存できませんでした。</string>
+    <string name="review_applying">変更を適用中</string>
+    <string name="review_dont_close">完了するまで Prune を閉じないでください。</string>
+    <string name="review_finished">完了</string>
+    <string name="review_undo_all">すべて取り消す</string>
+    <string name="review_done">閉じる</string>
+    <string name="review_verified">Android から状態を読み戻して確認しました。復元 → 履歴 に保存されています。</string>
+    <string name="review_not_applied_n">適用されなかった変更 (%1$d)</string>
+    <string name="review_applied">適用済み</string>
+    <string name="review_title_short">確認</string>
+    <string name="review_nothing">確認するものはありません。</string>
+    <string name="review_title">変更の確認</string>
+    <string name="review_apply_one">%2$s で %1$d 件の変更を適用</string>
+    <string name="review_apply_many">%2$s で %1$d 件の変更を適用</string>
+    <string name="review_setup_shizuku">適用するには Shizuku を設定</string>
+    <string name="review_export_script">ADB スクリプトとして書き出す</string>
+    <string name="review_nothing_changed_yet">まだ何も変更していません。リストを読み、残したいものを外してから適用してください。</string>
+    <string name="review_no_access">現在 Prune には特権アクセスがありません。直接適用するには Shizuku (または root) を設定するか、プランを ADB スクリプトとして書き出してパソコンから実行してください。</string>
+    <string name="review_confirm_one">%1$d 件の高リスクまたは不明な変更がこの端末の機能を壊す可能性があること、そして復元画面で取り消せることを理解しました。</string>
+    <string name="review_confirm_many">%1$d 件の高リスクまたは不明な変更がこの端末の機能を壊す可能性があること、そして復元画面で取り消せることを理解しました。</string>
+    <string name="review_not_reversible">元に戻せません</string>
+    <string name="review_fallback">代替: ユーザーからアンインストール</string>
+    <string name="cd_remove_from_plan">プランから外す</string>
+    <string name="review_what_this_does">この操作の内容と実際のコマンド</string>
+    <string name="review_n_of_m_applied">%2$d 件中 %1$d 件の変更を適用しました</string>
+    <string name="review_n_change">%1$d 件の変更</string>
+    <string name="review_n_changes">%1$d 件の変更</string>
+    <string name="review_n_risk">%2$s %1$d</string>
+    <string name="review_n_warned">警告あり %1$d</string>
+</resources>

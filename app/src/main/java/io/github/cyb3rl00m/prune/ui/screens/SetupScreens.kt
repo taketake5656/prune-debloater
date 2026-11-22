@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -62,29 +64,29 @@ fun SetupScreen(vm: AppViewModel, nav: Nav) {
     val device by vm.device.collectAsStateWithLifecycle()
     val context = LocalContext.current
     fun open(intent: Intent) = try { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } catch (_: ActivityNotFoundException) {
-        vm.say("Could not open that screen on this phone.")
+        vm.say(str(R.string.setup_cannot_open))
     }
 
-    ScreenScaffold("Access setup", nav, "setup", subtitle = "What Prune can do depends on the access you give it") {
+    ScreenScaffold(str(R.string.setup_title), nav, "setup", subtitle = str(R.string.setup_subtitle)) {
         item {
             PruneCard {
-                Text("Three permission levels", style = MaterialTheme.typography.titleMedium)
+                Text(str(R.string.setup_three_levels), style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
-                StatusLine(true, "1 · Standard (always)", "Scan every package, explain it, show usage, open app settings, uninstall apps you installed.")
+                StatusLine(true, str(R.string.setup_level1), str(R.string.setup_level1_desc))
                 StatusLine(access.active.name == "SHIZUKU" || access.rootGranted,
-                    "2 · ADB level (Shizuku, no root)",
-                    "Disable, uninstall-for-user and restore system packages, background restrictions, permissions, battery exemptions, animations, cache trimming.")
-                StatusLine(access.rootGranted, "3 · Root (optional)",
-                    "The same operations through su. Prune does not need root for anything; it is only an alternative to Shizuku.")
+                    str(R.string.setup_level2),
+                    str(R.string.setup_level2_desc))
+                StatusLine(access.rootGranted, str(R.string.setup_level3),
+                    str(R.string.setup_level3_desc))
             }
         }
-        item { SectionHeader("Shizuku (recommended)") }
+        item { SectionHeader(str(R.string.setup_shizuku_header)) }
         item {
             PruneCard {
-                StatusLine(access.shizukuInstalled, "Shizuku installed", "Free, open-source app by RikkaApps. Lets apps use ADB-level commands without a computer after setup.")
-                StatusLine(access.shizukuRunning, "Shizuku running", if (access.shizukuRunning) "Running as ${if (access.shizukuUid == 0) "root" else "ADB (shell)"}." else "Start it in the Shizuku app (see steps below). It must be started again after every reboot.")
-                StatusLine(access.shizukuPermission, "Prune authorized", "Shizuku asks you once to allow Prune.")
-                if (access.shizukuTooOld) Banner("This Shizuku version is too old. Update Shizuku.", BannerKind.ERROR)
+                StatusLine(access.shizukuInstalled, str(R.string.setup_shizuku_installed), str(R.string.setup_shizuku_installed_desc))
+                StatusLine(access.shizukuRunning, str(R.string.setup_shizuku_running), if (access.shizukuRunning) str(R.string.setup_running_as, if (access.shizukuUid == 0) "root" else "ADB (shell)") else str(R.string.setup_start_it))
+                StatusLine(access.shizukuPermission, str(R.string.setup_prune_authorized), str(R.string.setup_prune_authorized_desc))
+                if (access.shizukuTooOld) Banner(str(R.string.setup_shizuku_too_old), BannerKind.ERROR)
                 Spacer(Modifier.height(8.dp))
                 when {
                     !access.shizukuInstalled -> Button(onClick = {
@@ -92,72 +94,72 @@ fun SetupScreen(vm: AppViewModel, nav: Nav) {
                             if (it.resolveActivity(context.packageManager) != null) it
                             else Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/RikkaApps/Shizuku/releases"))
                         })
-                    }, modifier = Modifier.fillMaxWidth()) { Text("Get Shizuku") }
+                    }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_get_shizuku)) }
                     !access.shizukuRunning -> Button(onClick = {
                         context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")?.let { open(it) }
-                    }, modifier = Modifier.fillMaxWidth()) { Text("Open Shizuku") }
+                    }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_open_shizuku)) }
                     !access.shizukuPermission -> Button(onClick = { vm.requestShizuku() }, modifier = Modifier.fillMaxWidth().testTag("authorize_shizuku")) {
-                        Text("Authorize Prune in Shizuku")
+                        Text(str(R.string.setup_authorize))
                     }
-                    else -> OutlinedButton(onClick = { vm.refreshAccess() }, modifier = Modifier.fillMaxWidth()) { Text("Shizuku is ready · Refresh") }
+                    else -> OutlinedButton(onClick = { vm.refreshAccess() }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_ready_refresh)) }
                 }
             }
         }
         item {
             PruneCard {
-                Text("Start Shizuku on ${device?.brandName ?: "this phone"} (no computer needed)", style = MaterialTheme.typography.titleSmall)
+                Text(str(R.string.setup_start_on, device?.brandName ?: str(R.string.setup_this_phone)), style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(6.dp))
                 val integration = vm.repo.integration
                 val identity = vm.repo.identity
                 (integration.developerOptionsSteps + listOf(
-                    "Connect to Wi-Fi. In Developer options turn on Wireless debugging (Android 11+; on older versions use the computer method below).",
-                    "Open Shizuku → Start via Wireless debugging → Pairing. Shizuku shows a notification.",
-                    "In Wireless debugging, tap Pair device with pairing code. Type the code into Shizuku's notification.",
-                    "In Shizuku tap Start. Then come back here and tap Authorize Prune.",
-                    "After a reboot, open Shizuku and tap Start again (pairing is remembered).",
+                    str(R.string.setup_step_wifi),
+                    str(R.string.setup_step_pairing),
+                    str(R.string.setup_step_code),
+                    str(R.string.setup_step_start),
+                    str(R.string.setup_step_reboot),
                 ) + runCatching { integration.extraSetupSteps(identity) }.getOrDefault(emptyList())).forEachIndexed { i, s -> Text("${i + 1}. $s", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(vertical = 3.dp)) }
                 Spacer(Modifier.height(8.dp))
                 OutlinedButton(onClick = { open(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)) }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Open Developer options")
+                    Text(str(R.string.setup_open_dev_options))
                 }
                 Spacer(Modifier.height(8.dp))
-                Text("With a computer instead: enable USB debugging, connect the phone and run the command Shizuku shows under \"Start by connecting to a computer\", usually:", style = MaterialTheme.typography.bodySmall)
+                Text(str(R.string.setup_with_computer), style = MaterialTheme.typography.bodySmall)
                 SelectionContainer { Text("adb shell sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh", style = MonoStyle, color = MaterialTheme.colorScheme.primary) }
             }
         }
-        item { SectionHeader("Extra permissions") }
+        item { SectionHeader(str(R.string.setup_extra_perms)) }
         item {
             PruneCard {
-                StatusLine(access.usageAccess, "Usage access", "Finds apps you don't use, shows screen time and per-app storage. Nothing leaves the phone.")
-                StatusLine(access.writeSecureSettings, "Write secure settings", "Lets Prune change animation scales directly.")
+                StatusLine(access.usageAccess, str(R.string.perm_usage_access), str(R.string.setup_usage_desc))
+                StatusLine(access.writeSecureSettings, str(R.string.perm_write_secure_settings), str(R.string.setup_wss_desc))
                 Spacer(Modifier.height(8.dp))
                 if (access.privileged && (!access.usageAccess || !access.writeSecureSettings)) {
-                    Button(onClick = { vm.grantSelfPermissions() }, modifier = Modifier.fillMaxWidth().testTag("grant_self")) { Text("Grant both with ${access.active.label}") }
+                    Button(onClick = { vm.grantSelfPermissions() }, modifier = Modifier.fillMaxWidth().testTag("grant_self")) { Text(str(R.string.setup_grant_both, access.active.label)) }
                 } else if (!access.usageAccess) {
                     Button(onClick = {
                         open(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, Uri.parse("package:${context.packageName}")).let {
                             if (it.resolveActivity(context.packageManager) != null) it else Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                         })
-                    }, modifier = Modifier.fillMaxWidth()) { Text("Open usage access settings") }
+                    }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_open_usage_settings)) }
                 }
                 if (!access.writeSecureSettings && !access.privileged) {
                     Spacer(Modifier.height(8.dp))
-                    Text("Or from a computer:", style = MaterialTheme.typography.bodySmall)
+                    Text(str(R.string.setup_or_computer), style = MaterialTheme.typography.bodySmall)
                     SelectionContainer { Text("adb shell pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS", style = MonoStyle, color = MaterialTheme.colorScheme.primary) }
                 }
             }
         }
-        item { SectionHeader("Root (optional)") }
+        item { SectionHeader(str(R.string.setup_root_header)) }
         item {
             PruneCard {
-                StatusLine(access.rootGranted, "Root access", "Only if the phone is rooted (Magisk, KernelSU, APatch). Rooting usually needs an unlocked bootloader, can break banking and payment apps, and on Samsung trips Knox permanently. Prune never asks you to root.")
+                StatusLine(access.rootGranted, str(R.string.setup_root_access), str(R.string.setup_root_desc))
                 Spacer(Modifier.height(8.dp))
-                OutlinedButton(onClick = { vm.requestRoot() }, modifier = Modifier.fillMaxWidth()) { Text("Request root access") }
+                OutlinedButton(onClick = { vm.requestRoot() }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_request_root)) }
             }
         }
-        item { SectionHeader("Without Shizuku or root") }
+        item { SectionHeader(str(R.string.setup_without_header)) }
         item {
-            Banner("Every plan can be exported as an ADB script on the review screen and run from a computer. Prune records it and checks the results afterwards.", BannerKind.INFO)
+            Banner(str(R.string.setup_without_desc), BannerKind.INFO)
         }
     }
 }
@@ -166,8 +168,8 @@ fun SetupScreen(vm: AppViewModel, nav: Nav) {
 fun SettingsScreen(vm: AppViewModel, nav: Nav) {
     val s by vm.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    ScreenScaffold("Settings", nav, "settings") {
-        item { SectionHeader("Appearance") }
+    ScreenScaffold(str(R.string.cd_settings), nav, "settings") {
+        item { SectionHeader(str(R.string.settings_appearance)) }
         item {
             PruneCard {
                 ThemeMode.entries.forEach { m ->
@@ -178,10 +180,10 @@ fun SettingsScreen(vm: AppViewModel, nav: Nav) {
                 }
             }
         }
-        item { SectionHeader("Debloating") }
+        item { SectionHeader(str(R.string.settings_debloating)) }
         item {
             PruneCard {
-                Text("Default method", style = MaterialTheme.typography.titleSmall)
+                Text(str(R.string.settings_default_method), style = MaterialTheme.typography.titleSmall)
                 RemovalMethod.entries.forEach { m ->
                     Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.Top) {
                         RadioButton(s.method == m, { vm.update { setMethod(m) } })
@@ -191,36 +193,36 @@ fun SettingsScreen(vm: AppViewModel, nav: Nav) {
                         }
                     }
                 }
-                OptionSwitch("Fallback to uninstall-for-user", "Some firmwares (One UI, EMUI, MagicOS) refuse to disable some packages. Uninstall them for this user instead (also reversible).",
+                OptionSwitch(str(R.string.settings_fallback), str(R.string.settings_fallback_desc),
                     s.fallbackUninstall) { vm.update { setFallback(it) } }
-                OptionSwitch("Skip recently used apps", "Don't pre-select apps opened in the last ${s.skipUsedWithinDays} days.",
+                OptionSwitch(str(R.string.settings_skip_recent), str(R.string.settings_skip_recent_desc, s.skipUsedWithinDays),
                     s.skipUsedWithinDays > 0) { vm.update { setSkipDays(if (it) 14 else 0) } }
-                OptionSwitch("Prefer root over Shizuku", "Only matters when both are available.", s.preferRoot) { vm.update { setPreferRoot(it) } }
+                OptionSwitch(str(R.string.settings_prefer_root), str(R.string.settings_prefer_root_desc), s.preferRoot) { vm.update { setPreferRoot(it) } }
             }
         }
-        item { SectionHeader("About") }
+        item { SectionHeader(str(R.string.settings_about)) }
         item {
             PruneCard {
-                KeyValue("Version", BuildConfig.VERSION_NAME)
-                KeyValue("Package database", "${vm.repo.database.updated} · ${vm.repo.database.uad.size} community entries · ${vm.repo.database.curatedCount} curated in ${vm.repo.database.files.size} rule files")
-                KeyValue("License", "GPL-3.0-or-later")
+                KeyValue(str(R.string.apps_kv_version), BuildConfig.VERSION_NAME)
+                KeyValue(str(R.string.settings_package_db), str(R.string.settings_package_db_value, vm.repo.database.updated, vm.repo.database.uad.size, vm.repo.database.curatedCount, vm.repo.database.files.size))
+                KeyValue(str(R.string.settings_license), "GPL-3.0-or-later")
                 Spacer(Modifier.height(8.dp))
-                Text("Package descriptions come from the Universal Android Debloater Next Generation community list (GPL-3.0). Prune's own safety rules always override it.",
+                Text(str(R.string.settings_credits),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(10.dp))
                 OutlinedButton(onClick = {
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cyb3rl00m/prune-debloater"))) }
-                }, modifier = Modifier.fillMaxWidth()) { Text("Source code on GitHub") }
+                }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.settings_source)) }
                 Spacer(Modifier.height(6.dp))
-                OutlinedButton(onClick = { nav.go(Routes.SETUP) }, modifier = Modifier.fillMaxWidth()) { Text("Access setup") }
+                OutlinedButton(onClick = { nav.go(Routes.SETUP) }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.setup_title)) }
                 Spacer(Modifier.height(6.dp))
-                OutlinedButton(onClick = { nav.go(Routes.DEVICE) }, modifier = Modifier.fillMaxWidth()) { Text("Device information") }
+                OutlinedButton(onClick = { nav.go(Routes.DEVICE) }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.device_title)) }
                 Spacer(Modifier.height(6.dp))
-                OutlinedButton(onClick = { nav.go(Routes.COMPAT) }, modifier = Modifier.fillMaxWidth().testTag("open_compat")) { Text("Compatibility report") }
+                OutlinedButton(onClick = { nav.go(Routes.COMPAT) }, modifier = Modifier.fillMaxWidth().testTag("open_compat")) { Text(str(R.string.home_compat_report)) }
             }
         }
         item {
-            Text("Prune is not affiliated with any phone manufacturer or with Google. Brand and product names are trademarks of their owners.",
+            Text(str(R.string.settings_disclaimer),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(4.dp))
         }
     }
@@ -231,37 +233,37 @@ fun DeviceScreen(vm: AppViewModel, nav: Nav) {
     val d by vm.device.collectAsStateWithLifecycle()
     val access by vm.access.collectAsStateWithLifecycle()
     val scan by vm.scan.collectAsStateWithLifecycle()
-    ScreenScaffold("Device information", nav, "device") {
+    ScreenScaffold(str(R.string.device_title), nav, "device") {
         val dev = d
         if (dev == null) {
-            item { Text("Reading…") }
+            item { Text(str(R.string.device_reading)) }
             return@ScreenScaffold
         }
         item {
             PruneCard {
-                KeyValue("Model", dev.fullName)
-                KeyValue("Model number", dev.model)
-                KeyValue("Device code", dev.device)
-                KeyValue("Manufacturer", dev.manufacturer)
-                KeyValue("Brand", dev.brand)
+                KeyValue(str(R.string.device_model), dev.fullName)
+                KeyValue(str(R.string.device_model_number), dev.model)
+                KeyValue(str(R.string.device_code), dev.device)
+                KeyValue(str(R.string.compat_kv_manufacturer), dev.manufacturer)
+                KeyValue(str(R.string.device_brand), dev.brand)
                 KeyValue("Android", "${dev.androidVersion} (API ${dev.sdkInt})")
-                KeyValue("Firmware", dev.firmware?.toString() ?: "Not detected")
-                KeyValue("Integration", "${dev.integration.title} · ${dev.compat.label}")
-                KeyValue("Google services", if (dev.services.gms) "Installed" else "Not available")
-                KeyValue("Build", dev.buildNumber)
-                KeyValue("Security patch", dev.securityPatch)
-                KeyValue("CSC (region/carrier code)", listOfNotNull(dev.cscCode, dev.cscCountry).joinToString(" · ").ifEmpty { "Unknown" })
-                KeyValue("Carrier", dev.carrier ?: "No SIM / unknown")
+                KeyValue(str(R.string.compat_kv_firmware), dev.firmware?.toString() ?: str(R.string.compat_not_detected))
+                KeyValue(str(R.string.compat_kv_integration), "${dev.integration.title} · ${dev.compat.label}")
+                KeyValue(str(R.string.compat_kv_gms), if (dev.services.gms) str(R.string.compat_installed) else str(R.string.compat_not_available))
+                KeyValue(str(R.string.device_build), dev.buildNumber)
+                KeyValue(str(R.string.device_security_patch), dev.securityPatch)
+                KeyValue(str(R.string.device_csc), listOfNotNull(dev.cscCode, dev.cscCountry).joinToString(" · ").ifEmpty { str(R.string.risk_unknown) })
+                KeyValue(str(R.string.source_carrier), dev.carrier ?: str(R.string.device_no_sim))
                 KeyValue("RAM", io.github.cyb3rl00m.prune.core.plan.Executor.formatBytes(dev.totalRamBytes))
-                KeyValue("Storage", "${io.github.cyb3rl00m.prune.core.plan.Executor.formatBytes(dev.storageFreeBytes)} free of ${io.github.cyb3rl00m.prune.core.plan.Executor.formatBytes(dev.storageTotalBytes)}")
-                KeyValue("Android user", dev.userId.toString())
+                KeyValue(str(R.string.device_storage), str(R.string.device_storage_value, io.github.cyb3rl00m.prune.core.plan.Executor.formatBytes(dev.storageFreeBytes), io.github.cyb3rl00m.prune.core.plan.Executor.formatBytes(dev.storageTotalBytes)))
+                KeyValue(str(R.string.device_android_user), dev.userId.toString())
             }
         }
         item {
             PruneCard {
-                KeyValue("Packages", scan.apps.size.toString())
-                KeyValue("Access", "${access.active.label} (${access.active.tier})")
-                KeyValue("Shizuku", if (access.shizukuRunning) "Running" else if (access.shizukuInstalled) "Installed, not running" else "Not installed")
+                KeyValue(str(R.string.tab_packages), scan.apps.size.toString())
+                KeyValue(str(R.string.compat_access), "${access.active.label} (${access.active.tier})")
+                KeyValue("Shizuku", if (access.shizukuRunning) str(R.string.device_running) else if (access.shizukuInstalled) str(R.string.compat_shizuku_installed) else str(R.string.compat_shizuku_not_installed))
             }
         }
     }

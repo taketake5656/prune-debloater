@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        // The user may have granted usage access or started Shizuku in another app.
+        // ユーザーが別のアプリで使用状況へのアクセスを許可したり、Shizuku を起動したりしている可能性がある。
         vm.refreshAccess()
     }
 }

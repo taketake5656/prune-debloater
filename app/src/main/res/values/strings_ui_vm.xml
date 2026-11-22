@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_home">Home</string>
+    <string name="tab_debloat">Debloat</string>
+    <string name="tab_packages">Packages</string>
+    <string name="tab_optimize">Optimize</string>
+    <string name="tab_restore">Restore</string>
+
+    <string name="vm_profile_title">%1$s debloat</string>
+    <string name="vm_profile_origin">Level %1$d profile</string>
+    <string name="vm_need_shell">Shizuku or root is needed to apply changes. Export an ADB script instead, or set up Shizuku.</string>
+    <string name="vm_script_header">Prune ADB script, generated %1$s</string>
+    <string name="vm_script_saved">Saved to history. After running the script, open Restore → the batch → Check results.</string>
+    <string name="vm_script_checked">%1$d of %2$d changes are in effect.</string>
+    <string name="vm_reinstall_from_system">Reinstalls the app for this user from the system partition and turns it on.</string>
+    <string name="vm_origin_package_manager">Package manager</string>
+    <string name="vm_origin_restore">Restore</string>
+    <string name="vm_nothing_to_undo">Nothing to undo here.</string>
+    <string name="vm_undo_title">Undo: %1$s</string>
+    <string name="vm_restore_enabled">Restores the original state (enabled).</string>
+    <string name="vm_restore_disabled">Restores the original state (installed, disabled).</string>
+    <string name="vm_already_original">Everything Prune changed is already in its original state.</string>
+    <string name="vm_restore_original_title">Restore original state</string>
+    <string name="vm_restore_n_title">Restore %1$d package(s)</string>
+    <string name="vm_emergency_1">Prune emergency restore script, generated %1$s</string>
+    <string name="vm_emergency_2">Re-enables / reinstalls every system package that is disabled or removed for user %1$d.</string>
+    <string name="vm_emergency_3">Run from a computer with ADB connected. Each line is independent.</string>
+    <string name="vm_root_granted">Root access granted.</string>
+    <string name="vm_root_denied">Root access was not granted.</string>
+    <string name="vm_granted">Granted: %1$s</string>
+</resources>

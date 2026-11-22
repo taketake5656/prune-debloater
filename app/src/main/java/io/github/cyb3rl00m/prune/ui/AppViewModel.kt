@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,7 +40,7 @@ sealed interface ExecState {
     data class Done(val batch: Batch) : ExecState
 }
 
-/** Candidates for the debloat profile being customized, plus the user's manual ticks. */
+/** カスタマイズ中の debloat プロファイルの候補と、ユーザーが手動で付けたチェック。 */
 data class ProfileDraft(
     val options: ProfileOptions,
     val candidates: List<Candidate>,
@@ -63,7 +65,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     val allEcosystemKeys get() = ecosystems.map { it.key }.toSet()
 
     private val _draft = MutableStateFlow<Plan?>(null)
-    /** The plan shown on the review screen. */
+    /** 確認画面に表示するプラン。 */
     val draft: StateFlow<Plan?> = _draft.asStateFlow()
 
     private val _profile = MutableStateFlow<ProfileDraft?>(null)
@@ -75,7 +77,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages: SharedFlow<String> = _messages.asSharedFlow()
 
-    /** Ids of history entries the next plan undoes (so they can be marked undone when it succeeds). */
+    /** 次のプランが取り消す履歴エントリの id (成功したら取り消し済みにするため)。 */
     private var pendingUndo: Map<String, String> = emptyMap()
 
     init {
@@ -90,7 +92,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun usedEcosystems(): Set<String> = io.github.cyb3rl00m.prune.core.settings.SettingsStore.effectiveUsed(settings.value, allEcosystemKeys)
 
-    // ---------- Debloat profiles ----------
+    // ---------- debloat プロファイル ----------
 
     fun startProfile(level: DebloatLevel) {
         val s = settings.value
@@ -134,13 +136,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val p = _profile.value ?: return
         val extra = if (p.options.restrictUnusedBackground) p.backgroundApps.map { repo.optimizer.backgroundChange(it, true) } else emptyList()
         val plan = PlanBuilder.plan(
-            title = "${p.options.level.title} debloat", origin = "Level ${p.options.level.number} profile",
+            title = str(R.string.vm_profile_title, p.options.level.title), origin = str(R.string.vm_profile_origin, p.options.level.number),
             selected = p.selectedApps, options = p.options, extra = extra,
         )
         review(plan)
     }
 
-    // ---------- Review and apply ----------
+    // ---------- 確認と適用 ----------
 
     fun review(plan: Plan, undo: Map<String, String> = emptyMap()) {
         pendingUndo = undo
@@ -158,7 +160,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val plan = _draft.value ?: return
         val shell = repo.access.shell()
         if (shell == null) {
-            say("Shizuku or root is needed to apply changes. Export an ADB script instead, or set up Shizuku.")
+            say(str(R.string.vm_need_shell))
             return
         }
         val undo = pendingUndo
@@ -176,14 +178,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun scriptForDraft(): String? {
         val plan = _draft.value ?: return null
-        return ChangeCommands.adbScript(plan, user, "Prune ADB script, generated ${java.util.Date()}")
+        return ChangeCommands.adbScript(plan, user, str(R.string.vm_script_header, java.util.Date().toString()))
     }
 
     fun recordDraftAsScript() {
         val plan = _draft.value ?: return
         viewModelScope.launch {
             repo.executor.recordScript(plan)
-            say("Saved to history. After running the script, open Restore → the batch → Check results.")
+            say(str(R.string.vm_script_saved))
         }
     }
 
@@ -191,12 +193,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         repo.rescan()
         val checked = repo.executor.verifyScriptBatch(batch)
         val ok = checked.entries.count { it.success == true }
-        say("$ok of ${checked.entries.size} changes are in effect.")
+        say(str(R.string.vm_script_checked, ok, checked.entries.size))
     }
 
     fun resetExec() { _exec.value = ExecState.Idle }
 
-    // ---------- Single package actions ----------
+    // ---------- 個別パッケージの操作 ----------
 
     fun planFor(app: AppPackage, type: ChangeType): Plan {
         val base = PlanBuilder.changeFor(app, settings.value.method, settings.value.fallbackUninstall)
@@ -205,29 +207,29 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             ChangeType.UNINSTALL_USER -> base.copy(type = ChangeType.UNINSTALL_USER, fallbackUninstall = false,
                 explanation = io.github.cyb3rl00m.prune.core.model.RemovalMethod.UNINSTALL_USER.explanation)
             ChangeType.ENABLE -> base.copy(type = ChangeType.ENABLE, warnings = emptyList(), risk = null, fallbackUninstall = false,
-                explanation = if (app.status == PackageStatus.REMOVED) "Reinstalls the app for this user from the system partition and turns it on." else "Turns the app back on.")
+                explanation = if (app.status == PackageStatus.REMOVED) str(R.string.vm_reinstall_from_system) else str(R.string.inv_enable))
             else -> base.copy(type = type)
         }
-        return Plan(change.label, "Package manager", listOf(change))
+        return Plan(change.label, str(R.string.vm_origin_package_manager), listOf(change))
     }
 
-    // ---------- Restore ----------
+    // ---------- 復元 ----------
 
-    /** Puts the undo plan on the review screen. Returns false (and says why) if there is nothing to undo. */
+    /** 取り消しプランを確認画面に出す。取り消すものがなければ false を返す (理由も表示する)。 */
     fun undoEntries(entries: List<HistoryEntry>, title: String): Boolean {
         val inverses = entries.filter { it.success == true && !it.undone }
             .mapNotNull { e -> Inverse.of(e.change, e.before)?.let { inv -> inv to e.id } }
         if (inverses.isEmpty()) {
-            say("Nothing to undo here.")
+            say(str(R.string.vm_nothing_to_undo))
             return false
         }
-        review(Plan(title, "Restore", inverses.map { it.first }), inverses.associate { it.first.id to it.second })
+        review(Plan(title, str(R.string.vm_origin_restore), inverses.map { it.first }), inverses.associate { it.first.id to it.second })
         return true
     }
 
-    fun undoBatch(batch: Batch): Boolean = undoEntries(batch.entries, "Undo: ${batch.title}")
+    fun undoBatch(batch: Batch): Boolean = undoEntries(batch.entries, str(R.string.vm_undo_title, batch.title))
 
-    /** Puts every package Prune ever changed back to the state it had the first time Prune touched it. */
+    /** Prune が変更したすべてのパッケージを、Prune が最初に触れたときの状態に戻す。 */
     fun restoreAllOriginals(): Boolean {
         val apps = scan.value.apps.associateBy { it.packageName }
         val changes = history.value.originals.values.mapNotNull { o ->
@@ -236,34 +238,34 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             when {
                 now == o.state || now == "missing" -> null
                 o.state == "enabled" -> PlannedChange(type = ChangeType.ENABLE, packageName = o.packageName, label = app?.label ?: o.label,
-                    explanation = "Restores the original state (enabled).", isSystemPackage = app?.facts?.isSystem ?: true)
+                    explanation = str(R.string.vm_restore_enabled), isSystemPackage = app?.facts?.isSystem ?: true)
                 o.state == "disabled" && now == "removed" -> PlannedChange(type = ChangeType.REINSTALL_USER, packageName = o.packageName,
-                    label = app?.label ?: o.label, explanation = "Restores the original state (installed, disabled).")
+                    label = app?.label ?: o.label, explanation = str(R.string.vm_restore_disabled))
                 else -> null
             }
         }
         if (changes.isEmpty()) {
-            say("Everything Prune changed is already in its original state.")
+            say(str(R.string.vm_already_original))
             return false
         }
-        review(Plan("Restore original state", "Restore", changes))
+        review(Plan(str(R.string.vm_restore_original_title), str(R.string.vm_origin_restore), changes))
         return true
     }
 
     fun restorePackages(apps: List<AppPackage>): Boolean {
         val changes = apps.filter { it.status != PackageStatus.ENABLED }.map { planFor(it, ChangeType.ENABLE).changes.first() }
         if (changes.isEmpty()) return false
-        review(Plan("Restore ${changes.size} package(s)", "Restore", changes))
+        review(Plan(str(R.string.vm_restore_n_title, changes.size), str(R.string.vm_origin_restore), changes))
         return true
     }
 
-    /** ADB script that re-enables every system package that is currently disabled or removed. */
+    /** 現在無効化・削除されているすべてのシステムパッケージを再び有効にする ADB スクリプト。 */
     fun emergencyRestoreScript(): String {
         val apps = scan.value.apps.filter { it.facts.isSystem && it.status != PackageStatus.ENABLED }
         return buildString {
-            appendLine("# Prune emergency restore script, generated ${java.util.Date()}")
-            appendLine("# Re-enables / reinstalls every system package that is disabled or removed for user $user.")
-            appendLine("# Run from a computer with ADB connected. Each line is independent.")
+            appendLine("# " + str(R.string.vm_emergency_1, java.util.Date().toString()))
+            appendLine("# " + str(R.string.vm_emergency_2, user))
+            appendLine("# " + str(R.string.vm_emergency_3))
             appendLine()
             for (a in apps) {
                 appendLine("# ${a.label}")
@@ -273,7 +275,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // ---------- Compatibility ----------
+    // ---------- 互換性 ----------
 
     fun compatibilityReport(): io.github.cyb3rl00m.prune.core.oem.CompatibilityReport? {
         val d = device.value ?: return null
@@ -290,7 +292,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    // ---------- Settings ----------
+    // ---------- 設定 ----------
 
     fun update(block: suspend io.github.cyb3rl00m.prune.core.settings.SettingsStore.() -> Unit) =
         viewModelScope.launch { repo.settings.block() }
@@ -299,13 +301,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun requestRoot() = viewModelScope.launch {
         val ok = repo.access.requestRoot()
-        say(if (ok) "Root access granted." else "Root access was not granted.")
+        say(str(if (ok) R.string.vm_root_granted else R.string.vm_root_denied))
     }
 
     fun grantSelfPermissions() = viewModelScope.launch {
         val done = repo.access.grantSelfPermissions()
         if (done.isNotEmpty()) {
-            say("Granted: ${done.joinToString()}")
+            say(str(R.string.vm_granted, done.joinToString()))
             repo.rescan()
         }
     }

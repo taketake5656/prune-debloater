@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -69,9 +71,9 @@ fun DebloatScreen(vm: AppViewModel, nav: Nav) {
                 .count { it.keptBecause == null && it.selected }
         }
     }
-    ScreenScaffold("Debloat", null, "debloat", subtitle = "Pick a level. You review every change before anything happens.") {
+    ScreenScaffold(str(R.string.tab_debloat), null, "debloat", subtitle = str(R.string.debloat_subtitle)) {
         item {
-            Banner("Every level is a starting point: on the next screen you tell Prune which manufacturer and Google features you use, and untick anything you want to keep.",
+            Banner(str(R.string.debloat_banner),
                 BannerKind.INFO)
         }
         DebloatLevel.entries.forEach { level ->
@@ -105,7 +107,7 @@ private fun LevelCard(level: DebloatLevel, count: Int, onClick: () -> Unit) {
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(count.toString(), style = MaterialTheme.typography.titleLarge, color = accent)
-                Text(if (level == DebloatLevel.CUSTOM) "pre-selected" else "packages", style = MaterialTheme.typography.labelSmall,
+                Text(if (level == DebloatLevel.CUSTOM) str(R.string.debloat_preselected) else str(R.string.debloat_packages), style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
@@ -138,24 +140,24 @@ fun CustomizeScreen(vm: AppViewModel, nav: Nav, level: DebloatLevel) {
     val bgCount = if (o.restrictUnusedBackground) p.backgroundApps.size else 0
 
     ScreenScaffold(
-        title = "${level.title} debloat", nav = nav, tag = "customize",
-        subtitle = "${selected.size} packages selected",
+        title = str(R.string.vm_profile_title, level.title), nav = nav, tag = "customize",
+        subtitle = str(R.string.debloat_n_selected, selected.size),
         bottom = {
             Button(
                 onClick = { vm.reviewProfile(); nav.go(Routes.REVIEW) },
                 enabled = selected.isNotEmpty() || bgCount > 0,
                 modifier = Modifier.fillMaxWidth().testTag("review_changes"),
-            ) { Text("Review ${selected.size + bgCount} changes") }
+            ) { Text(str(R.string.debloat_review_n, selected.size + bgCount)) }
         },
     ) {
-        item { SectionHeader("Features you use") }
+        item { SectionHeader(str(R.string.debloat_features)) }
         item {
             PruneCard {
-                Text("Packages behind the features you keep ticked are never selected. Untick what you never use.",
+                Text(str(R.string.debloat_features_desc),
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(10.dp))
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    // Only features that exist on this phone.
+                    // この端末に存在する機能だけを表示する。
                     val present = remember(scan.apps) {
                         scan.apps.filter { it.facts.installedForUser }.flatMap { it.classification.groups }.toSet()
                     }
@@ -175,16 +177,16 @@ fun CustomizeScreen(vm: AppViewModel, nav: Nav, level: DebloatLevel) {
                 }
             }
         }
-        item { SectionHeader("Options") }
+        item { SectionHeader(str(R.string.debloat_options)) }
         item {
             PruneCard {
-                OptionSwitch("Include Google apps", "YouTube, Google TV, Meet, Gemini, Google One... Google Play Services is always kept.",
+                OptionSwitch(str(R.string.debloat_include_google), str(R.string.debloat_include_google_desc),
                     o.includeGoogle) { vm.updateProfileOptions(o.copy(includeGoogle = it)) }
-                OptionSwitch("Restrict background of unused apps", if (scan.usage.isEmpty())
-                    "Needs usage access (Setup screen)." else "Apps you haven't opened for 30 days: ${p.backgroundApps.size}.",
+                OptionSwitch(str(R.string.debloat_restrict_bg), if (scan.usage.isEmpty())
+                    str(R.string.debloat_restrict_bg_needs) else str(R.string.debloat_restrict_bg_count, p.backgroundApps.size),
                     o.restrictUnusedBackground) { vm.updateProfileOptions(o.copy(restrictUnusedBackground = it)) }
                 Spacer(Modifier.height(8.dp))
-                Text("Method", style = MaterialTheme.typography.titleSmall)
+                Text(str(R.string.debloat_method), style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(6.dp))
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     RemovalMethod.entries.forEachIndexed { i, m ->
@@ -197,30 +199,30 @@ fun CustomizeScreen(vm: AppViewModel, nav: Nav, level: DebloatLevel) {
             }
         }
         if (level == DebloatLevel.CUSTOM) item {
-            Banner("Custom mode lists every package Prune allows you to change, including high-risk ones. Protected packages (telephony, System UI, security, biometrics, core Android) are not listed and cannot be selected.",
+            Banner(str(R.string.debloat_custom_banner),
                 BannerKind.WARNING)
         }
         item {
-            SectionHeader("Selected (${selected.size})") {
-                TextButton(onClick = { vm.setAllCandidates(false) }) { Text("None") }
+            SectionHeader(str(R.string.debloat_selected_n, selected.size)) {
+                TextButton(onClick = { vm.setAllCandidates(false) }) { Text(str(R.string.debloat_none)) }
             }
         }
         if (selected.isEmpty()) item {
-            PruneCard { Text("Nothing selected. Everything at this level is already off, or kept by your answers above.", style = MaterialTheme.typography.bodyMedium) }
+            PruneCard { Text(str(R.string.debloat_nothing_selected), style = MaterialTheme.typography.bodyMedium) }
         }
         items(selected, key = { "s_" + it.app.packageName }) { c ->
             CandidateRow(c.app, true, c.note) { vm.toggleCandidate(c.app.packageName, it) }
         }
         if (unselected.isNotEmpty()) {
             item {
-                ExpandHeader("Not pre-selected (${unselected.size})", showUnselected) { showUnselected = !showUnselected }
+                ExpandHeader(str(R.string.debloat_not_preselected_n, unselected.size), showUnselected) { showUnselected = !showUnselected }
             }
             if (showUnselected) items(unselected, key = { "u_" + it.app.packageName }) { c ->
                 CandidateRow(c.app, false, c.note) { vm.toggleCandidate(c.app.packageName, it) }
             }
         }
         if (kept.isNotEmpty()) {
-            item { ExpandHeader("Kept because of your answers (${kept.size})", showKept) { showKept = !showKept } }
+            item { ExpandHeader(str(R.string.debloat_kept_n, kept.size), showKept) { showKept = !showKept } }
             if (showKept) items(kept, key = { "k_" + it.app.packageName }) { c ->
                 PackageRow(c.app, subtitle = c.keptBecause, onClick = { nav.go(Routes.app(c.app.packageName)) })
             }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="optui_subtitle">実際に技術的な効果がある変更だけ。気休めはなし。</string>
+    <string name="optui_banner">Prune はプロセスの強制終了、CPU/GPU ガバナーの変更、熱管理への干渉を行いません。これらは端末を不安定にし、かえって電池を消費することが多いためです。</string>
+    <string name="optui_why">効果がある理由</string>
+    <string name="optui_requires">必要なもの: %1$s</string>
+    <string name="optui_current_scales">現在の倍率</string>
+    <string name="optui_scales_value">ウィンドウ %1$s× · トランジション %2$s× · Animator %3$s×</string>
+    <string name="optui_scale_default">1× (既定)</string>
+    <string name="optui_scale_off">オフ</string>
+    <string name="optui_animation_speed">アニメーション速度 %1$s</string>
+    <string name="optui_without_shizuku">Shizuku がなくても、確認画面で変更を ADB スクリプトとして書き出せます。</string>
+    <string name="optui_usage_needed_unused">使っていないアプリを知るには、使用状況へのアクセスが必要です。</string>
+    <string name="optui_bg_needs_shell">バックグラウンド動作の変更には Shizuku または root が必要です。設定 → アプリ → 対象のアプリ → バッテリー で、アプリごとに「制限」にすることもできます。</string>
+    <string name="optui_no_unused">バックグラウンドで動き続けている未使用アプリはありません。</string>
+    <string name="optui_last_opened">最後に開いた日: %1$s</string>
+    <string name="optui_exempt_changeable">変更できる除外アプリ (%1$d)</string>
+    <string name="optui_remove_exemptions">電池の最適化の除外を解除</string>
+    <string name="optui_exempt_system">システムによる除外 (%1$d)</string>
+    <string name="optui_exempt_system_desc">Android またはメーカー自身が除外しているものです。ここからは変更できません。</string>
+    <string name="optui_no_sensitive">機密性の高い権限を持つアプリはありません。</string>
+    <string name="optui_revoke_perms">権限の取り消し: %1$s</string>
+    <string name="optui_revoke_all">すべて取り消す…</string>
+    <string name="optui_notif_old_android">通知の権限は Android 13 以降にあります。このバージョンでは 設定 → 通知 を使ってください。</string>
+    <string name="optui_usage_needed_sizes">アプリのサイズを読むには、使用状況へのアクセスが必要です。</string>
+    <string name="optui_used_of">%2$s 中 %1$s 使用</string>
+    <string name="optui_free_caches">空き %1$s · アプリのキャッシュ %2$s</string>
+    <string name="optui_clear_all_caches">全アプリのキャッシュを削除…</string>
+    <string name="optui_largest">サイズの大きいアプリ</string>
+    <string name="optui_size_cache">%1$s · キャッシュ %2$s</string>
+    <string name="optui_usage_needed_screen">画面時間を表示するには、使用状況へのアクセスが必要です。</string>
+    <string name="optui_battery_needs_shell">推定電池使用量には Shizuku または root が必要です (dumpsys batterystats から取得します)。</string>
+    <string name="optui_battery_note">電池の数値は、前回のフル充電以降に Android 自身が推定したものです。おおよその値であり、ファームウェアによっては取得できません。</string>
+    <string name="optui_on_screen">画面表示 %1$s (7 日間)</string>
+    <string name="optui_compile_desc">Android が夜間に行うのと同じジョブを実行します。5〜20 分かかり、端末が熱くなることがあります。充電中に行うのがおすすめです。</string>
+    <string name="optui_compile_btn">アプリを今すぐコンパイル…</string>
+    <string name="optui_show_system">システムアプリを表示</string>
+    <string name="optui_show_system_desc">オフ: 自分で入れたアプリとサードパーティ製プリインストールのみ。</string>
+    <string name="optui_n_selected">%1$d 個選択中</string>
+    <string name="optui_review">確認…</string>
+</resources>

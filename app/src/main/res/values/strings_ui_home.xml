@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cd_back">Back</string>
+    <string name="cd_scan_again">Scan again</string>
+    <string name="cd_settings">Settings</string>
+
+    <string name="fmt_less_than_min">&lt;1 min</string>
+    <string name="fmt_min">%1$d min</string>
+    <string name="fmt_h_min">%1$d h %2$d min</string>
+    <string name="fmt_never">never (in the last 90 days)</string>
+    <string name="fmt_today">today</string>
+    <string name="fmt_yesterday">yesterday</string>
+    <string name="fmt_days_ago">%1$d days ago</string>
+
+    <string name="home_subtitle">Android debloater &amp; optimizer</string>
+    <string name="home_detecting_device">Detecting device…</string>
+    <string name="home_reading_device">Reading device…</string>
+    <string name="home_banner_experimental">%1$s: experimental support. Prune has dedicated rules for this brand, but they are not tested on real hardware yet. Review every change.</string>
+    <string name="home_banner_generic">%1$s: generic compatibility. Prune uses its generic Android rules and the community database for this brand. Review every change.</string>
+    <string name="home_compat_report">Compatibility report</string>
+    <string name="home_stat_installed">Installed packages</string>
+    <string name="home_stat_system">System packages</string>
+    <string name="home_stat_removable">Removable (Levels 1–3)</string>
+    <string name="home_stat_changed">Disabled or removed</string>
+    <string name="home_progress_title">Debloat progress</string>
+    <string name="home_progress_desc">Share of the optional packages at this level that are already off.</string>
+    <string name="home_progress_value">%1$d of %2$d packages (%3$d %%)</string>
+    <string name="home_choose_level">Choose a debloat level</string>
+    <string name="home_duplicates">%1$d app types installed more than once</string>
+    <string name="home_recommendations">Optimization recommendations</string>
+    <string name="home_scanning">Scanning…</string>
+    <string name="home_no_recommendations">No recommendations right now.</string>
+    <string name="home_scan_failed">Scan failed: %1$s</string>
+    <string name="home_scanning_packages">Scanning packages…</string>
+    <string name="home_last_scan">Last scan %1$s · database %2$s</string>
+    <string name="home_access">Access: %1$s</string>
+    <string name="home_limited_access">Limited access</string>
+    <string name="home_access_full">Prune can disable, remove and restore system packages.</string>
+    <string name="home_access_limited_desc">Prune can scan and explain everything. To change system packages, set up Shizuku (no root needed).</string>
+    <string name="home_set_up">Set up</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="optui_subtitle">Only changes with a real technical effect. No placebo.</string>
+    <string name="optui_banner">Prune does not kill processes, change CPU/GPU governors or touch thermal management. Those make phones less stable and often use more battery, not less.</string>
+    <string name="optui_why">Why this works</string>
+    <string name="optui_requires">Requires: %1$s</string>
+    <string name="optui_current_scales">Current scales</string>
+    <string name="optui_scales_value">Window %1$s× · Transition %2$s× · Animator %3$s×</string>
+    <string name="optui_scale_default">1× (default)</string>
+    <string name="optui_scale_off">Off</string>
+    <string name="optui_animation_speed">Animation speed %1$s</string>
+    <string name="optui_without_shizuku">Without Shizuku you can still export the change as an ADB script on the review screen.</string>
+    <string name="optui_usage_needed_unused">Usage access is needed to know which apps you don\'t use.</string>
+    <string name="optui_bg_needs_shell">Changing background access needs Shizuku or root. You can also set each app to \"Restricted\" in Settings → Apps → app → Battery.</string>
+    <string name="optui_no_unused">No unused apps that still run in the background.</string>
+    <string name="optui_last_opened">Last opened %1$s</string>
+    <string name="optui_exempt_changeable">Exempt apps you can change (%1$d)</string>
+    <string name="optui_remove_exemptions">Remove battery exemptions</string>
+    <string name="optui_exempt_system">Exempted by the system (%1$d)</string>
+    <string name="optui_exempt_system_desc">Android or the manufacturer exempt these themselves. They cannot be changed from here.</string>
+    <string name="optui_no_sensitive">No apps hold sensitive permissions.</string>
+    <string name="optui_revoke_perms">Revoke permissions: %1$s</string>
+    <string name="optui_revoke_all">Revoke all…</string>
+    <string name="optui_notif_old_android">Notification permission exists from Android 13. Use Settings → Notifications on this version.</string>
+    <string name="optui_usage_needed_sizes">Usage access is needed to read app sizes.</string>
+    <string name="optui_used_of">%1$s used of %2$s</string>
+    <string name="optui_free_caches">%1$s free · app caches %2$s</string>
+    <string name="optui_clear_all_caches">Clear all app caches…</string>
+    <string name="optui_largest">Largest apps</string>
+    <string name="optui_size_cache">%1$s · cache %2$s</string>
+    <string name="optui_usage_needed_screen">Usage access is needed for screen time.</string>
+    <string name="optui_battery_needs_shell">Battery estimates need Shizuku or root (they come from dumpsys batterystats).</string>
+    <string name="optui_battery_note">Battery figures are Android\'s own estimate since the last full charge. They are approximate and not available on every firmware.</string>
+    <string name="optui_on_screen">%1$s on screen (7 days)</string>
+    <string name="optui_compile_desc">Runs the same job Android runs overnight. It can take 5–20 minutes and the phone may get warm. Best done while charging.</string>
+    <string name="optui_compile_btn">Compile apps now…</string>
+    <string name="optui_show_system">Show system apps</string>
+    <string name="optui_show_system_desc">Off: only apps you installed and third-party preloads.</string>
+    <string name="optui_n_selected">%1$d selected</string>
+    <string name="optui_review">Review…</string>
+</resources>
