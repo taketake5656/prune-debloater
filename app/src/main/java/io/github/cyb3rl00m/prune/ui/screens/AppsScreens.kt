@@ -184,7 +184,7 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
                 c.notes.forEach { Spacer(Modifier.height(6.dp)); Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                 if (c.communityTier != null) {
                     Spacer(Modifier.height(8.dp))
-                    Text(str(R.string.apps_community_rating, c.communityTier!!), style = MaterialTheme.typography.labelSmall,
+                    Text(str(R.string.apps_community_rating, c.communityTier), style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }

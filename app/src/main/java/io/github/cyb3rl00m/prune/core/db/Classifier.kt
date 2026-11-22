@@ -68,7 +68,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
         val description = uad?.description?.takeIf { it.isNotBlank() } ?: curated?.note ?: defaultDescription(facts, source, manufacturer)
         if (curated?.note != null && uad?.description?.isNotBlank() == true) notes += curated.note
         prefix?.note?.let { if (uad == null) notes += it }
-        if (preloadInstaller) notes += str(R.string.cls_note_preload_installer, facts.installer!!)
+        if (preloadInstaller) notes += str(R.string.cls_note_preload_installer, facts.installer)
         val regional = REGIONAL.containsMatchIn(pkg)
         if (regional) notes += str(R.string.cls_note_regional)
 
