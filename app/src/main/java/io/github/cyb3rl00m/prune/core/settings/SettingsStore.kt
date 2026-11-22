@@ -1,6 +1,9 @@
 package io.github.cyb3rl00m.prune.core.settings
 
 import android.content.Context
+import androidx.annotation.StringRes
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -12,16 +15,20 @@ import io.github.cyb3rl00m.prune.core.model.RemovalMethod
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-enum class ThemeMode(val label: String) { SYSTEM("Follow system"), DARK("Dark"), LIGHT("Light") }
+enum class ThemeMode(@StringRes private val labelRes: Int) {
+    SYSTEM(R.string.theme_system), DARK(R.string.theme_dark), LIGHT(R.string.theme_light);
+
+    val label: String get() = str(labelRes)
+}
 
 data class AppSettings(
     val theme: ThemeMode = ThemeMode.SYSTEM,
     val method: RemovalMethod = RemovalMethod.DISABLE,
     val fallbackUninstall: Boolean = true,
     val skipUsedWithinDays: Int = 14,
-    /** null = not answered yet: every ecosystem counts as used. */
+    /** null = まだ回答していない。すべてのエコシステムを「使用中」と見なす。 */
     val usedEcosystems: Set<String>? = null,
-    /** Ecosystem keys that existed when the user answered; newer keys count as used until answered. */
+    /** ユーザーが回答した時点で存在したエコシステムのキー。それより新しいキーは回答するまで「使用中」と見なす。 */
     val knownEcosystems: Set<String>? = null,
     val preferRoot: Boolean = false,
     val setupDone: Boolean = false,
@@ -72,12 +79,12 @@ class SettingsStore(private val context: Context) {
     }
 
     companion object {
-        /** Ecosystem keys of Prune 1.x (Samsung only). Answers saved by 1.x know nothing about other brands. */
+        /** Prune 1.x (Samsung のみ) のエコシステムのキー。1.x で保存された回答は他のブランドを知らない。 */
         val V1_ECOSYSTEMS = setOf("WALLET", "PASS", "WEARABLE", "SMARTTHINGS", "DEX", "LINK_WINDOWS", "QUICK_SHARE",
             "BIXBY", "HEALTH", "ACCOUNT", "FIND_MY", "SECURE_FOLDER", "SPEN", "GAMING", "GALAXY_AI", "THEMES", "EDGE",
             "ACCESSIBILITY", "CAR")
 
-        /** Keys the user said they use, plus every key they were never asked about. */
+        /** ユーザーが使うと答えたキーと、まだ尋ねていないすべてのキー。 */
         fun effectiveUsed(s: AppSettings, all: Set<String>): Set<String> {
             val used = s.usedEcosystems ?: return all
             val known = s.knownEcosystems ?: all

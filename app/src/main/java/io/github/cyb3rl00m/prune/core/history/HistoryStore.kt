@@ -17,16 +17,16 @@ import java.io.File
 data class HistoryEntry(
     val id: String,
     val change: PlannedChange,
-    /** State before the change: "enabled" | "disabled" | "removed" | app-op mode | "granted" | "exempt" | setting value. */
+    /** 変更前の状態: "enabled" | "disabled" | "removed" | app-op のモード | "granted" | "exempt" | 設定値。 */
     val before: String? = null,
     val after: String? = null,
-    /** null = not verified yet (ADB script that has not been checked). */
+    /** null = まだ検証していない (結果を確認していない ADB スクリプト)。 */
     val success: Boolean? = null,
     val message: String = "",
     val commands: List<String> = emptyList(),
     val timestamp: Long = System.currentTimeMillis(),
     val undone: Boolean = false,
-    /** id of the entry this one reverts, if it is an undo. */
+    /** 取り消し操作の場合、取り消す対象のエントリの id。 */
     val undoOf: String? = null,
 )
 
@@ -38,11 +38,11 @@ data class Batch(
     val timestamp: Long,
     val access: String,
     val entries: List<HistoryEntry>,
-    /** True for plans exported as an ADB script: results are checked when the user taps "Check results". */
+    /** ADB スクリプトとして書き出したプランなら true。結果はユーザーが「結果を確認」をタップしたときに確認する。 */
     val script: Boolean = false,
 )
 
-/** State of a package the first time Prune changed it. Used by "Restore everything". */
+/** Prune が最初に変更したときのパッケージの状態。「すべて元に戻す」で使う。 */
 @Serializable
 data class OriginalState(val packageName: String, val label: String, val state: String, val recordedAt: Long)
 
@@ -53,7 +53,7 @@ data class HistoryFile(
     val originals: Map<String, OriginalState> = emptyMap(),
 )
 
-/** Modification history, kept as a JSON file in the app's private storage. */
+/** 変更履歴。アプリの非公開ストレージに JSON ファイルとして保存する。 */
 class HistoryStore(context: Context) {
 
     private val file = File(context.filesDir, "history.json")
@@ -65,7 +65,7 @@ class HistoryStore(context: Context) {
     private fun load(): HistoryFile = runCatching {
         if (file.exists()) json.decodeFromString(HistoryFile.serializer(), file.readText()) else HistoryFile()
     }.getOrElse {
-        // Keep a copy of an unreadable file instead of silently losing the history.
+        // 読めないファイルは黙って履歴を失うのではなく、コピーを残しておく。
         runCatching { file.copyTo(File(file.parentFile, "history-unreadable-${System.currentTimeMillis()}.json")) }
         HistoryFile()
     }

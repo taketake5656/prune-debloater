@@ -6,11 +6,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.view.inputmethod.InputMethodManager
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 
 /**
- * Finds app types installed more than once (two browsers, two galleries, three keyboards...), a common
- * source of manufacturer bloat. Uses Android's standard app categories, so it works on every brand.
- * It only reports: which duplicate to keep is the user's choice.
+ * 同じ種類のアプリが複数インストールされているものを見つける (ブラウザ 2 つ、ギャラリー 2 つ、キーボード 3 つなど)。
+ * メーカー製の不要アプリのよくある原因。Android 標準のアプリカテゴリを使うので、どのブランドでも動く。
+ * 報告するだけで、どれを残すかはユーザーが選ぶ。
  */
 class DuplicateFinder(private val context: Context) {
 
@@ -25,25 +27,25 @@ class DuplicateFinder(private val context: Context) {
             if (list.size >= 2) groups += DuplicateGroup(name, list.sorted(), default?.takeIf { it in list })
         }
         val categories = listOf(
-            Intent.CATEGORY_APP_BROWSER to "Browsers",
-            Intent.CATEGORY_APP_GALLERY to "Galleries",
-            Intent.CATEGORY_APP_MUSIC to "Music players",
-            Intent.CATEGORY_APP_CALCULATOR to "Calculators",
-            Intent.CATEGORY_APP_CALENDAR to "Calendars",
-            Intent.CATEGORY_APP_EMAIL to "Email apps",
-            Intent.CATEGORY_APP_MESSAGING to "Messaging (SMS) apps",
-            Intent.CATEGORY_APP_CONTACTS to "Contacts apps",
-            Intent.CATEGORY_APP_MAPS to "Maps",
-        ) + (if (Build.VERSION.SDK_INT >= 29) listOf(Intent.CATEGORY_APP_FILES to "File managers") else emptyList())
+            Intent.CATEGORY_APP_BROWSER to str(R.string.dup_browsers),
+            Intent.CATEGORY_APP_GALLERY to str(R.string.dup_galleries),
+            Intent.CATEGORY_APP_MUSIC to str(R.string.dup_music),
+            Intent.CATEGORY_APP_CALCULATOR to str(R.string.dup_calculators),
+            Intent.CATEGORY_APP_CALENDAR to str(R.string.dup_calendars),
+            Intent.CATEGORY_APP_EMAIL to str(R.string.dup_email),
+            Intent.CATEGORY_APP_MESSAGING to str(R.string.dup_messaging),
+            Intent.CATEGORY_APP_CONTACTS to str(R.string.dup_contacts),
+            Intent.CATEGORY_APP_MAPS to str(R.string.dup_maps),
+        ) + (if (Build.VERSION.SDK_INT >= 29) listOf(Intent.CATEGORY_APP_FILES to str(R.string.dup_files)) else emptyList())
         for ((category, name) in categories) {
             val intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, category)
             add(name, query(intent), defaultFor(intent))
         }
-        add("App stores", query(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.example"))))
-        add("Video players", query(Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse("content://media/video"), "video/*")))
-        add("Cameras", query(Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)))
+        add(str(R.string.dup_stores), query(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.example"))))
+        add(str(R.string.dup_video), query(Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse("content://media/video"), "video/*")))
+        add(str(R.string.dup_cameras), query(Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)))
         val imm = context.getSystemService(InputMethodManager::class.java)
-        add("Keyboards", runCatching { imm?.inputMethodList?.map { it.packageName } }.getOrNull().orEmpty())
+        add(str(R.string.dup_keyboards), runCatching { imm?.inputMethodList?.map { it.packageName } }.getOrNull().orEmpty())
         return groups
     }
 

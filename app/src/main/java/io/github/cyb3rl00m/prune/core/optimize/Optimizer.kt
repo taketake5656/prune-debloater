@@ -11,6 +11,9 @@ import android.os.Process
 import android.os.UserHandle
 import android.os.storage.StorageManager
 import android.provider.Settings
+import androidx.annotation.StringRes
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import io.github.cyb3rl00m.prune.core.model.AppPackage
 import io.github.cyb3rl00m.prune.core.model.ChangeType
 import io.github.cyb3rl00m.prune.core.model.Source
@@ -22,56 +25,24 @@ import io.github.cyb3rl00m.prune.core.shell.PrivilegedShell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** The optimization sections, each with the technical reason it works. */
-enum class OptimizationSection(val title: String, val why: String, val requirement: String) {
-    ANIMATIONS(
-        "Animation speed",
-        "Android plays a short animation for every window, transition and UI change. The three animation scales " +
-            "(Developer options) multiply their duration. 0.5× halves the time you wait for each transition. It makes " +
-            "the phone feel faster; it does not make the processor faster.",
-        "Shizuku, root, or ADB (WRITE_SECURE_SETTINGS)"),
-    BACKGROUND(
-        "Background activity",
-        "Apps can run jobs, alarms and services in the background even when you never open them. Setting the " +
-            "RUN_ANY_IN_BACKGROUND app-op to \"ignore\" is the same switch as Android's \"Restricted\" battery setting: " +
-            "the app can no longer run in the background, but works normally when you open it. Only apps you haven't " +
-            "opened for 30 days are suggested.",
-        "Shizuku or root, plus usage access"),
-    BATTERY_EXEMPTIONS(
-        "Battery optimization exemptions",
-        "Apps on the battery-optimization exemption list (\"Unrestricted\") ignore Doze and App Standby, so they can " +
-            "wake the phone at any time. Removing an exemption you don't need lets Android batch their work while the " +
-            "phone is idle. Messaging, alarm and fitness apps may need the exemption: keep those.",
-        "Shizuku or root (or change each app in Settings)"),
-    PERMISSIONS(
-        "Sensitive permissions",
-        "Location, microphone, camera, contacts, SMS and call log access are the permissions with the biggest privacy " +
-            "impact, and background location also costs battery. Revoking a permission is instant and reversible: the " +
-            "app asks again when it needs it.",
-        "Shizuku or root (or change each app in Settings)"),
-    NOTIFICATIONS(
-        "Notifications",
-        "Since Android 13 posting notifications is a runtime permission (POST_NOTIFICATIONS). Revoking it for apps that " +
-            "only send promotions silences them completely. Every notification also wakes the screen and the app, so fewer " +
-            "notifications means fewer wake-ups.",
-        "Android 13+. Shizuku or root (or change each app in Settings)"),
-    STORAGE(
-        "Storage and cache",
-        "Apps keep cache files to load faster. The cache is rebuilt when needed, so clearing it is safe, but the apps " +
-            "will be a bit slower the first time and re-download thumbnails. Prune asks Android to trim caches the same " +
-            "way it does when storage runs low (pm trim-caches) and measures the space actually freed.",
-        "Usage access to see sizes; Shizuku or root to clear all caches at once"),
-    RESOURCES(
-        "Resource usage",
-        "Shows which apps you use most (screen time, last 7 days) and the battery estimate Android itself calculates " +
-            "(dumpsys batterystats, since the last full charge). Use it to find apps that cost more than they are worth.",
-        "Usage access; battery estimates need Shizuku or root"),
-    COMPILATION(
-        "App compilation",
-        "After app updates Android runs apps partly interpreted until its idle maintenance compiles them during the " +
-            "night (while charging). Running the same background compilation job now (cmd package bg-dexopt-job) " +
-            "compiles the hot code paths of every app with its usage profile. Takes several minutes and uses battery.",
-        "Shizuku or root"),
+/** 最適化の各セクションと、それぞれが効く技術的な理由。 */
+enum class OptimizationSection(
+    @StringRes private val titleRes: Int,
+    @StringRes private val whyRes: Int,
+    @StringRes private val requirementRes: Int,
+) {
+    ANIMATIONS(R.string.opt_animations, R.string.opt_animations_why, R.string.opt_animations_req),
+    BACKGROUND(R.string.opt_background, R.string.opt_background_why, R.string.opt_background_req),
+    BATTERY_EXEMPTIONS(R.string.opt_exemptions, R.string.opt_exemptions_why, R.string.opt_settings_req),
+    PERMISSIONS(R.string.opt_permissions, R.string.opt_permissions_why, R.string.opt_settings_req),
+    NOTIFICATIONS(R.string.opt_notifications, R.string.opt_notifications_why, R.string.opt_notifications_req),
+    STORAGE(R.string.opt_storage, R.string.opt_storage_why, R.string.opt_storage_req),
+    RESOURCES(R.string.opt_resources, R.string.opt_resources_why, R.string.opt_resources_req),
+    COMPILATION(R.string.opt_compilation, R.string.opt_compilation_why, R.string.req_shell);
+
+    val title: String get() = str(titleRes)
+    val why: String get() = str(whyRes)
+    val requirement: String get() = str(requirementRes)
 }
 
 data class AnimationState(val window: Float, val transition: Float, val animator: Float) {
@@ -107,18 +78,18 @@ class Optimizer(private val context: Context) {
 
     fun animationChanges(scale: Float): List<PlannedChange> {
         val value = if (scale == 0f) "0" else scale.toString()
-        return listOf(KEY_WINDOW to "Window animation scale", KEY_TRANSITION to "Transition animation scale",
-            KEY_ANIMATOR to "Animator duration scale").map { (key, label) ->
+        return listOf(KEY_WINDOW to str(R.string.opt_window_scale), KEY_TRANSITION to str(R.string.opt_transition_scale),
+            KEY_ANIMATOR to str(R.string.opt_animator_scale)).map { (key, label) ->
             PlannedChange(
-                type = ChangeType.SETTING_PUT, label = "$label → ${if (scale == 0f) "off" else "${value}×"}",
+                type = ChangeType.SETTING_PUT, label = "$label → ${if (scale == 0f) str(R.string.opt_off) else "${value}×"}",
                 params = mapOf("key" to key, "value" to value),
                 explanation = OptimizationSection.ANIMATIONS.why + if (scale == 0f)
-                    "\n\nOff removes animations completely. Some apps rely on animations to show progress; 0.5× is the usual choice." else "",
+                    "\n\n" + str(R.string.opt_animations_off_note) else "",
             )
         }
     }
 
-    /** Apps not opened for [days] days that may still run in the background. Needs usage stats and a shell. */
+    /** [days] 日間開かれていないのに、バックグラウンドで動きうるアプリ。使用状況統計とシェルが必要。 */
     suspend fun backgroundCandidates(apps: List<AppPackage>, usage: Map<String, AppUsage>, shell: PrivilegedShell?,
                                      days: Int = 30): List<AppPackage> = withContext(Dispatchers.IO) {
         if (usage.isEmpty()) return@withContext emptyList()
@@ -138,7 +109,7 @@ class Optimizer(private val context: Context) {
 
     fun backgroundChange(app: AppPackage, restrict: Boolean) = PlannedChange(
         type = ChangeType.APPOP_SET, packageName = app.packageName,
-        label = (if (restrict) "Restrict background: " else "Allow background: ") + app.label,
+        label = str(if (restrict) R.string.opt_restrict_background else R.string.opt_allow_background, app.label),
         params = mapOf("op" to "RUN_ANY_IN_BACKGROUND", "mode" to if (restrict) "ignore" else "default"),
         explanation = OptimizationSection.BACKGROUND.why, isSystemPackage = app.facts.isSystem,
     )
@@ -158,12 +129,13 @@ class Optimizer(private val context: Context) {
     }
 
     fun exemptionChange(app: AppPackage) = PlannedChange(
-        type = ChangeType.DEVICEIDLE_REMOVE, packageName = app.packageName, label = "Remove battery exemption: ${app.label}",
+        type = ChangeType.DEVICEIDLE_REMOVE, packageName = app.packageName, label = str(R.string.opt_remove_exemption, app.label),
         explanation = OptimizationSection.BATTERY_EXEMPTIONS.why, isSystemPackage = app.facts.isSystem,
     )
 
     @Suppress("DEPRECATION")
     suspend fun permissions(apps: List<AppPackage>, includeSystem: Boolean): List<AppPermissions> = withContext(Dispatchers.IO) {
+        val sensitive = sensitive()
         apps.filter { (includeSystem || !it.facts.isSystem) && it.facts.installedForUser && it.packageName != context.packageName }
             .mapNotNull { app ->
                 val info: PackageInfo = runCatching {
@@ -174,7 +146,7 @@ class Optimizer(private val context: Context) {
                 val req = info.requestedPermissions ?: return@mapNotNull null
                 val flags = info.requestedPermissionsFlags ?: return@mapNotNull null
                 val granted = req.indices.filter { (flags[it] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0 }
-                    .mapNotNull { SENSITIVE[req[it]] }
+                    .mapNotNull { sensitive[req[it]] }
                     .filter { it.permission != Manifest.permission.POST_NOTIFICATIONS }
                 if (granted.isEmpty()) null else AppPermissions(app, granted)
             }.sortedByDescending { it.granted.size }
@@ -191,11 +163,11 @@ class Optimizer(private val context: Context) {
 
     fun revokeChange(app: AppPackage, perm: PermissionInfoItem) = PlannedChange(
         type = ChangeType.PERMISSION_REVOKE, packageName = app.packageName,
-        label = "Revoke ${perm.label}: ${app.label}", params = mapOf("permission" to perm.permission),
+        label = str(R.string.opt_revoke, perm.label, app.label), params = mapOf("permission" to perm.permission),
         explanation = OptimizationSection.PERMISSIONS.why, isSystemPackage = app.facts.isSystem,
     )
 
-    fun notificationChange(app: AppPackage) = revokeChange(app, PermissionInfoItem(Manifest.permission.POST_NOTIFICATIONS, "notifications", "Notifications"))
+    fun notificationChange(app: AppPackage) = revokeChange(app, PermissionInfoItem(Manifest.permission.POST_NOTIFICATIONS, str(R.string.perm_notifications), str(R.string.permgroup_notifications)))
         .copy(explanation = OptimizationSection.NOTIFICATIONS.why)
 
     suspend fun storage(apps: List<AppPackage>): StorageSummary? = withContext(Dispatchers.IO) {
@@ -213,10 +185,10 @@ class Optimizer(private val context: Context) {
         StorageSummary(total, free, list.sortedByDescending { it.total })
     }
 
-    fun trimCachesChange() = PlannedChange(type = ChangeType.TRIM_CACHES, label = "Clear cached files of all apps",
+    fun trimCachesChange() = PlannedChange(type = ChangeType.TRIM_CACHES, label = str(R.string.opt_trim_caches_label),
         explanation = OptimizationSection.STORAGE.why)
 
-    fun dexoptChange() = PlannedChange(type = ChangeType.DEXOPT, label = "Compile apps now (background dexopt)",
+    fun dexoptChange() = PlannedChange(type = ChangeType.DEXOPT, label = str(R.string.opt_dexopt_label),
         explanation = OptimizationSection.COMPILATION.why)
 
     suspend fun resources(apps: List<AppPackage>, usage: Map<String, AppUsage>, shell: PrivilegedShell?): List<ResourceItem> =
@@ -227,7 +199,7 @@ class Optimizer(private val context: Context) {
             val byUid = apps.groupBy { it.facts.uid }
             val items = apps.filter { it.facts.installedForUser }.map { app ->
                 val shared = byUid[app.facts.uid]?.size ?: 1
-                // Apps that share a uid share one battery figure: show it only when the uid has a single package.
+                // uid を共有するアプリは電池使用量も共有になるため、その uid のパッケージが 1 つだけの場合に限り表示する。
                 ResourceItem(app, usage[app.packageName]?.foregroundMs7d ?: 0L, battery[app.facts.uid]?.takeIf { shared == 1 })
             }
             items.filter { it.foregroundMs7d > 0 || (it.batteryMah ?: 0.0) > 0.0 }
@@ -238,24 +210,24 @@ class Optimizer(private val context: Context) {
         val out = mutableListOf<Recommendation>()
         val anim = animationState()
         if (anim.window >= 1f && anim.transition >= 1f && anim.animator >= 1f) {
-            out += Recommendation(OptimizationSection.ANIMATIONS, "Animations at 1×",
-                "Setting them to 0.5× halves transition time. ${if (privileged) "One tap." else "Needs Shizuku or ADB."}")
+            out += Recommendation(OptimizationSection.ANIMATIONS, str(R.string.rec_animations),
+                str(R.string.rec_animations_detail, str(if (privileged) R.string.rec_one_tap else R.string.rec_needs_shizuku_adb)))
         }
         if (usage.isEmpty()) {
-            out += Recommendation(OptimizationSection.RESOURCES, "Grant usage access",
-                "Lets Prune find apps you don't use and show storage per app.")
+            out += Recommendation(OptimizationSection.RESOURCES, str(R.string.rec_usage_access),
+                str(R.string.rec_usage_access_detail))
         } else {
             val cutoff = System.currentTimeMillis() - 30 * DAY
             val unused = apps.count { !it.facts.isSystem && it.facts.enabled && (usage[it.packageName]?.lastUsed ?: 0L) < cutoff &&
                 installedBefore(it.packageName, cutoff) }
-            if (unused > 0) out += Recommendation(OptimizationSection.BACKGROUND, "$unused apps unused for 30+ days",
-                "Restrict their background activity or uninstall them.")
+            if (unused > 0) out += Recommendation(OptimizationSection.BACKGROUND, str(R.string.rec_unused, unused),
+                str(R.string.rec_unused_detail))
         }
         val power = context.getSystemService(PowerManager::class.java)
         val exempt = apps.count { !it.facts.isSystem && it.packageName != context.packageName &&
             runCatching { power.isIgnoringBatteryOptimizations(it.packageName) }.getOrDefault(false) }
-        if (exempt > 0) out += Recommendation(OptimizationSection.BATTERY_EXEMPTIONS, "$exempt apps ignore battery optimization",
-            "Review which of them really need to run unrestricted.")
+        if (exempt > 0) out += Recommendation(OptimizationSection.BATTERY_EXEMPTIONS, str(R.string.rec_exempt, exempt),
+            str(R.string.rec_exempt_detail))
         return out
     }
 
@@ -272,30 +244,35 @@ class Optimizer(private val context: Context) {
         const val KEY_ANIMATOR = "animator_duration_scale"
         private const val DAY = 24L * 60 * 60 * 1000
 
-        val SENSITIVE: Map<String, PermissionInfoItem> = listOf(
-            PermissionInfoItem(Manifest.permission.ACCESS_FINE_LOCATION, "precise location", "Location"),
-            PermissionInfoItem(Manifest.permission.ACCESS_COARSE_LOCATION, "approximate location", "Location"),
-            PermissionInfoItem(Manifest.permission.ACCESS_BACKGROUND_LOCATION, "background location", "Location"),
-            PermissionInfoItem(Manifest.permission.CAMERA, "camera", "Camera"),
-            PermissionInfoItem(Manifest.permission.RECORD_AUDIO, "microphone", "Microphone"),
-            PermissionInfoItem(Manifest.permission.READ_CONTACTS, "contacts", "Contacts"),
-            PermissionInfoItem(Manifest.permission.WRITE_CONTACTS, "edit contacts", "Contacts"),
-            PermissionInfoItem(Manifest.permission.READ_CALENDAR, "calendar", "Calendar"),
-            PermissionInfoItem(Manifest.permission.READ_SMS, "read SMS", "SMS"),
-            PermissionInfoItem(Manifest.permission.SEND_SMS, "send SMS", "SMS"),
-            PermissionInfoItem(Manifest.permission.RECEIVE_SMS, "receive SMS", "SMS"),
-            PermissionInfoItem(Manifest.permission.READ_CALL_LOG, "call log", "Call log"),
-            PermissionInfoItem(Manifest.permission.CALL_PHONE, "make calls", "Phone"),
-            PermissionInfoItem(Manifest.permission.READ_PHONE_STATE, "phone state", "Phone"),
-            PermissionInfoItem(Manifest.permission.BODY_SENSORS, "body sensors", "Body sensors"),
-            PermissionInfoItem(Manifest.permission.ACTIVITY_RECOGNITION, "physical activity", "Physical activity"),
-            PermissionInfoItem("android.permission.READ_MEDIA_IMAGES", "photos", "Photos and videos"),
-            PermissionInfoItem("android.permission.READ_MEDIA_VIDEO", "videos", "Photos and videos"),
-            PermissionInfoItem("android.permission.READ_MEDIA_AUDIO", "music and audio", "Music and audio"),
-            PermissionInfoItem(Manifest.permission.READ_EXTERNAL_STORAGE, "files and media", "Files"),
-            PermissionInfoItem("android.permission.BLUETOOTH_SCAN", "nearby devices", "Nearby devices"),
-            PermissionInfoItem("android.permission.NEARBY_WIFI_DEVICES", "nearby Wi-Fi devices", "Nearby devices"),
-            PermissionInfoItem(Manifest.permission.POST_NOTIFICATIONS, "notifications", "Notifications"),
-        ).associateBy { it.permission }
+        /** 確認対象の機密性の高い権限: (権限名, 表示名, グループ名)。 */
+        private val SENSITIVE_DEFS: List<Triple<String, Int, Int>> = listOf(
+            Triple(Manifest.permission.ACCESS_FINE_LOCATION, R.string.perm_fine_location, R.string.permgroup_location),
+            Triple(Manifest.permission.ACCESS_COARSE_LOCATION, R.string.perm_coarse_location, R.string.permgroup_location),
+            Triple(Manifest.permission.ACCESS_BACKGROUND_LOCATION, R.string.perm_background_location, R.string.permgroup_location),
+            Triple(Manifest.permission.CAMERA, R.string.perm_camera, R.string.permgroup_camera),
+            Triple(Manifest.permission.RECORD_AUDIO, R.string.perm_microphone, R.string.permgroup_microphone),
+            Triple(Manifest.permission.READ_CONTACTS, R.string.perm_contacts, R.string.permgroup_contacts),
+            Triple(Manifest.permission.WRITE_CONTACTS, R.string.perm_edit_contacts, R.string.permgroup_contacts),
+            Triple(Manifest.permission.READ_CALENDAR, R.string.perm_calendar, R.string.permgroup_calendar),
+            Triple(Manifest.permission.READ_SMS, R.string.perm_read_sms, R.string.permgroup_sms),
+            Triple(Manifest.permission.SEND_SMS, R.string.perm_send_sms, R.string.permgroup_sms),
+            Triple(Manifest.permission.RECEIVE_SMS, R.string.perm_receive_sms, R.string.permgroup_sms),
+            Triple(Manifest.permission.READ_CALL_LOG, R.string.perm_call_log, R.string.permgroup_call_log),
+            Triple(Manifest.permission.CALL_PHONE, R.string.perm_make_calls, R.string.permgroup_phone),
+            Triple(Manifest.permission.READ_PHONE_STATE, R.string.perm_phone_state, R.string.permgroup_phone),
+            Triple(Manifest.permission.BODY_SENSORS, R.string.perm_body_sensors, R.string.permgroup_body_sensors),
+            Triple(Manifest.permission.ACTIVITY_RECOGNITION, R.string.perm_physical_activity, R.string.permgroup_physical_activity),
+            Triple("android.permission.READ_MEDIA_IMAGES", R.string.perm_photos, R.string.permgroup_photos_videos),
+            Triple("android.permission.READ_MEDIA_VIDEO", R.string.perm_videos, R.string.permgroup_photos_videos),
+            Triple("android.permission.READ_MEDIA_AUDIO", R.string.perm_music_audio, R.string.permgroup_music_audio),
+            Triple(Manifest.permission.READ_EXTERNAL_STORAGE, R.string.perm_files_media, R.string.permgroup_files),
+            Triple("android.permission.BLUETOOTH_SCAN", R.string.perm_nearby_devices, R.string.permgroup_nearby_devices),
+            Triple("android.permission.NEARBY_WIFI_DEVICES", R.string.perm_nearby_wifi, R.string.permgroup_nearby_devices),
+            Triple(Manifest.permission.POST_NOTIFICATIONS, R.string.perm_notifications, R.string.permgroup_notifications),
+        )
+
+        /** 権限名 -> 表示用の情報。表示名は現在の表示言語で解決する。 */
+        fun sensitive(): Map<String, PermissionInfoItem> =
+            SENSITIVE_DEFS.associate { (p, label, group) -> p to PermissionInfoItem(p, str(label), str(group)) }
     }
 }

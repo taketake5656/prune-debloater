@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_system">Follow system</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+
+    <string name="dup_browsers">Browsers</string>
+    <string name="dup_galleries">Galleries</string>
+    <string name="dup_music">Music players</string>
+    <string name="dup_calculators">Calculators</string>
+    <string name="dup_calendars">Calendars</string>
+    <string name="dup_email">Email apps</string>
+    <string name="dup_messaging">Messaging (SMS) apps</string>
+    <string name="dup_contacts">Contacts apps</string>
+    <string name="dup_maps">Maps</string>
+    <string name="dup_files">File managers</string>
+    <string name="dup_stores">App stores</string>
+    <string name="dup_video">Video players</string>
+    <string name="dup_cameras">Cameras</string>
+    <string name="dup_keyboards">Keyboards</string>
+
+    <string name="dyn_launcher">Your current home screen (launcher).</string>
+    <string name="dyn_dialer">Your default phone app: needed for calls and emergency calls.</string>
+    <string name="dyn_sms">Your default SMS app.</string>
+    <string name="dyn_keyboard">Your active keyboard. Without it you cannot type (or enter your PIN).</string>
+    <string name="dyn_accessibility">Has an accessibility service you turned on.</string>
+    <string name="dyn_device_admin">Device administrator (for example work profile, Find My Mobile or MDM).</string>
+    <string name="dyn_browser">Your default browser. Links open in it.</string>
+    <string name="dyn_enabled_keyboard">An enabled keyboard on this phone.</string>
+    <string name="dyn_notification_access">Has notification access (for example a watch or wearable app).</string>
+    <string name="dyn_live_wallpaper">Provides your current live wallpaper.</string>
+    <string name="dyn_prune_itself">Prune itself.</string>
+</resources>
