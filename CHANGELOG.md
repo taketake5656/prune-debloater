@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.0.0-ja.1 — 2026-11-23
+
+Prune 日本語版 (taketake5656/prune-debloater) の最初のリリース。本家 2.0.0 がベース。
+
+**New**
+- 日本語表示に対応。UI と Prune 独自ルールの文言を日本語化 (端末の言語が日本語のとき)。英語の文言は本家と同じ。
+- ルールの訳文は `tools/rules/ja/` に置き、`tools/build_db.py` が検証して `assets/rules/ja/` に出力する。
+- 英語/日本語の文字列リソースとルール訳文の整合性を確認するユニットテスト。
+
+**Changed**
+- ソースコードのコメントを日本語化。
+- Gradle 9.9.2 / Android Gradle Plugin 9.5.2 / Kotlin 2.4.21 (JDK 25 でビルド可能)。
+- README を日本語化 (英語版は README.en.md)。
+- リリース APK は fork 用の鍵 (CN=taketake5656) で署名する。本家版の上には上書きインストールできない。
+
 ## 2.0.0 — 2026-11-21
 
 Prune becomes a universal Android debloater.

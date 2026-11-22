@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/cyb3rl00m/prune-debloater/releases/latest"><img src="https://img.shields.io/badge/release-v2.0.0-3DDC97" alt="Release"></a>
+  <a href="https://github.com/taketake5656/prune-debloater/releases/latest"><img src="https://img.shields.io/badge/release-v2.0.0--ja.1-3DDC97" alt="Release"></a>
   <img src="https://img.shields.io/badge/Android-9%2B-7C6CFF" alt="Android 9+">
   <img src="https://img.shields.io/badge/root-not%20required-0B0F17" alt="root 不要">
   <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0">
@@ -35,13 +35,13 @@ Prune は、Windows における Chris Titus Tech の WinUtil のような存在
 
 ## ダウンロード
 
-**日本語版 (この fork):** 現在、この fork からのリリースはありません。[ソースからビルド](#ソースからビルド) してください。
+**日本語版 (この fork):** [最新リリース](https://github.com/taketake5656/prune-debloater/releases/latest) から **`Prune-2.0.0-ja.1.apk`** を入手し、端末で開いて、ブラウザまたはファイルマネージャーからのインストールを許可してください。SHA-256 チェックサムは同じ場所の `SHA256SUMS.txt` にあります。この APK は fork 用の鍵 (`CN=taketake5656`) で署名されています。
 
 **本家の英語版:** [最新リリース](https://github.com/cyb3rl00m/prune-debloater/releases/latest) から **`Prune-2.0.0.apk`** を入手し、端末で開いて、ブラウザまたはファイルマネージャーからのインストールを許可してください。SHA-256 チェックサムは同じ場所の `SHA256SUMS.txt` にあります。
 
 **1.x からのアップグレード:** 2.0.0 を上書きインストールしてください。同じ鍵で署名されているので、履歴、設定、「使っている機能」の回答は引き継がれます。
 
-自分でビルドした APK は本家のリリースとは署名が異なるため、本家版の上に上書きインストールすることはできません (先にアンインストールが必要で、その場合は履歴と設定が失われます)。
+日本語版と本家版はパッケージ名が同じで署名が異なるため、互いに上書きインストールすることはできません。切り替えるには先にアンインストールが必要で、その場合は履歴と設定が失われます。自分でビルドした APK も同様です。
 
 ## 対応メーカー
 

@@ -1,7 +1,8 @@
 name: publish-release
 
 # 署名済み APK から GitHub リリースを公開する。
-# リリース APK は CI の外で署名する (署名鍵は GitHub に保存しない)。
+# この fork (taketake5656/prune-debloater) では、fork 用の鍵 (CN=taketake5656) で署名した APK だけを受け付ける。
+# 本家 (CN=cyb3rl00m) の鍵では署名できないため、本家の APK をそのまま公開することはない。
 # リリース方法: 次を含む release-publish という名前のブランチを push する
 #   apk/Prune-<version>.apk と apk/SHA256SUMS.txt、および docs/release-notes/v<version>.md
 on:
@@ -20,7 +21,7 @@ jobs:
         run: |
           cd apk && sha256sum -c SHA256SUMS.txt
           APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
-          "$APKSIGNER" verify --print-certs Prune-*.apk | grep -q "CN=cyb3rl00m"
+          "$APKSIGNER" verify --print-certs Prune-*.apk | grep -q "CN=taketake5656"
       - name: Create the release
         env:
           GH_TOKEN: ${{ github.token }}
