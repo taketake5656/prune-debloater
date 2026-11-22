@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="exec_disable_refused">無効化が拒否されました (%1$s)。代わりにこのユーザーからアンインストールしました。</string>
+    <string name="exec_free_space_grew">空き容量が %1$s 増えました (実測)。</string>
+    <string name="exec_done">完了しました。</string>
+    <string name="exec_not_done">適用されませんでした: %1$s</string>
+    <string name="exec_state_still">状態は \"%1$s\" のままです</string>
+    <string name="exec_waiting_script">待機中: スクリプトを実行してから「結果を確認」をタップしてください。</string>
+    <string name="exec_adb_script">ADB スクリプト</string>
+    <string name="exec_verified">確認済み。</string>
+    <string name="exec_not_applied">適用されていません (状態は \"%1$s\")。</string>
+    <string name="exec_cannot_verify">Shizuku または root がないと確認できません。</string>
+</resources>

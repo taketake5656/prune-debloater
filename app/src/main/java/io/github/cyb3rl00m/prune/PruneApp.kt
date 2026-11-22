@@ -16,6 +16,7 @@ import io.github.cyb3rl00m.prune.core.db.PackageDatabase
 import io.github.cyb3rl00m.prune.core.device.DeviceInfo
 import io.github.cyb3rl00m.prune.core.device.DeviceInfoReader
 import io.github.cyb3rl00m.prune.core.history.HistoryStore
+import io.github.cyb3rl00m.prune.core.i18n.I18n
 import io.github.cyb3rl00m.prune.core.model.AppPackage
 import io.github.cyb3rl00m.prune.core.optimize.Optimizer
 import io.github.cyb3rl00m.prune.core.plan.Executor
@@ -42,6 +43,8 @@ class PruneApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // core/ のコードが文字列リソースを引けるよう、リポジトリより先に初期化する。
+        I18n.install(this)
         repository = PruneRepository(this)
     }
 }
@@ -57,22 +60,26 @@ data class ScanState(
     val error: String? = null,
 )
 
-/** Single owner of device state shared by all screens. */
+/** 全画面で共有する端末状態の唯一の持ち主。 */
 class PruneRepository(val context: Context) {
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    /** Device identity never changes while the app runs: read it once. */
+    /** 端末の識別情報はアプリ実行中に変わらないので、一度だけ読む。 */
     val identity: DeviceIdentity by lazy { DeviceIdentity.read() }
     val integration: OemIntegration by lazy { OemRegistry.detect(identity) }
 
     val database: PackageDatabase by lazy {
         val assets = context.assets
         fun read(path: String) = assets.open(path).bufferedReader().use { it.readText() }
-        // index.json lists core.json first; a damaged manufacturer file is skipped, not fatal.
+        // index.json は core.json を先頭に並べる。壊れたメーカー別ファイルは読み飛ばし、致命的エラーにはしない。
         val files = runCatching {
             Json.parseToJsonElement(read("rules/index.json")).jsonObject["files"]!!.jsonArray.map { it.jsonPrimitive.content }
         }.getOrDefault(listOf("core.json"))
-        PackageDatabase.parse(files.mapNotNull { runCatching { read("rules/$it") }.getOrNull() }, read("packages_uad.json"))
+        // 表示言語の訳文 (rules/<言語>/<ファイル名>) があれば、ルールの説明文に当てる。
+        val lang = I18n.language
+        val loaded = files.mapNotNull { f -> runCatching { read("rules/$f") }.getOrNull()?.let { f to it } }
+        val translations = loaded.map { (f, _) -> if (lang == "en") null else runCatching { read("rules/$lang/$f") }.getOrNull() }
+        PackageDatabase.parse(loaded.map { it.second }, read("packages_uad.json"), translations)
     }
     val classifier by lazy {
         Classifier(database, DeviceContext(identity.sdkInt, OemRegistry.firmwareSafe(integration, identity)?.name))

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="risk_safe">Safe</string>
+    <string name="risk_safe_meaning">Optional app. Nothing else depends on it.</string>
+    <string name="risk_low">Low risk</string>
+    <string name="risk_low_meaning">Optional feature. You lose only that feature.</string>
+    <string name="risk_moderate">Moderate</string>
+    <string name="risk_moderate_meaning">Part of a manufacturer or Google feature. Read the warning before removing.</string>
+    <string name="risk_unknown">Unknown</string>
+    <string name="risk_unknown_meaning">Prune does not know what this package does. Only for experienced users.</string>
+    <string name="risk_high">High risk</string>
+    <string name="risk_high_meaning">Core feature or used by other apps. Only for experienced users.</string>
+    <string name="risk_locked">Protected</string>
+    <string name="risk_locked_meaning">System-critical. Prune never changes it.</string>
+
+    <string name="source_oem">Manufacturer</string>
+    <string name="source_google">Google</string>
+    <string name="source_carrier">Carrier</string>
+    <string name="source_preload">Third-party preload</string>
+    <string name="source_android">Android core</string>
+    <string name="source_other_system">Other system</string>
+    <string name="source_user">Installed by you</string>
+
+    <string name="status_enabled">Enabled</string>
+    <string name="status_disabled">Disabled</string>
+    <string name="status_removed">Removed for this user</string>
+
+    <string name="action_keep">Keep</string>
+    <string name="action_disable">Disable</string>
+    <string name="action_review">Review before changing</string>
+    <string name="action_uninstall_app">Uninstall normally</string>
+
+    <string name="method_disable">Disable</string>
+    <string name="method_disable_explanation">Turns the app off for this user. It stops running, disappears from the app drawer and keeps its data. Reversible at any time with Prune, ADB or Settings.</string>
+    <string name="method_uninstall_user">Uninstall for this user</string>
+    <string name="method_uninstall_user_explanation">Removes the app and its data for this user. The original copy stays in the system partition, so it can be reinstalled at any time (Prune restore or `pm install-existing`) and comes back after a factory reset.</string>
+
+    <string name="change_disable">Disable</string>
+    <string name="change_enable">Enable</string>
+    <string name="change_uninstall_user">Uninstall for user</string>
+    <string name="change_reinstall_user">Reinstall</string>
+    <string name="change_uninstall_app">Uninstall app</string>
+    <string name="change_appop_set">Change background access</string>
+    <string name="change_permission_revoke">Revoke permission</string>
+    <string name="change_permission_grant">Grant permission</string>
+    <string name="change_deviceidle_remove">Remove battery exemption</string>
+    <string name="change_deviceidle_add">Restore battery exemption</string>
+    <string name="change_setting_put">Change setting</string>
+    <string name="change_trim_caches">Clear app caches</string>
+    <string name="change_dexopt">Optimize apps</string>
+</resources>

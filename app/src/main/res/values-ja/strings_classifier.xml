@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cls_could_not_analyse">Prune はこのパッケージを解析できませんでした。</string>
+    <string name="cls_note_preload_installer">プリロード/パートナー用インストーラ %1$s によってインストールされました。メーカーまたはキャリアが入れたものです。</string>
+    <string name="cls_note_regional">アプリの地域別バリアントです。</string>
+    <string name="cls_in_use_title">この端末で使用中</string>
+    <string name="cls_locked_persistent">常駐システムアプリ: システムが必要とするため、Android が常に動作させています。</string>
+    <string name="cls_locked_community_unsafe">コミュニティデータベース (UAD-ng) で削除は危険とされています。</string>
+    <string name="cls_note_unknown">Prune のデータベースにありません。用途は不明です。何をするものか分かっている場合のみ変更してください。</string>
+    <string name="cls_note_system_privileges">システム権限 (%1$s) で動作します。</string>
+    <string name="cls_desc_preload_user">メーカー、キャリア、またはパートナーがプリインストールしたアプリです。他のアプリと同じように削除できます。</string>
+    <string name="cls_desc_user">ユーザーがインストールしたアプリです。他のアプリと同じようにアンインストールできます。</string>
+    <string name="cls_desc_oem">%1$s のシステムコンポーネントです。Prune にはまだ説明がありません。</string>
+    <string name="cls_desc_google">Google のシステムコンポーネントです。Prune にはまだ説明がありません。</string>
+    <string name="cls_desc_carrier">キャリアがインストールしたコンポーネントです。</string>
+    <string name="cls_desc_system">システムコンポーネントです。Prune にはまだ説明がありません。</string>
+    <string name="cls_recovery_system">Prune (復元タブ) で元に戻すか、パソコンから adb shell pm install-existing %1$s と adb shell pm enable %1$s を実行します。初期化しても元に戻ります。</string>
+    <string name="cls_recovery_user">無効化した場合: Prune または 設定 → アプリ で有効にします。アンインストールした場合: アプリストアから再度インストールします。</string>
+    <string name="tier_recommended">推奨</string>
+    <string name="tier_advanced">上級</string>
+    <string name="tier_expert">エキスパート</string>
+    <string name="tier_unsafe">危険</string>
+</resources>

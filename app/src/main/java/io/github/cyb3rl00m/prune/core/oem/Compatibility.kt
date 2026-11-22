@@ -1,48 +1,62 @@
 package io.github.cyb3rl00m.prune.core.oem
 
+import androidx.annotation.StringRes
+import io.github.cyb3rl00m.prune.R
 import io.github.cyb3rl00m.prune.core.history.HistoryFile
+import io.github.cyb3rl00m.prune.core.i18n.str
 import io.github.cyb3rl00m.prune.core.model.ChangeType
 
-/** What an operation needs. */
-enum class Requirement(val label: String) {
-    STANDARD("Standard (no extra access)"),
-    USAGE_ACCESS("Usage access"),
-    SHELL("Shizuku or root"),
-    SHELL_OR_SECURE_SETTINGS("Shizuku, root, or the WRITE_SECURE_SETTINGS grant"),
+/** 操作に必要なもの。 */
+enum class Requirement(@StringRes private val labelRes: Int) {
+    STANDARD(R.string.req_standard),
+    USAGE_ACCESS(R.string.req_usage_access),
+    SHELL(R.string.req_shell),
+    SHELL_OR_SECURE_SETTINGS(R.string.req_shell_or_secure_settings);
+
+    val label: String get() = str(labelRes)
 }
 
-/** Everything Prune can do, for the compatibility report. */
-enum class Operation(val label: String, val requirement: Requirement, val minSdk: Int = 28, val changeTypes: Set<ChangeType> = emptySet()) {
-    SCAN("Scan and classify packages", Requirement.STANDARD),
-    UNINSTALL_OWN("Uninstall apps you installed (system dialog)", Requirement.STANDARD),
-    SCRIPT("Export changes as an ADB script", Requirement.STANDARD),
-    USAGE("App usage, unused apps and storage per app", Requirement.USAGE_ACCESS),
-    DISABLE("Disable system apps", Requirement.SHELL, changeTypes = setOf(ChangeType.DISABLE)),
-    UNINSTALL_USER("Uninstall system apps for this user", Requirement.SHELL, changeTypes = setOf(ChangeType.UNINSTALL_USER)),
-    RESTORE("Restore and re-enable apps", Requirement.SHELL, changeTypes = setOf(ChangeType.ENABLE, ChangeType.REINSTALL_USER)),
-    BACKGROUND("Restrict background activity", Requirement.SHELL, changeTypes = setOf(ChangeType.APPOP_SET)),
-    PERMISSIONS("Revoke and grant permissions", Requirement.SHELL, changeTypes = setOf(ChangeType.PERMISSION_REVOKE, ChangeType.PERMISSION_GRANT)),
-    NOTIFICATIONS("Turn off app notifications", Requirement.SHELL, minSdk = 33),
-    BATTERY_EXEMPTIONS("Remove battery-optimization exemptions", Requirement.SHELL, changeTypes = setOf(ChangeType.DEVICEIDLE_REMOVE, ChangeType.DEVICEIDLE_ADD)),
-    ANIMATIONS("Change animation speed", Requirement.SHELL_OR_SECURE_SETTINGS, changeTypes = setOf(ChangeType.SETTING_PUT)),
-    CACHES("Clear all app caches", Requirement.SHELL, changeTypes = setOf(ChangeType.TRIM_CACHES)),
-    DEXOPT("Compile apps now", Requirement.SHELL, changeTypes = setOf(ChangeType.DEXOPT)),
-    BATTERY_STATS("Battery estimates per app", Requirement.SHELL),
+/** Prune ができることの一覧 (互換性レポート用)。 */
+enum class Operation(
+    @StringRes private val labelRes: Int,
+    val requirement: Requirement,
+    val minSdk: Int = 28,
+    val changeTypes: Set<ChangeType> = emptySet(),
+) {
+    SCAN(R.string.op_scan, Requirement.STANDARD),
+    UNINSTALL_OWN(R.string.op_uninstall_own, Requirement.STANDARD),
+    SCRIPT(R.string.op_script, Requirement.STANDARD),
+    USAGE(R.string.op_usage, Requirement.USAGE_ACCESS),
+    DISABLE(R.string.op_disable, Requirement.SHELL, changeTypes = setOf(ChangeType.DISABLE)),
+    UNINSTALL_USER(R.string.op_uninstall_user, Requirement.SHELL, changeTypes = setOf(ChangeType.UNINSTALL_USER)),
+    RESTORE(R.string.op_restore, Requirement.SHELL, changeTypes = setOf(ChangeType.ENABLE, ChangeType.REINSTALL_USER)),
+    BACKGROUND(R.string.op_background, Requirement.SHELL, changeTypes = setOf(ChangeType.APPOP_SET)),
+    PERMISSIONS(R.string.op_permissions, Requirement.SHELL, changeTypes = setOf(ChangeType.PERMISSION_REVOKE, ChangeType.PERMISSION_GRANT)),
+    NOTIFICATIONS(R.string.op_notifications, Requirement.SHELL, minSdk = 33),
+    BATTERY_EXEMPTIONS(R.string.op_battery_exemptions, Requirement.SHELL, changeTypes = setOf(ChangeType.DEVICEIDLE_REMOVE, ChangeType.DEVICEIDLE_ADD)),
+    ANIMATIONS(R.string.op_animations, Requirement.SHELL_OR_SECURE_SETTINGS, changeTypes = setOf(ChangeType.SETTING_PUT)),
+    CACHES(R.string.op_caches, Requirement.SHELL, changeTypes = setOf(ChangeType.TRIM_CACHES)),
+    DEXOPT(R.string.op_dexopt, Requirement.SHELL, changeTypes = setOf(ChangeType.DEXOPT)),
+    BATTERY_STATS(R.string.op_battery_stats, Requirement.SHELL);
+
+    val label: String get() = str(labelRes)
 }
 
-enum class OpStatus(val label: String) {
-    AVAILABLE("Available"),
-    NEEDS_ACCESS("Needs Shizuku or root"),
-    NEEDS_USAGE("Needs usage access"),
-    UNSUPPORTED("Not supported on this Android version"),
+enum class OpStatus(@StringRes private val labelRes: Int) {
+    AVAILABLE(R.string.opstatus_available),
+    NEEDS_ACCESS(R.string.opstatus_needs_access),
+    NEEDS_USAGE(R.string.opstatus_needs_usage),
+    UNSUPPORTED(R.string.opstatus_unsupported);
+
+    val label: String get() = str(labelRes)
 }
 
 data class OperationReport(
     val operation: Operation,
     val status: OpStatus,
-    /** Firmware-specific caveat, if any. */
+    /** ファームウェア固有の注意点 (あれば)。 */
     val caveat: String?,
-    /** Results of this operation on this device, from Prune's history. */
+    /** この端末でのこの操作の結果 (Prune の履歴より)。 */
     val succeeded: Int,
     val failed: Int,
     val lastError: String?,
@@ -75,29 +89,34 @@ data class CompatibilityReport(
     val supported get() = operations.filter { it.status == OpStatus.AVAILABLE }
     val unsupported get() = operations.filter { it.status != OpStatus.AVAILABLE }
 
-    /** Plain text, for bug reports. */
+    /** 不具合報告用のプレーンテキスト。表示言語で書き出す。 */
     fun asText(appVersion: String): String = buildString {
-        appendLine("Prune $appVersion compatibility report")
-        appendLine("Device: $device")
-        appendLine("Manufacturer: $manufacturer")
-        appendLine("Android: $androidVersion (API $sdkInt)")
-        appendLine("Firmware: ${firmware ?: "unknown"}")
-        appendLine("Integration: ${integration.title} — ${integration.compat.label}")
-        appendLine("Google services: ${if (services.gms) "yes" else "no"} · Play Store: ${if (services.playStore) "yes" else "no"} · Huawei HMS: ${if (services.hms) "yes" else "no"}")
-        appendLine("Access: ${access.tier} · Shizuku ${if (access.shizukuRunning) "running" else if (access.shizukuInstalled) "installed" else "not installed"}" +
-            " · root ${if (access.root) "yes" else "no"} · usage access ${if (access.usageAccess) "yes" else "no"}")
+        fun yn(b: Boolean) = str(if (b) R.string.report_yes else R.string.report_no)
+        val shizuku = str(when {
+            access.shizukuRunning -> R.string.report_running
+            access.shizukuInstalled -> R.string.report_installed
+            else -> R.string.report_not_installed
+        })
+        appendLine(str(R.string.report_title, appVersion))
+        appendLine(str(R.string.report_device, device))
+        appendLine(str(R.string.report_manufacturer, manufacturer))
+        appendLine(str(R.string.report_android, androidVersion, sdkInt))
+        appendLine(str(R.string.report_firmware, firmware?.toString() ?: str(R.string.report_unknown)))
+        appendLine(str(R.string.report_integration, integration.title, integration.compat.label))
+        appendLine(str(R.string.report_services, yn(services.gms), yn(services.playStore), yn(services.hms)))
+        appendLine(str(R.string.report_access, access.tier, shizuku, yn(access.root), yn(access.usageAccess)))
         appendLine()
-        appendLine("Operations:")
+        appendLine(str(R.string.report_operations))
         for (o in operations) {
             append("- ${o.operation.label}: ${o.status.label}")
-            if (o.succeeded + o.failed > 0) append(" (on this device: ${o.succeeded} ok, ${o.failed} failed)")
+            if (o.succeeded + o.failed > 0) append(" " + str(R.string.report_on_this_device, o.succeeded, o.failed))
             appendLine()
-            o.caveat?.let { appendLine("    note: $it") }
-            o.lastError?.let { appendLine("    last error: $it") }
+            o.caveat?.let { appendLine("    " + str(R.string.report_note, it)) }
+            o.lastError?.let { appendLine("    " + str(R.string.report_last_error, it)) }
         }
         if (limitations.isNotEmpty()) {
             appendLine()
-            appendLine("Known limitations:")
+            appendLine(str(R.string.report_known_limitations))
             limitations.forEach { appendLine("- ${it.title}: ${it.text}") }
         }
     }
@@ -138,16 +157,16 @@ data class CompatibilityReport(
             )
         }
 
-        /** Firmware-specific notes per operation. Only for behaviour that is documented for that firmware. */
+        /** 操作ごとのファームウェア固有の注意点。そのファームウェアについて文書化されている挙動に限る。 */
         fun caveat(i: OemIntegration, op: Operation): String? = when {
             i == XiaomiIntegration && op in setOf(Operation.PERMISSIONS, Operation.BACKGROUND, Operation.NOTIFICATIONS, Operation.ANIMATIONS) ->
-                "Needs \"USB debugging (Security settings)\" in Developer options on Xiaomi firmware."
+                str(R.string.caveat_xiaomi)
             i == OplusIntegration && op in setOf(Operation.PERMISSIONS, Operation.BACKGROUND, Operation.NOTIFICATIONS) ->
-                "Needs \"Disable permission monitoring\" in Developer options on ColorOS-based firmware."
+                str(R.string.caveat_oplus)
             i.disableOftenRefused && op == Operation.DISABLE ->
-                "Often refused by this firmware; Prune then uninstalls for this user instead (reversible)."
+                str(R.string.caveat_disable_often_refused)
             i == SamsungIntegration && op == Operation.DISABLE ->
-                "Refused for some Samsung packages; Prune then uninstalls for this user instead (reversible)."
+                str(R.string.caveat_samsung_disable)
             else -> null
         }
     }

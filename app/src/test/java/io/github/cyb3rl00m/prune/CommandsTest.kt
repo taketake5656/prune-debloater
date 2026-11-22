@@ -13,6 +13,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CommandsTest {
+    init { TestStrings.install() }
     @Test fun commandShapes() {
         assertEquals(listOf("pm", "disable-user", "--user", "0", "com.samsung.android.app.tips"), Commands.disable("com.samsung.android.app.tips", 0))
         assertEquals(listOf("pm", "uninstall", "-k", "--user", "0", "a.b"), Commands.uninstallForUser("a.b", 0))

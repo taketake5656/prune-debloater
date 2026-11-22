@@ -1,6 +1,8 @@
 package io.github.cyb3rl00m.prune.core.plan
 
 import android.content.Context
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.PowerManager
@@ -24,8 +26,8 @@ import java.util.UUID
 data class ExecProgress(val done: Int, val total: Int, val current: String, val log: List<String>)
 
 /**
- * Applies plans. For every change it records the state before, runs the commands, then reads the real state
- * back from Android to decide whether it worked: a command's own output is never trusted on its own.
+ * プランを適用する。変更ごとに変更前の状態を記録し、コマンドを実行してから、Android から実際の状態を
+ * 読み戻して成否を判定する。コマンド自身の出力だけを信用することはない。
  */
 class Executor(
     private val context: Context,
@@ -64,7 +66,7 @@ class Executor(
                 ChangeType.DISABLE -> {
                     var r = run(Commands.disable(change.packageName!!, user))
                     if (!OutputParsers.disableSucceeded(r) && change.fallbackUninstall) {
-                        message = "Disabling was refused (${firstLine(r)}). Uninstalled for this user instead."
+                        message = str(R.string.exec_disable_refused, firstLine(r))
                         r = run(Commands.uninstallForUser(change.packageName, user))
                     }
                     r
@@ -74,7 +76,7 @@ class Executor(
                     val free = freeBytes()
                     val r = run(Commands.trimCaches(), 300_000)
                     val gained = (freeBytes() - free).coerceAtLeast(0)
-                    message = "Free space grew by ${formatBytes(gained)} (measured)."
+                    message = str(R.string.exec_free_space_grew, formatBytes(gained))
                     r
                 }
                 ChangeType.DEXOPT -> run(Commands.backgroundDexopt(), 30 * 60_000L)
@@ -101,8 +103,8 @@ class Executor(
                 ChangeType.UNINSTALL_APP -> false
             }
             if (message.isEmpty()) {
-                message = if (success) "Done." else "Not done: " + (result?.let(::firstLine)?.ifBlank { null }
-                    ?: "state is still \"$after\"")
+                message = if (success) str(R.string.exec_done) else str(R.string.exec_not_done,
+                    result?.let(::firstLine)?.ifBlank { null } ?: str(R.string.exec_state_still, after.toString()))
             }
             log += if (success) "  ✓ ${change.label}" else "  ✗ ${change.label}: $message"
             entries += HistoryEntry(
@@ -119,17 +121,17 @@ class Executor(
         batch
     }
 
-    /** Records a plan that was exported as an ADB script. Results stay unverified until [verifyScriptBatch]. */
+    /** ADB スクリプトとして書き出したプランを記録する。[verifyScriptBatch] を呼ぶまで結果は未検証のまま。 */
     suspend fun recordScript(plan: Plan): Batch {
         val entries = plan.changes.map { c ->
             HistoryEntry(UUID.randomUUID().toString(), c, before = readState(c, null), success = null,
-                message = "Waiting: run the script, then tap Check results.",
+                message = str(R.string.exec_waiting_script),
                 commands = ChangeCommands.forChange(c, user).map(Commands::toShell))
         }
         val originals = entries.filter { it.change.packageName != null && it.before in PACKAGE_STATES }
             .associate { it.change.packageName!! to OriginalState(it.change.packageName, it.change.label, it.before!!, System.currentTimeMillis()) }
         val batch = Batch(UUID.randomUUID().toString(), plan.title, plan.origin, System.currentTimeMillis(),
-            "ADB script", entries, script = true)
+            str(R.string.exec_adb_script), entries, script = true)
         history.addBatch(batch, originals)
         return batch
     }
@@ -150,16 +152,16 @@ class Executor(
                 else -> null
             }
             e.copy(after = after, success = ok, message = when (ok) {
-                true -> "Verified."
-                false -> "Not applied (state is \"$after\")."
-                null -> "Cannot be verified without Shizuku or root."
+                true -> str(R.string.exec_verified)
+                false -> str(R.string.exec_not_applied, after.toString())
+                null -> str(R.string.exec_cannot_verify)
             })
         })
         history.replaceBatch(checked)
         return checked
     }
 
-    /** Reads the current state relevant to a change. [shell] is needed for app-ops only. */
+    /** 変更に関係する現在の状態を読む。[shell] が必要なのは app-ops の場合だけ。 */
     suspend fun readState(change: PlannedChange, shell: PrivilegedShell?): String? = withContext(Dispatchers.IO) {
         val p = change.packageName
         when (change.type) {

@@ -1,9 +1,13 @@
 package io.github.cyb3rl00m.prune.core.oem
 
+import io.github.cyb3rl00m.prune.R
 import io.github.cyb3rl00m.prune.core.device.OneUi
+import io.github.cyb3rl00m.prune.core.i18n.str
 
-// Manufacturer integrations. Firmware properties that are missing simply give no version:
-// detection never fails a device, it only describes it less precisely.
+// メーカー別の統合。ファームウェアのプロパティがなければバージョンが得られないだけで、
+// 検出が端末で失敗することはない (説明が大まかになるだけ)。
+// 表示文言は文字列リソースから毎回取得する (getter にしているのは表示言語の変更に追従するため)。
+// ブランド名・ファームウェア名はルールの照合にも使う識別子なので翻訳しない。
 
 object SamsungIntegration : OemIntegration() {
     override val id = "samsung"
@@ -18,31 +22,26 @@ object SamsungIntegration : OemIntegration() {
         return Firmware("One UI", v)
     }
     override fun brandName(d: DeviceIdentity) = "Samsung Galaxy"
-    override val developerOptionsSteps = listOf(
-        "Settings → About phone → Software information → tap Build number 7 times (enter your PIN).",
-        "Developer options are at the bottom of Settings.",
-    )
+    override val developerOptionsSteps get() = listOf(str(R.string.samsung_dev_1), str(R.string.samsung_dev_2))
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = listOf(
-        Limitation("Some packages refuse disabling",
-            "Recent One UI versions block `pm disable-user` for some Samsung packages (\"Shell cannot change component state\"). " +
-                "Prune can uninstall them for the current user instead; that is reversible too."),
-        Limitation("Knox", "Rooting a Galaxy phone trips Knox permanently: Samsung Wallet, Secure Folder and Samsung Health stop working. Prune never needs root."),
+        Limitation(str(R.string.samsung_lim_disable_t), str(R.string.samsung_lim_disable)),
+        Limitation("Knox", str(R.string.samsung_lim_knox)),
     )
 
-    /** Synthetic property: Build.VERSION.SEM_PLATFORM_INT read by reflection on Samsung firmware. */
+    /** 合成プロパティ: Samsung のファームウェアでリフレクションにより読む Build.VERSION.SEM_PLATFORM_INT。 */
     const val SEM_PLATFORM_PROP = "prune.sem_platform_int"
 }
 
 object GooglePixelIntegration : OemIntegration() {
     override val id = "pixel"
-    override val title = "Google Pixel (stock Android)"
+    override val title get() = str(R.string.pixel_title)
     override val compat = CompatLevel.PARTIAL
     override val packagePrefixes = listOf("com.google.android.apps.pixel", "com.google.pixel.")
     override fun matches(d: DeviceIdentity) = d.manufacturerKey == "google" && d.model.startsWith("Pixel", ignoreCase = true)
     override fun firmware(d: DeviceIdentity) = Firmware("Stock Android", d.display.takeIf { it.isNotBlank() })
     override fun brandName(d: DeviceIdentity) = "Google Pixel"
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = listOf(
-        Limitation("Mostly Google apps", "Pixels have little manufacturer bloat. Most removable packages are Google apps: enable \"Include Google apps\" in a profile to see them."),
+        Limitation(str(R.string.pixel_lim_google_t), str(R.string.pixel_lim_google)),
     )
 }
 
@@ -63,23 +62,18 @@ object XiaomiIntegration : OemIntegration() {
         "poco" -> "POCO"
         else -> "Xiaomi"
     }
-    override val developerOptionsSteps = listOf(
-        "Settings → About phone → tap OS version (HyperOS) or MIUI version 7 times.",
-        "Developer options are in Settings → Additional settings.",
-    )
-    override fun extraSetupSteps(d: DeviceIdentity) = listOf(
-        "In Developer options also turn on \"USB debugging (Security settings)\". Without it Xiaomi blocks permission, background and animation changes over ADB/Shizuku. Xiaomi requires a SIM card and a Xiaomi account to turn it on.",
-    )
+    override val developerOptionsSteps get() = listOf(str(R.string.xiaomi_dev_1), str(R.string.xiaomi_dev_2))
+    override fun extraSetupSteps(d: DeviceIdentity) = listOf(str(R.string.xiaomi_extra))
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = listOf(
-        Limitation("USB debugging (Security settings)", "Needed for `pm grant/revoke`, app-ops and settings changes. Disabling and removing apps works without it."),
-        Limitation("Updates can bring apps back", "HyperOS/MIUI updates sometimes re-enable or reinstall removed system apps. Run your profile again after an update."),
-        Limitation("Core MIUI packages", "Removing the Security app, permission manager or core MIUI packages can bootloop: Prune keeps them locked."),
+        Limitation(str(R.string.xiaomi_lim_usb_t), str(R.string.xiaomi_lim_usb)),
+        Limitation(str(R.string.lim_updates_t), str(R.string.xiaomi_lim_updates)),
+        Limitation(str(R.string.xiaomi_lim_core_t), str(R.string.xiaomi_lim_core)),
     )
 }
 
 object HuaweiIntegration : OemIntegration() {
     override val id = "huawei"
-    override val title = "Huawei (EMUI / HarmonyOS with Android support)"
+    override val title get() = str(R.string.huawei_title)
     override val compat = CompatLevel.EXPERIMENTAL
     override val packagePrefixes = listOf("com.huawei.", "com.hicloud.", "com.vmall.")
     override fun matches(d: DeviceIdentity) = d.manufacturerKey == "huawei" || d.brandKey == "huawei"
@@ -90,21 +84,20 @@ object HuaweiIntegration : OemIntegration() {
     }
     override val disableOftenRefused = true
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = buildList {
-        add(Limitation("Disabling is often refused", "EMUI and HarmonyOS refuse `pm disable-user` for many system apps. Prune falls back to uninstalling for the current user, which is reversible."))
-        if (!services.gms) add(Limitation("No Google services",
-            "This phone runs without Google Mobile Services. Huawei Mobile Services (HMS Core) and AppGallery replace them, so Prune keeps both locked."))
-        if (isHarmony(d)) add(Limitation("HarmonyOS", "Prune works on HarmonyOS versions that still run Android apps (2.x to 4.x). HarmonyOS NEXT cannot run Android apps at all."))
+        add(Limitation(str(R.string.lim_disable_refused_t), str(R.string.huawei_lim_disable)))
+        if (!services.gms) add(Limitation(str(R.string.lim_no_gms_t), str(R.string.huawei_lim_no_gms)))
+        if (isHarmony(d)) add(Limitation("HarmonyOS", str(R.string.huawei_lim_harmony)))
     }
     override fun dynamicProtections(services: ServicesInfo): Map<String, String> =
         if (services.gms) emptyMap() else mapOf(
-            "com.huawei.hwid" to "Huawei Mobile Services: this phone has no Google services, so apps depend on HMS Core.",
-            "com.huawei.appmarket" to "AppGallery: the only app store on this phone (no Google Play).",
+            "com.huawei.hwid" to str(R.string.huawei_protect_hms),
+            "com.huawei.appmarket" to str(R.string.huawei_protect_appgallery),
         )
 
     fun isHarmony(d: DeviceIdentity) = d.prop("hw_sc.build.platform.version") != null ||
         d.prop(HARMONY_BRAND_PROP).equals("harmony", ignoreCase = true)
 
-    /** Synthetic property: com.huawei.system.BuildEx.getOsBrand() read by reflection. */
+    /** 合成プロパティ: リフレクションで読む com.huawei.system.BuildEx.getOsBrand()。 */
     const val HARMONY_BRAND_PROP = "prune.huawei.os_brand"
 }
 
@@ -121,11 +114,11 @@ object HonorIntegration : OemIntegration() {
     }
     override val disableOftenRefused = true
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = buildList {
-        add(Limitation("Disabling is often refused", "MagicOS refuses `pm disable-user` for many system apps. Prune falls back to uninstalling for the current user, which is reversible."))
-        if (!services.gms) add(Limitation("No Google services", "Honor Mobile Services replace Google services on this phone, so Prune keeps them locked."))
+        add(Limitation(str(R.string.lim_disable_refused_t), str(R.string.honor_lim_disable)))
+        if (!services.gms) add(Limitation(str(R.string.lim_no_gms_t), str(R.string.honor_lim_no_gms)))
     }
     override fun dynamicProtections(services: ServicesInfo): Map<String, String> =
-        if (services.gms) emptyMap() else mapOf("com.hihonor.id" to "Honor Mobile Services: this phone has no Google services, so apps depend on it.")
+        if (services.gms) emptyMap() else mapOf("com.hihonor.id" to str(R.string.honor_protect_hms))
 }
 
 object OplusIntegration : OemIntegration() {
@@ -150,16 +143,11 @@ object OplusIntegration : OemIntegration() {
         d.brandKey == "realme" -> "realme"
         else -> "OPPO"
     }
-    override val developerOptionsSteps = listOf(
-        "Settings → About device → Version → tap Build number 7 times.",
-        "Developer options are in Settings → Additional settings (System settings on newer versions).",
-    )
-    override fun extraSetupSteps(d: DeviceIdentity) = listOf(
-        "In Developer options turn on \"Disable permission monitoring\". Without it permission and background changes over ADB/Shizuku are refused.",
-    )
+    override val developerOptionsSteps get() = listOf(str(R.string.oplus_dev_1), str(R.string.oplus_dev_2))
+    override fun extraSetupSteps(d: DeviceIdentity) = listOf(str(R.string.oplus_extra))
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = listOf(
-        Limitation("Disable permission monitoring", "ColorOS-based firmware blocks `pm grant/revoke` and app-op changes until this developer option is on."),
-        Limitation("Security apps", "The Security Center and permission manager are locked: removing them breaks permission dialogs."),
+        Limitation(str(R.string.oplus_lim_monitoring_t), str(R.string.oplus_lim_monitoring)),
+        Limitation(str(R.string.oplus_lim_security_t), str(R.string.oplus_lim_security)),
     )
 }
 
@@ -171,7 +159,7 @@ object MotorolaIntegration : OemIntegration() {
     override fun matches(d: DeviceIdentity) = d.manufacturerKey == "motorola" || d.brandKey == "motorola"
     override fun firmware(d: DeviceIdentity) = Firmware("My UX", null)
     override fun limitations(d: DeviceIdentity, services: ServicesInfo) = listOf(
-        Limitation("Overlays", "Motorola ships many configuration overlays (Wi-Fi, SIM, audio). They are locked or high risk: some cause bootloops when removed."),
+        Limitation(str(R.string.moto_lim_overlays_t), str(R.string.moto_lim_overlays)),
     )
 }
 
@@ -270,25 +258,22 @@ object LgIntegration : OemIntegration() {
     override fun brandName(d: DeviceIdentity) = "LG"
 }
 
-/** Any other Android device: generic rules and community data only. */
+/** その他すべての Android 端末: 汎用ルールとコミュニティデータのみ。 */
 object GenericAndroidIntegration : OemIntegration() {
     override val id = "generic"
-    override val title = "Android (generic)"
+    override val title get() = str(R.string.generic_title)
     override val compat = CompatLevel.GENERIC
     override fun matches(d: DeviceIdentity) = true
     override fun firmware(d: DeviceIdentity) = Firmware("Android", d.release.takeIf { it.isNotBlank() })
-    override val developerOptionsSteps = listOf(
-        "Settings → About phone → tap Build number 7 times (the exact place varies by manufacturer).",
-        "Developer options appear in Settings → System, or in the main Settings list.",
-    )
+    override val developerOptionsSteps get() = listOf(str(R.string.generic_dev_1), str(R.string.generic_dev_2))
 }
 
-/** The Android emulator: where Prune's automated tests run. */
+/** Android エミュレータ: Prune の自動テストを実行する環境。 */
 object EmulatorIntegration : OemIntegration() {
     override val id = "emulator"
-    override val title = "Android emulator"
+    override val title get() = str(R.string.emulator_title)
     override val compat = CompatLevel.TESTED
     override fun matches(d: DeviceIdentity) = d.isEmulator
     override fun firmware(d: DeviceIdentity) = Firmware("Android emulator", d.release)
-    override fun brandName(d: DeviceIdentity) = "Android emulator"
+    override fun brandName(d: DeviceIdentity) = str(R.string.emulator_title)
 }

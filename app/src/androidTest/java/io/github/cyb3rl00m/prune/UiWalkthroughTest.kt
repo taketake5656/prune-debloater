@@ -16,7 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Walks through every screen, takes screenshots, and runs one disable + undo through the real UI. */
+/** 全画面を巡回してスクリーンショットを撮り、実際の UI で無効化と取り消しを 1 回ずつ行う。 */
 @OptIn(ExperimentalTestApi::class)
 @RunWith(AndroidJUnit4::class)
 class UiWalkthroughTest {
@@ -60,7 +60,7 @@ class UiWalkthroughTest {
         click("back")
         click("tab_debloat"); waitTag("screen_debloat"); Shots.take("02-debloat")
         scrollTo("list_debloat", "level_2"); click("level_2"); waitTag("screen_customize"); Shots.take("03-customize-balanced")
-        // A stock emulator has few Samsung/Google packages: the Balanced list can be empty there.
+        // 素のエミュレータには Samsung/Google のパッケージが少ないため、Balanced のリストが空になることがある。
         val canReview = runCatching { rule.onNodeWithTag("review_changes").assertIsEnabled() }.isSuccess
         if (canReview) {
             click("review_changes"); waitTag("screen_review"); Shots.take("04-review-no-access")

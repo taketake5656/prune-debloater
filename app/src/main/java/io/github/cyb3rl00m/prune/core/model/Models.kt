@@ -1,59 +1,66 @@
 package io.github.cyb3rl00m.prune.core.model
 
+import androidx.annotation.StringRes
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import kotlinx.serialization.Serializable
 
-/** How risky it is to disable or remove a package. LOCKED packages are never touched by Prune. */
-enum class Risk(val label: String, val meaning: String) {
-    SAFE("Safe", "Optional app. Nothing else depends on it."),
-    LOW("Low risk", "Optional feature. You lose only that feature."),
-    MODERATE("Moderate", "Part of a manufacturer or Google feature. Read the warning before removing."),
-    UNKNOWN("Unknown", "Prune does not know what this package does. Only for experienced users."),
-    HIGH("High risk", "Core feature or used by other apps. Only for experienced users."),
-    LOCKED("Protected", "System-critical. Prune never changes it.");
+/** パッケージを無効化・削除する際の危険度。LOCKED のパッケージは Prune が決して変更しない。 */
+enum class Risk(@StringRes private val labelRes: Int, @StringRes private val meaningRes: Int) {
+    SAFE(R.string.risk_safe, R.string.risk_safe_meaning),
+    LOW(R.string.risk_low, R.string.risk_low_meaning),
+    MODERATE(R.string.risk_moderate, R.string.risk_moderate_meaning),
+    UNKNOWN(R.string.risk_unknown, R.string.risk_unknown_meaning),
+    HIGH(R.string.risk_high, R.string.risk_high_meaning),
+    LOCKED(R.string.risk_locked, R.string.risk_locked_meaning);
+
+    val label: String get() = str(labelRes)
+    val meaning: String get() = str(meaningRes)
 }
 
-/** Where a package comes from. */
-enum class Source(val label: String) {
-    /** Made by a phone manufacturer; [Classification.manufacturer] names which one. */
-    OEM("Manufacturer"),
-    GOOGLE("Google"),
-    CARRIER("Carrier"),
-    PRELOAD("Third-party preload"),
-    ANDROID("Android core"),
-    OTHER_SYSTEM("Other system"),
-    USER("Installed by you");
+/** パッケージの出どころ。 */
+enum class Source(@StringRes private val labelRes: Int) {
+    /** 端末メーカー製。どのメーカーかは [Classification.manufacturer] に入る。 */
+    OEM(R.string.source_oem),
+    GOOGLE(R.string.source_google),
+    CARRIER(R.string.source_carrier),
+    PRELOAD(R.string.source_preload),
+    ANDROID(R.string.source_android),
+    OTHER_SYSTEM(R.string.source_other_system),
+    USER(R.string.source_user);
+
+    val label: String get() = str(labelRes)
 }
 
-/** Current state of a package for the current Android user. */
-enum class PackageStatus(val label: String) {
-    ENABLED("Enabled"),
-    DISABLED("Disabled"),
-    REMOVED("Removed for this user");
+/** 現在の Android ユーザーにおけるパッケージの状態。 */
+enum class PackageStatus(@StringRes private val labelRes: Int) {
+    ENABLED(R.string.status_enabled),
+    DISABLED(R.string.status_disabled),
+    REMOVED(R.string.status_removed);
+
+    val label: String get() = str(labelRes)
 }
 
-/** What Prune recommends doing with a package. */
-enum class RecommendedAction(val label: String) {
-    KEEP("Keep"),
-    DISABLE("Disable"),
-    REVIEW("Review before changing"),
-    UNINSTALL_APP("Uninstall normally");
+/** パッケージに対して Prune が推奨する操作。 */
+enum class RecommendedAction(@StringRes private val labelRes: Int) {
+    KEEP(R.string.action_keep),
+    DISABLE(R.string.action_disable),
+    REVIEW(R.string.action_review),
+    UNINSTALL_APP(R.string.action_uninstall_app);
+
+    val label: String get() = str(labelRes)
 }
 
-/** The ways Prune can take a system package out of use. Both are reversible. */
-enum class RemovalMethod(val label: String, val explanation: String) {
-    DISABLE(
-        "Disable",
-        "Turns the app off for this user. It stops running, disappears from the app drawer and keeps its data. " +
-            "Reversible at any time with Prune, ADB or Settings."
-    ),
-    UNINSTALL_USER(
-        "Uninstall for this user",
-        "Removes the app and its data for this user. The original copy stays in the system partition, so it " +
-            "can be reinstalled at any time (Prune restore or `pm install-existing`) and comes back after a factory reset."
-    );
+/** システムパッケージを使えなくする方法。どちらも元に戻せる。 */
+enum class RemovalMethod(@StringRes private val labelRes: Int, @StringRes private val explanationRes: Int) {
+    DISABLE(R.string.method_disable, R.string.method_disable_explanation),
+    UNINSTALL_USER(R.string.method_uninstall_user, R.string.method_uninstall_user_explanation);
+
+    val label: String get() = str(labelRes)
+    val explanation: String get() = str(explanationRes)
 }
 
-/** Facts about an installed package that are read from PackageManager. Pure data so it can be unit tested. */
+/** PackageManager から読み取った、インストール済みパッケージの事実情報。ユニットテストできるよう純粋なデータにしている。 */
 data class PackageFacts(
     val packageName: String,
     val label: String,
@@ -66,7 +73,7 @@ data class PackageFacts(
     val versionName: String?,
     val uid: Int,
     val hasLauncherActivity: Boolean = false,
-    /** Package that installed this app (Play Store, a manufacturer store, a preload installer), if Android reports one. */
+    /** このアプリをインストールしたパッケージ (Play ストア、メーカーストア、プリロード用インストーラ)。Android が報告する場合のみ。 */
     val installer: String? = null,
 ) {
     val status: PackageStatus
@@ -77,14 +84,14 @@ data class PackageFacts(
         }
 }
 
-/** A warning attached to a package, for example "Samsung Wallet stops working". */
+/** パッケージに付く警告。例:「Samsung Wallet が動かなくなる」。 */
 data class Warning(val groupKey: String, val title: String, val text: String)
 
-/** Prune's full verdict about one package. */
+/** 1 つのパッケージに対する Prune の最終判定。 */
 data class Classification(
     val source: Source,
     val risk: Risk,
-    /** Lowest debloat level (1..4) that may select this package; null if no profile ever selects it. */
+    /** このパッケージを選択しうる最も低い debloat レベル (1..4)。どのプロファイルでも選択しない場合は null。 */
     val level: Int?,
     val description: String,
     val notes: List<String>,
@@ -96,27 +103,27 @@ data class Classification(
     val dependencies: List<String> = emptyList(),
     val neededBy: List<String> = emptyList(),
     val communityTier: String? = null,
-    /** Manufacturer name for [Source.OEM] packages (for example "Xiaomi"). */
+    /** [Source.OEM] パッケージのメーカー名 (例: "Xiaomi")。 */
     val manufacturer: String? = null,
-    /** What can stop working, if Prune's database says more than the warnings. */
+    /** 警告以上の情報が Prune のデータベースにある場合の、動かなくなるもの。 */
     val consequences: String? = null,
-    /** How to bring the package back. */
+    /** パッケージを元に戻す方法。 */
     val recovery: String = "",
-    /** Region-specific variant (for example a .global or .india build of an app). */
+    /** 地域別のバリアント (例: アプリの .global 版や .india 版)。 */
     val regional: Boolean = false,
 ) {
-    /** Label for the package's origin: the manufacturer's name for manufacturer packages. */
+    /** パッケージの出どころを示すラベル。メーカー製パッケージではメーカー名。 */
     val sourceLabel: String get() = if (source == Source.OEM) manufacturer ?: source.label else source.label
-    /** HIGH and UNKNOWN are never pre-selected and need an extra confirmation. */
+    /** HIGH と UNKNOWN は事前選択されず、追加の確認が必要。 */
     val needsCare: Boolean get() = risk == Risk.HIGH || risk == Risk.UNKNOWN
 }
 
 data class AppPackage(
     val facts: PackageFacts,
     val classification: Classification,
-    /** Last time the user opened it (from usage stats), or null if unknown. */
+    /** ユーザーが最後に開いた時刻 (使用状況統計より)。不明なら null。 */
     val lastUsed: Long? = null,
-    /** Set when another installed app does the same job (two browsers, two galleries...). */
+    /** 同じ役割の別アプリがインストールされている場合に設定される (ブラウザ 2 つ、ギャラリー 2 つなど)。 */
     val duplicateGroup: String? = null,
 ) {
     val packageName get() = facts.packageName
@@ -126,20 +133,22 @@ data class AppPackage(
     val isLocked get() = classification.risk == Risk.LOCKED
 }
 
-/** One device-level change Prune can apply and undo. */
+/** Prune が適用・取り消しできる端末レベルの変更 1 件。 */
 @Serializable
-enum class ChangeType(val label: String, val reversible: Boolean = true) {
-    DISABLE("Disable"),
-    ENABLE("Enable"),
-    UNINSTALL_USER("Uninstall for user"),
-    REINSTALL_USER("Reinstall"),
-    UNINSTALL_APP("Uninstall app", reversible = false),
-    APPOP_SET("Change background access"),
-    PERMISSION_REVOKE("Revoke permission"),
-    PERMISSION_GRANT("Grant permission"),
-    DEVICEIDLE_REMOVE("Remove battery exemption"),
-    DEVICEIDLE_ADD("Restore battery exemption"),
-    SETTING_PUT("Change setting"),
-    TRIM_CACHES("Clear app caches", reversible = false),
-    DEXOPT("Optimize apps", reversible = false);
+enum class ChangeType(@StringRes private val labelRes: Int, val reversible: Boolean = true) {
+    DISABLE(R.string.change_disable),
+    ENABLE(R.string.change_enable),
+    UNINSTALL_USER(R.string.change_uninstall_user),
+    REINSTALL_USER(R.string.change_reinstall_user),
+    UNINSTALL_APP(R.string.change_uninstall_app, reversible = false),
+    APPOP_SET(R.string.change_appop_set),
+    PERMISSION_REVOKE(R.string.change_permission_revoke),
+    PERMISSION_GRANT(R.string.change_permission_grant),
+    DEVICEIDLE_REMOVE(R.string.change_deviceidle_remove),
+    DEVICEIDLE_ADD(R.string.change_deviceidle_add),
+    SETTING_PUT(R.string.change_setting_put),
+    TRIM_CACHES(R.string.change_trim_caches, reversible = false),
+    DEXOPT(R.string.change_dexopt, reversible = false);
+
+    val label: String get() = str(labelRes)
 }

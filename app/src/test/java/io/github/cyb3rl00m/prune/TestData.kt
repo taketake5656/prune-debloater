@@ -7,11 +7,12 @@ import io.github.cyb3rl00m.prune.core.model.AppPackage
 import io.github.cyb3rl00m.prune.core.model.PackageFacts
 import java.io.File
 
-/** Loads the real database assets shipped in the APK. */
+/** APK に同梱される実際のデータベース資産を読み込む。 */
 object TestData {
+    init { TestStrings.install() }
     val assets: File by lazy { listOf(File("src/main/assets"), File("app/src/main/assets")).first { it.isDirectory } }
 
-    /** Rule files in the order the app loads them (rules/index.json). */
+    /** アプリが読み込む順 (rules/index.json) に並べたルールファイル。 */
     val ruleFiles: List<String> by lazy {
         Regex("\"([a-z_]+\\.json)\"").findAll(File(assets, "rules/index.json").readText()).map { it.groupValues[1] }.toList()
     }
@@ -20,7 +21,7 @@ object TestData {
         PackageDatabase.parse(ruleFiles.map { File(assets, "rules/$it").readText() }, File(assets, "packages_uad.json").readText())
     }
 
-    /** All curated entries across rule files. */
+    /** 全ルールファイルのキュレーション済みエントリ。 */
     val curated by lazy { db.files.flatMap { it.entries.entries } }
     val locked by lazy { db.files.flatMap { it.locked } }
     val classifier by lazy { Classifier(db) }

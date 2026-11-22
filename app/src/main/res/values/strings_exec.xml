@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="exec_disable_refused">Disabling was refused (%1$s). Uninstalled for this user instead.</string>
+    <string name="exec_free_space_grew">Free space grew by %1$s (measured).</string>
+    <string name="exec_done">Done.</string>
+    <string name="exec_not_done">Not done: %1$s</string>
+    <string name="exec_state_still">state is still \"%1$s\"</string>
+    <string name="exec_waiting_script">Waiting: run the script, then tap Check results.</string>
+    <string name="exec_adb_script">ADB script</string>
+    <string name="exec_verified">Verified.</string>
+    <string name="exec_not_applied">Not applied (state is \"%1$s\").</string>
+    <string name="exec_cannot_verify">Cannot be verified without Shizuku or root.</string>
+</resources>

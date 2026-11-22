@@ -11,6 +11,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ClassifierTest {
+    init { TestStrings.install() }
     private val c = TestData.classifier
 
     @Test fun databaseLoads() {
@@ -70,7 +71,7 @@ class ClassifierTest {
     }
 
     @Test fun communityRecommendedSamsungIsNotMinimal() {
-        // UAD-ng marks Find My Mobile and Auto Blocker "Recommended"; Prune must be more careful.
+        // UAD-ng は Find My Mobile と Auto Blocker を "Recommended" としているが、Prune はより慎重でなければならない。
         assertEquals(3, c.classify(TestData.facts("com.samsung.android.fmm")).level)
         val rampart = c.classify(TestData.facts("com.samsung.android.rampart"))
         assertEquals(Risk.HIGH, rampart.risk)

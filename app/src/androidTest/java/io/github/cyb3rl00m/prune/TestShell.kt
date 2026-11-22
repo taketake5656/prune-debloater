@@ -10,15 +10,15 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * Runs commands as the shell user (uid 2000) through UiAutomation: the same identity Shizuku gives Prune
- * when it is started with wireless debugging. Used to verify Prune's real commands on a real Android system.
+ * UiAutomation を通して shell ユーザー (uid 2000) としてコマンドを実行する。ワイヤレスデバッグで起動した
+ * Shizuku が Prune に与えるのと同じ権限。実際の Android 上で Prune の本物のコマンドを検証するために使う。
  */
 class UiAutomationShell : PrivilegedShell {
     override val kind = AccessKind.SHIZUKU
     override val uid = 2000
 
     override suspend fun run(argv: List<String>, timeoutMs: Long): ShellResult = withContext(Dispatchers.IO) {
-        // UiAutomation splits the command on spaces (no shell), so argv must not contain spaces. Prune's never do.
+        // UiAutomation はコマンドを空白で分割する (シェルを通さない) ため、argv に空白を含めてはならない。Prune のコマンドは決して含まない。
         require(argv.none { it.contains(' ') })
         val fds = InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommandRwe(argv.joinToString(" "))
         fds[1].close()

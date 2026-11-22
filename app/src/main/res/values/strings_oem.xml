@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="compat_tested">Fully implemented and tested</string>
+    <string name="compat_tested_meaning">Prune\'s automated tests run in this environment.</string>
+    <string name="compat_partial">Implemented, partially tested</string>
+    <string name="compat_partial_meaning">Dedicated rules exist and the debloat engine is tested on stock Android, but not on this brand\'s hardware yet.</string>
+    <string name="compat_experimental">Experimental</string>
+    <string name="compat_experimental_meaning">Dedicated rules and known firmware limitations are built in, tested only with simulated devices. Expect surprises: review every change.</string>
+    <string name="compat_generic">Generic compatibility</string>
+    <string name="compat_generic_meaning">No dedicated integration. The generic Android rules and the community database are used.</string>
+    <string name="compat_unsupported">Unsupported</string>
+    <string name="compat_unsupported_meaning">Prune cannot work here.</string>
+
+    <string name="default_dev_steps">Settings → About phone → tap Build number 7 times (enter your PIN). Developer options appear in Settings → System.</string>
+
+    <string name="samsung_dev_1">Settings → About phone → Software information → tap Build number 7 times (enter your PIN).</string>
+    <string name="samsung_dev_2">Developer options are at the bottom of Settings.</string>
+    <string name="samsung_lim_disable_t">Some packages refuse disabling</string>
+    <string name="samsung_lim_disable">Recent One UI versions block `pm disable-user` for some Samsung packages (\"Shell cannot change component state\"). Prune can uninstall them for the current user instead; that is reversible too.</string>
+    <string name="samsung_lim_knox">Rooting a Galaxy phone trips Knox permanently: Samsung Wallet, Secure Folder and Samsung Health stop working. Prune never needs root.</string>
+
+    <string name="pixel_title">Google Pixel (stock Android)</string>
+    <string name="pixel_lim_google_t">Mostly Google apps</string>
+    <string name="pixel_lim_google">Pixels have little manufacturer bloat. Most removable packages are Google apps: enable \"Include Google apps\" in a profile to see them.</string>
+
+    <string name="xiaomi_dev_1">Settings → About phone → tap OS version (HyperOS) or MIUI version 7 times.</string>
+    <string name="xiaomi_dev_2">Developer options are in Settings → Additional settings.</string>
+    <string name="xiaomi_extra">In Developer options also turn on \"USB debugging (Security settings)\". Without it Xiaomi blocks permission, background and animation changes over ADB/Shizuku. Xiaomi requires a SIM card and a Xiaomi account to turn it on.</string>
+    <string name="xiaomi_lim_usb_t">USB debugging (Security settings)</string>
+    <string name="xiaomi_lim_usb">Needed for `pm grant/revoke`, app-ops and settings changes. Disabling and removing apps works without it.</string>
+    <string name="lim_updates_t">Updates can bring apps back</string>
+    <string name="xiaomi_lim_updates">HyperOS/MIUI updates sometimes re-enable or reinstall removed system apps. Run your profile again after an update.</string>
+    <string name="xiaomi_lim_core_t">Core MIUI packages</string>
+    <string name="xiaomi_lim_core">Removing the Security app, permission manager or core MIUI packages can bootloop: Prune keeps them locked.</string>
+
+    <string name="huawei_title">Huawei (EMUI / HarmonyOS with Android support)</string>
+    <string name="lim_disable_refused_t">Disabling is often refused</string>
+    <string name="huawei_lim_disable">EMUI and HarmonyOS refuse `pm disable-user` for many system apps. Prune falls back to uninstalling for the current user, which is reversible.</string>
+    <string name="lim_no_gms_t">No Google services</string>
+    <string name="huawei_lim_no_gms">This phone runs without Google Mobile Services. Huawei Mobile Services (HMS Core) and AppGallery replace them, so Prune keeps both locked.</string>
+    <string name="huawei_lim_harmony">Prune works on HarmonyOS versions that still run Android apps (2.x to 4.x). HarmonyOS NEXT cannot run Android apps at all.</string>
+    <string name="huawei_protect_hms">Huawei Mobile Services: this phone has no Google services, so apps depend on HMS Core.</string>
+    <string name="huawei_protect_appgallery">AppGallery: the only app store on this phone (no Google Play).</string>
+
+    <string name="honor_lim_disable">MagicOS refuses `pm disable-user` for many system apps. Prune falls back to uninstalling for the current user, which is reversible.</string>
+    <string name="honor_lim_no_gms">Honor Mobile Services replace Google services on this phone, so Prune keeps them locked.</string>
+    <string name="honor_protect_hms">Honor Mobile Services: this phone has no Google services, so apps depend on it.</string>
+
+    <string name="oplus_dev_1">Settings → About device → Version → tap Build number 7 times.</string>
+    <string name="oplus_dev_2">Developer options are in Settings → Additional settings (System settings on newer versions).</string>
+    <string name="oplus_extra">In Developer options turn on \"Disable permission monitoring\". Without it permission and background changes over ADB/Shizuku are refused.</string>
+    <string name="oplus_lim_monitoring_t">Disable permission monitoring</string>
+    <string name="oplus_lim_monitoring">ColorOS-based firmware blocks `pm grant/revoke` and app-op changes until this developer option is on.</string>
+    <string name="oplus_lim_security_t">Security apps</string>
+    <string name="oplus_lim_security">The Security Center and permission manager are locked: removing them breaks permission dialogs.</string>
+
+    <string name="moto_lim_overlays_t">Overlays</string>
+    <string name="moto_lim_overlays">Motorola ships many configuration overlays (Wi-Fi, SIM, audio). They are locked or high risk: some cause bootloops when removed.</string>
+
+    <string name="generic_title">Android (generic)</string>
+    <string name="generic_dev_1">Settings → About phone → tap Build number 7 times (the exact place varies by manufacturer).</string>
+    <string name="generic_dev_2">Developer options appear in Settings → System, or in the main Settings list.</string>
+    <string name="emulator_title">Android emulator</string>
+
+    <string name="req_standard">Standard (no extra access)</string>
+    <string name="req_usage_access">Usage access</string>
+    <string name="req_shell">Shizuku or root</string>
+    <string name="req_shell_or_secure_settings">Shizuku, root, or the WRITE_SECURE_SETTINGS grant</string>
+
+    <string name="op_scan">Scan and classify packages</string>
+    <string name="op_uninstall_own">Uninstall apps you installed (system dialog)</string>
+    <string name="op_script">Export changes as an ADB script</string>
+    <string name="op_usage">App usage, unused apps and storage per app</string>
+    <string name="op_disable">Disable system apps</string>
+    <string name="op_uninstall_user">Uninstall system apps for this user</string>
+    <string name="op_restore">Restore and re-enable apps</string>
+    <string name="op_background">Restrict background activity</string>
+    <string name="op_permissions">Revoke and grant permissions</string>
+    <string name="op_notifications">Turn off app notifications</string>
+    <string name="op_battery_exemptions">Remove battery-optimization exemptions</string>
+    <string name="op_animations">Change animation speed</string>
+    <string name="op_caches">Clear all app caches</string>
+    <string name="op_dexopt">Compile apps now</string>
+    <string name="op_battery_stats">Battery estimates per app</string>
+
+    <string name="opstatus_available">Available</string>
+    <string name="opstatus_needs_access">Needs Shizuku or root</string>
+    <string name="opstatus_needs_usage">Needs usage access</string>
+    <string name="opstatus_unsupported">Not supported on this Android version</string>
+
+    <string name="report_yes">yes</string>
+    <string name="report_no">no</string>
+    <string name="report_running">running</string>
+    <string name="report_installed">installed</string>
+    <string name="report_not_installed">not installed</string>
+    <string name="report_unknown">unknown</string>
+    <string name="report_title">Prune %1$s compatibility report</string>
+    <string name="report_device">Device: %1$s</string>
+    <string name="report_manufacturer">Manufacturer: %1$s</string>
+    <string name="report_android">Android: %1$s (API %2$d)</string>
+    <string name="report_firmware">Firmware: %1$s</string>
+    <string name="report_integration">Integration: %1$s — %2$s</string>
+    <string name="report_services">Google services: %1$s · Play Store: %2$s · Huawei HMS: %3$s</string>
+    <string name="report_access">Access: %1$s · Shizuku %2$s · root %3$s · usage access %4$s</string>
+    <string name="report_operations">Operations:</string>
+    <string name="report_on_this_device">(on this device: %1$d ok, %2$d failed)</string>
+    <string name="report_note">note: %1$s</string>
+    <string name="report_last_error">last error: %1$s</string>
+    <string name="report_known_limitations">Known limitations:</string>
+
+    <string name="caveat_xiaomi">Needs \"USB debugging (Security settings)\" in Developer options on Xiaomi firmware.</string>
+    <string name="caveat_oplus">Needs \"Disable permission monitoring\" in Developer options on ColorOS-based firmware.</string>
+    <string name="caveat_disable_often_refused">Often refused by this firmware; Prune then uninstalls for this user instead (reversible).</string>
+    <string name="caveat_samsung_disable">Refused for some Samsung packages; Prune then uninstalls for this user instead (reversible).</string>
+</resources>

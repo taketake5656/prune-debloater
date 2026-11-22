@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="level1_title">最小</string>
+    <string name="level1_summary">実質的な変更なしで、すっきりした端末に。</string>
+    <string name="level1_d1">宣伝アプリ、キャリアアプリ、サードパーティ製プリインストール (Facebook、Netflix など) を削除</string>
+    <string name="level1_d2">メーカーの任意の追加機能 (ヒント、プロモーション配信、広告サービス、AR ステッカー) をオフ</string>
+    <string name="level1_d3">メーカーのエコシステム機能と Google サービスはすべて残す</string>
+    <string name="level2_title">バランス</string>
+    <string name="level2_summary">目に見えて軽く、エコシステムは維持。</string>
+    <string name="level2_d1">「最小」の内容すべて</string>
+    <string name="level2_d2">バックグラウンドで動く診断・データ収集サービスを削除</string>
+    <string name="level2_d3">メーカーの任意アプリ (ゲームランチャー、メール、データ移行ツールなど) を削除</string>
+    <string name="level2_d4">任意: 不要な Google アプリを削除</string>
+    <string name="level2_d5">任意: 30 日間使っていないアプリのバックグラウンド動作を制限</string>
+    <string name="level3_title">積極的</string>
+    <string name="level3_summary">無理のない範囲でできるだけ軽く。</string>
+    <string name="level3_d1">「バランス」の内容すべて。Google アプリも既定で対象</string>
+    <string name="level3_d2">メーカーのコンポーネントや任意のシステム部品をさらに削除</string>
+    <string name="level3_d3">使わないと答えたエコシステム機能の部品を削除</string>
+    <string name="level3_d4">機能が失われる前提です。確認画面の警告をすべて読んでください</string>
+    <string name="level4_title">エクストリーム / カスタム</string>
+    <string name="level4_summary">すべてのパッケージを自分で選ぶ。</string>
+    <string name="level4_d1">変更可能なすべてのパッケージを危険度付きで表示</string>
+    <string name="level4_d2">「積極的」の選択から始め、項目を 1 つずつ追加・削除</string>
+    <string name="level4_d3">高リスク・不明なパッケージは追加の確認が必要</string>
+    <string name="level4_d4">保護されたパッケージはここでもロックされたまま</string>
+
+    <string name="plan_kept_you_use">%1$s を使用中</string>
+    <string name="plan_kept_google_excluded">Google アプリは対象外</string>
+    <string name="plan_note_recently_used">過去 %1$d 日以内に開いたアプリです</string>
+    <string name="plan_note_high">高リスク: 確信がある場合のみ選択してください</string>
+    <string name="plan_note_unknown">用途不明: 何をするものか分かっている場合のみ選択してください</string>
+    <string name="plan_note_not_default">既定の選択には含まれません</string>
+
+    <string name="script_title">%1$s - %2$d 件の変更</string>
+    <string name="script_line_run">端末と ADB で接続したパソコンで実行してください (USB デバッグまたはワイヤレス デバッグ)。</string>
+    <string name="script_line_os">Linux/macOS: sh this-file.sh    Windows: 各行をコマンド プロンプトに貼り付けてください。</string>
+    <string name="script_line_independent">各行は独立しています。元に戻すには: Prune の復元画面にある復元スクリプトを使ってください。</string>
+
+    <string name="inv_enable">アプリを再びオンにします。</string>
+    <string name="inv_reinstall_enable">このユーザーにアプリを再インストールし、オンにします。</string>
+    <string name="inv_reinstall_disabled">このユーザーにアプリを再インストールします (以前と同じく無効のままです)。</string>
+    <string name="inv_disable_again">アプリを再び無効にします。</string>
+    <string name="inv_uninstall_again">このユーザーからアプリを再びアンインストールします。</string>
+    <string name="inv_appop">以前のバックグラウンド設定 (%1$s) に戻します。</string>
+    <string name="inv_grant">権限を再び付与します。</string>
+    <string name="inv_revoke">権限を再び取り消します。</string>
+    <string name="inv_deviceidle_add">アプリを再び電池の最適化の対象外にします。</string>
+    <string name="inv_deviceidle_remove">電池の最適化の除外を再び解除します。</string>
+    <string name="inv_setting">以前の値 (%1$s) に戻します。</string>
+    <string name="inv_system_default">システムの既定値</string>
+</resources>

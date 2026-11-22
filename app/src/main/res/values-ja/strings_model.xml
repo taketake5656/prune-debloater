@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="risk_safe">安全</string>
+    <string name="risk_safe_meaning">任意のアプリです。他に依存しているものはありません。</string>
+    <string name="risk_low">低リスク</string>
+    <string name="risk_low_meaning">任意の機能です。失われるのはその機能だけです。</string>
+    <string name="risk_moderate">中程度</string>
+    <string name="risk_moderate_meaning">メーカーまたは Google の機能の一部です。削除する前に警告を読んでください。</string>
+    <string name="risk_unknown">不明</string>
+    <string name="risk_unknown_meaning">Prune はこのパッケージの役割を把握していません。上級者向けです。</string>
+    <string name="risk_high">高リスク</string>
+    <string name="risk_high_meaning">中核機能、または他のアプリが使用しています。上級者向けです。</string>
+    <string name="risk_locked">保護</string>
+    <string name="risk_locked_meaning">システムに不可欠です。Prune は決して変更しません。</string>
+
+    <string name="source_oem">メーカー</string>
+    <string name="source_google">Google</string>
+    <string name="source_carrier">キャリア</string>
+    <string name="source_preload">サードパーティ製プリインストール</string>
+    <string name="source_android">Android コア</string>
+    <string name="source_other_system">その他のシステム</string>
+    <string name="source_user">ユーザーがインストール</string>
+
+    <string name="status_enabled">有効</string>
+    <string name="status_disabled">無効</string>
+    <string name="status_removed">このユーザーから削除済み</string>
+
+    <string name="action_keep">そのまま残す</string>
+    <string name="action_disable">無効化</string>
+    <string name="action_review">変更前に確認</string>
+    <string name="action_uninstall_app">通常のアンインストール</string>
+
+    <string name="method_disable">無効化</string>
+    <string name="method_disable_explanation">このユーザーに対してアプリをオフにします。動作が止まり、アプリ一覧から消えますが、データは残ります。Prune、ADB、設定からいつでも元に戻せます。</string>
+    <string name="method_uninstall_user">このユーザーからアンインストール</string>
+    <string name="method_uninstall_user_explanation">このユーザーからアプリとそのデータを削除します。元のコピーはシステム領域に残るため、いつでも再インストールでき (Prune の復元、または `pm install-existing`)、初期化すると元に戻ります。</string>
+
+    <string name="change_disable">無効化</string>
+    <string name="change_enable">有効化</string>
+    <string name="change_uninstall_user">ユーザーからアンインストール</string>
+    <string name="change_reinstall_user">再インストール</string>
+    <string name="change_uninstall_app">アプリをアンインストール</string>
+    <string name="change_appop_set">バックグラウンド動作の変更</string>
+    <string name="change_permission_revoke">権限の取り消し</string>
+    <string name="change_permission_grant">権限の付与</string>
+    <string name="change_deviceidle_remove">電池の最適化除外を解除</string>
+    <string name="change_deviceidle_add">電池の最適化除外を復元</string>
+    <string name="change_setting_put">設定の変更</string>
+    <string name="change_trim_caches">アプリのキャッシュを削除</string>
+    <string name="change_dexopt">アプリの最適化</string>
+</resources>
