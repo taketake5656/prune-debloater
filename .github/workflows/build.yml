@@ -120,7 +120,7 @@ jobs:
           name: emulator-results-api${{ matrix.api }}
           path: emulator-results/
 
-      # Also publish results to a throwaway branch: easier to fetch than artifacts from restricted networks.
+      # 結果を使い捨てのブランチにも公開する: 制限のあるネットワークからは artifact より取得しやすい。
       - name: Publish results to the ci-results branch
         if: always() && github.event_name != 'pull_request'
         env:

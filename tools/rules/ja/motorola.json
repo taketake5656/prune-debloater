@@ -1,0 +1,47 @@
+{
+ "groups": {
+  "MOTO_FEATURES": {
+   "name": "Moto アクションと Moto ディスプレイ",
+   "warning": "ジェスチャー (振ってライト点灯、ひねってカメラ起動) と Moto ディスプレイ / Peek が動作しなくなります。"
+  },
+  "UPDATES": {
+   "name": "システムアップデート",
+   "warning": "端末がセキュリティアップデートやシステムアップデートを受け取れなくなる可能性があります。アップデートを確認する前に再び有効にしてください。"
+  }
+ },
+ "entries": {
+  "com.motorola.demo": {
+   "note": "店頭デモモード。"
+  },
+  "com.motorola.mototour": {
+   "note": "Moto Tour (紹介ガイド)。"
+  },
+  "com.motorola.genie": {
+   "note": "デバイスヘルプ。"
+  },
+  "com.motorola.motocare": {
+   "note": "デバイスヘルプ (旧名称)。"
+  },
+  "com.motorola.ccc.notification": {
+   "note": "Motorola の宣伝通知。"
+  },
+  "com.motorola.brapps": {
+   "note": "Motorola App Box (中南米向け)。"
+  },
+  "com.motorola.timeweatherwidget": {
+   "note": "時計と天気のウィジェット。"
+  },
+  "com.motorola.actions": {
+   "note": "Moto アクションのジェスチャー。"
+  },
+  "com.motorola.moto": {
+   "note": "Moto アプリ: アクション、ディスプレイ、ジェスチャーの設定。"
+  },
+  "com.motorola.motodisplay": {
+   "note": "Moto ディスプレイ / Peek の通知表示。"
+  },
+  "com.motorola.ccc.ota": {
+   "note": "Motorola のアップデートサービス。"
+  }
+ }
+}

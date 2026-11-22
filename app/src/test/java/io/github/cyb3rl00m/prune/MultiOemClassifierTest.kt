@@ -31,6 +31,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MultiOemClassifierTest {
+    init { TestStrings.install() }
     private val c = TestData.classifier
     private val all = TestData.db.ecosystems.map { it.key }.toSet()
 
@@ -115,7 +116,7 @@ class MultiOemClassifierTest {
     }
 
     @Test fun ecosystemAnswersFromVersion1() {
-        // A 1.x user who said they don't use Bixby: Bixby stays off, new brands' features count as used.
+        // Bixby を使わないと答えた 1.x のユーザー: Bixby は対象外のまま、新しいブランドの機能は「使用中」と見なす。
         val v1 = AppSettings(usedEcosystems = SettingsStore.V1_ECOSYSTEMS - "BIXBY", knownEcosystems = SettingsStore.V1_ECOSYSTEMS)
         val used = SettingsStore.effectiveUsed(v1, all)
         assertFalse("BIXBY" in used)

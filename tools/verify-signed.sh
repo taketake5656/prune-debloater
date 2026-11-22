@@ -5,7 +5,7 @@ mkdir -p "$OUT"
 STATUS=0
 adb wait-for-device
 APK=$(ls apk/Prune-*.apk | head -1)
-# Optional upgrade test: apk/upgrade-from.apk is installed first, then the new APK over it.
+# 任意のアップグレードテスト: 先に apk/upgrade-from.apk をインストールし、その上に新しい APK を入れる。
 if [ -f apk/upgrade-from.apk ]; then
   adb install apk/upgrade-from.apk | tee "$OUT/install-old.txt" || STATUS=1
   adb shell am start -W -n io.github.cyb3rl00m.prune/.MainActivity > /dev/null; sleep 6

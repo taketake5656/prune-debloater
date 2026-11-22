@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="access_shizuku">Shizuku</string>
+    <string name="access_root">root</string>
+    <string name="access_adb_script">パソコンから ADB</string>
+    <string name="access_none">特権アクセスなし</string>
+    <string name="tier_adb">ADB レベル</string>
+    <string name="tier_root">root</string>
+    <string name="tier_adb_manual">ADB レベル (手動)</string>
+    <string name="tier_standard">標準</string>
+    <string name="perm_usage_access">使用状況へのアクセス</string>
+    <string name="perm_write_secure_settings">セキュア設定の書き込み</string>
+    <string name="shell_timed_out">タイムアウトしました</string>
+</resources>

@@ -40,7 +40,7 @@ data class DeviceInfo(
     val isEmulator: Boolean get() = identity.isEmulator
     val compat: CompatLevel get() = integration.compat
     val displayName: String get() = if (marketName != model) "$marketName ($model)" else model
-    /** "Samsung Galaxy S25 FE", "Redmi Note 13", "Pixel 9", "Motorola moto g84"... */
+    /** 例: "Samsung Galaxy S25 FE"、"Redmi Note 13"、"Pixel 9"、"Motorola moto g84" など。 */
     val fullName: String get() = when {
         marketName.startsWith(brandName, ignoreCase = true) -> marketName
         isSamsung && marketName.startsWith("Galaxy") -> "Samsung $marketName"
@@ -87,7 +87,7 @@ object DeviceInfoReader {
         )
     }
 
-    /** Google and Huawei/Honor service frameworks, detected from installed, enabled packages (no Play Services API). */
+    /** Google と Huawei/Honor のサービスフレームワーク。インストール済みで有効なパッケージから検出する (Play Services API は使わない)。 */
     fun services(context: Context): ServicesInfo {
         val pm = context.packageManager
         fun enabled(pkg: String) = runCatching {
@@ -103,9 +103,9 @@ object DeviceInfoReader {
     }
 }
 
-/** One UI version decoding. Pure functions, unit tested. */
+/** One UI のバージョンの解読。純粋関数で、ユニットテスト対象。 */
 object OneUi {
-    /** ro.build.version.oneui = MMmmpp, e.g. 60101 = One UI 6.1.1, 80000 = One UI 8.0. */
+    /** ro.build.version.oneui = MMmmpp。例: 60101 = One UI 6.1.1、80000 = One UI 8.0。 */
     fun fromProperty(raw: String?): String? {
         val v = raw?.trim()?.toIntOrNull() ?: return null
         if (v < 10000) return null
@@ -115,7 +115,7 @@ object OneUi {
         return if (patch == 0) "$major.$minor" else "$major.$minor.$patch"
     }
 
-    /** SEM_PLATFORM_INT: 100000 = One UI 1.0, 110500 = 2.5, 130000 = 4.0 (One UI = (x - 90000) / 10000). */
+    /** SEM_PLATFORM_INT: 100000 = One UI 1.0、110500 = 2.5、130000 = 4.0 (One UI = (x - 90000) / 10000)。 */
     fun fromSemPlatformInt(sem: Int?): String? {
         if (sem == null || sem < 100000) return null
         val v = sem - 90000
@@ -125,7 +125,7 @@ object OneUi {
     }
 }
 
-/** Marketing names for Samsung model numbers whose firmware does not report one. */
+/** ファームウェアが販売名を報告しない Samsung の型番に対する販売名。 */
 object SamsungModels {
     private val names = linkedMapOf(
         "SM-S731" to "Galaxy S25 FE", "SM-S937" to "Galaxy S25 Edge", "SM-S938" to "Galaxy S25 Ultra",

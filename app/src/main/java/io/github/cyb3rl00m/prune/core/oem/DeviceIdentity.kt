@@ -4,8 +4,8 @@ import android.os.Build
 import java.util.concurrent.TimeUnit
 
 /**
- * Everything Prune knows about the device's identity: Build fields plus system properties.
- * Pure data, so manufacturer detection can be unit tested with mock devices.
+ * Prune が知る端末の識別情報すべて: Build のフィールドとシステムプロパティ。
+ * 純粋なデータなので、メーカー検出をモック端末でユニットテストできる。
  */
 data class DeviceIdentity(
     val manufacturer: String,
@@ -17,7 +17,7 @@ data class DeviceIdentity(
     val sdkInt: Int,
     val release: String,
     val display: String,
-    /** System properties, as `getprop` prints them. */
+    /** `getprop` が出力するとおりのシステムプロパティ。 */
     val props: Map<String, String> = emptyMap(),
 ) {
     val manufacturerKey: String get() = manufacturer.trim().lowercase()
@@ -25,14 +25,14 @@ data class DeviceIdentity(
 
     fun prop(name: String): String? = props[name]?.trim()?.takeIf { it.isNotEmpty() }
 
-    /** True on the Android emulator (no OEM firmware, used for Prune's automated tests). */
+    /** Android エミュレータなら true (OEM ファームウェアなし。Prune の自動テストで使う)。 */
     val isEmulator: Boolean
         get() = prop("ro.kernel.qemu") == "1" || prop("ro.boot.qemu") == "1" ||
             fingerprint.startsWith("generic") || fingerprint.contains("/sdk_g") ||
             model.startsWith("sdk_g") || product.startsWith("sdk_g") || model.contains("Emulator")
 
     companion object {
-        /** Reads Build and all system properties with one `getprop` call (no hidden APIs). */
+        /** Build と全システムプロパティを 1 回の `getprop` 呼び出しで読む (非公開 API は使わない)。 */
         fun read(): DeviceIdentity = DeviceIdentity(
             manufacturer = Build.MANUFACTURER.orEmpty(),
             brand = Build.BRAND.orEmpty(),
@@ -46,7 +46,7 @@ data class DeviceIdentity(
             props = readProps() + synthetic(),
         )
 
-        /** Values only reachable through manufacturer classes, exposed as properties so detection stays pure. */
+        /** メーカー独自クラス経由でしか取れない値。検出を純粋に保つため、プロパティとして公開する。 */
         private fun synthetic(): Map<String, String> = buildMap {
             runCatching { Build.VERSION::class.java.getField("SEM_PLATFORM_INT").getInt(null) }
                 .getOrNull()?.let { put(SamsungIntegration.SEM_PLATFORM_PROP, it.toString()) }

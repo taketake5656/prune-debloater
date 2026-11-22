@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debloat_subtitle">Pick a level. You review every change before anything happens.</string>
+    <string name="debloat_banner">Every level is a starting point: on the next screen you tell Prune which manufacturer and Google features you use, and untick anything you want to keep.</string>
+    <string name="debloat_preselected">pre-selected</string>
+    <string name="debloat_packages">packages</string>
+    <string name="debloat_n_selected">%1$d packages selected</string>
+    <string name="debloat_review_n">Review %1$d changes</string>
+    <string name="debloat_features">Features you use</string>
+    <string name="debloat_features_desc">Packages behind the features you keep ticked are never selected. Untick what you never use.</string>
+    <string name="debloat_options">Options</string>
+    <string name="debloat_include_google">Include Google apps</string>
+    <string name="debloat_include_google_desc">YouTube, Google TV, Meet, Gemini, Google One... Google Play Services is always kept.</string>
+    <string name="debloat_restrict_bg">Restrict background of unused apps</string>
+    <string name="debloat_restrict_bg_needs">Needs usage access (Setup screen).</string>
+    <string name="debloat_restrict_bg_count">Apps you haven\'t opened for 30 days: %1$d.</string>
+    <string name="debloat_method">Method</string>
+    <string name="debloat_custom_banner">Custom mode lists every package Prune allows you to change, including high-risk ones. Protected packages (telephony, System UI, security, biometrics, core Android) are not listed and cannot be selected.</string>
+    <string name="debloat_selected_n">Selected (%1$d)</string>
+    <string name="debloat_none">None</string>
+    <string name="debloat_nothing_selected">Nothing selected. Everything at this level is already off, or kept by your answers above.</string>
+    <string name="debloat_not_preselected_n">Not pre-selected (%1$d)</string>
+    <string name="debloat_kept_n">Kept because of your answers (%1$d)</string>
+</resources>

@@ -23,8 +23,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Simulated devices. These check detection logic against the properties each firmware is documented to set;
- * they are not hardware tests.
+ * シミュレートした端末。各ファームウェアが設定するとされるプロパティに対して検出ロジックを確認する。
+ * 実機テストではない。
  */
 object MockDevices {
     fun device(manufacturer: String, brand: String, model: String, sdk: Int = 35, release: String = "15",
@@ -53,6 +53,7 @@ object MockDevices {
 }
 
 class OemIntegrationTest {
+    init { TestStrings.install() }
     private val gms = ServicesInfo(gms = true, playStore = true, hms = false)
     private val noGms = ServicesInfo(gms = false, playStore = false, hms = true)
 
@@ -98,7 +99,7 @@ class OemIntegrationTest {
     }
 
     @Test fun compatibilityLevelsAreHonest() {
-        // Nothing but the emulator (where the automated tests run) may claim TESTED.
+        // TESTED を名乗れるのは (自動テストを実行している) エミュレータだけ。
         for (i in OemRegistry.integrations + GenericAndroidIntegration) assertTrue(i.id, i.compat != CompatLevel.TESTED)
         assertEquals(CompatLevel.TESTED, EmulatorIntegration.compat)
         assertEquals(CompatLevel.PARTIAL, SamsungIntegration.compat)

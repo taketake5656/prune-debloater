@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,13 +64,13 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
     val history by vm.history.collectAsStateWithLifecycle()
     val exporter = rememberTextExporter()
     val report = remember(device, access, history) { vm.compatibilityReport() }
-    ScreenScaffold("Compatibility", nav, "compat", subtitle = "What Prune can do on this device",
+    ScreenScaffold(str(R.string.compat_title), nav, "compat", subtitle = str(R.string.compat_subtitle),
         actions = {
             if (report != null) IconButton(onClick = { exporter.share("prune-compatibility.txt", report.asText(BuildConfig.VERSION_NAME)) },
-                modifier = Modifier.testTag("share_report")) { Icon(Icons.Outlined.ContentCopy, "Share report") }
+                modifier = Modifier.testTag("share_report")) { Icon(Icons.Outlined.ContentCopy, str(R.string.cd_share_report)) }
         }) {
         if (report == null) {
-            item { Text("Reading device…") }
+            item { Text(str(R.string.home_reading_device)) }
             return@ScreenScaffold
         }
         val level = report.integration.compat
@@ -82,35 +84,35 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
                 Spacer(Modifier.height(8.dp))
                 Text(report.integration.compatNote, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(8.dp))
-                KeyValue("Manufacturer", report.manufacturer)
-                KeyValue("Integration", report.integration.title)
+                KeyValue(str(R.string.compat_kv_manufacturer), report.manufacturer)
+                KeyValue(str(R.string.compat_kv_integration), report.integration.title)
                 KeyValue("Android", "${report.androidVersion} (API ${report.sdkInt})")
-                KeyValue("Firmware", report.firmware?.toString() ?: "Not detected")
-                KeyValue("Google services", if (report.services.gms) "Installed" else "Not available")
-                if (report.services.hms) KeyValue("Huawei Mobile Services", "Installed")
-                if (report.services.honorServices) KeyValue("Honor Mobile Services", "Installed")
+                KeyValue(str(R.string.compat_kv_firmware), report.firmware?.toString() ?: str(R.string.compat_not_detected))
+                KeyValue(str(R.string.compat_kv_gms), if (report.services.gms) str(R.string.compat_installed) else str(R.string.compat_not_available))
+                if (report.services.hms) KeyValue("Huawei Mobile Services", str(R.string.compat_installed))
+                if (report.services.honorServices) KeyValue("Honor Mobile Services", str(R.string.compat_installed))
             }
         }
-        item { SectionHeader("Access") }
+        item { SectionHeader(str(R.string.compat_access)) }
         item {
             PruneCard {
-                KeyValue("Current tier", report.access.tier)
+                KeyValue(str(R.string.compat_kv_tier), report.access.tier)
                 KeyValue("Shizuku", when {
-                    report.access.shizukuAuthorized -> "Running, Prune authorized"
-                    report.access.shizukuRunning -> "Running, not authorized"
-                    report.access.shizukuInstalled -> "Installed, not running"
-                    else -> "Not installed"
+                    report.access.shizukuAuthorized -> str(R.string.compat_shizuku_authorized)
+                    report.access.shizukuRunning -> str(R.string.compat_shizuku_running)
+                    report.access.shizukuInstalled -> str(R.string.compat_shizuku_installed)
+                    else -> str(R.string.compat_shizuku_not_installed)
                 })
-                KeyValue("Root", if (report.access.root) "Granted" else "Not granted")
-                KeyValue("Usage access", if (report.access.usageAccess) "Granted" else "Not granted")
-                KeyValue("Write secure settings", if (report.access.writeSecureSettings) "Granted" else "Not granted")
+                KeyValue(str(R.string.access_root), if (report.access.root) str(R.string.compat_granted) else str(R.string.compat_not_granted))
+                KeyValue(str(R.string.perm_usage_access), if (report.access.usageAccess) str(R.string.compat_granted) else str(R.string.compat_not_granted))
+                KeyValue(str(R.string.perm_write_secure_settings), if (report.access.writeSecureSettings) str(R.string.compat_granted) else str(R.string.compat_not_granted))
                 if (!report.access.privileged) {
                     Spacer(Modifier.height(8.dp))
-                    OutlinedButton(onClick = { nav.go(Routes.SETUP) }, modifier = Modifier.fillMaxWidth()) { Text("Set up access") }
+                    OutlinedButton(onClick = { nav.go(Routes.SETUP) }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.compat_setup_access)) }
                 }
             }
         }
-        item { SectionHeader("Operations") }
+        item { SectionHeader(str(R.string.compat_operations)) }
         items(report.operations, key = { it.operation.name }) { o ->
             val (icon, tint) = when (o.status) {
                 OpStatus.AVAILABLE -> Icons.Outlined.CheckCircle to MaterialTheme.colorScheme.primary
@@ -123,7 +125,7 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
                     Spacer(Modifier.width(10.dp))
                     Column(Modifier.weight(1f)) {
                         Text(o.operation.label, style = MaterialTheme.typography.titleSmall)
-                        Text("${o.status.label} · requires ${o.operation.requirement.label.lowercase()}",
+                        Text(str(R.string.compat_requires, o.status.label, o.operation.requirement.label.lowercase()),
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         o.caveat?.let {
                             Spacer(Modifier.height(4.dp))
@@ -135,16 +137,16 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
                         }
                         if (o.succeeded + o.failed > 0) {
                             Spacer(Modifier.height(4.dp))
-                            Text("On this device: ${o.succeeded} succeeded, ${o.failed} failed", style = MaterialTheme.typography.labelSmall,
+                            Text(str(R.string.compat_on_device, o.succeeded, o.failed), style = MaterialTheme.typography.labelSmall,
                                 color = if (o.failed > 0) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary)
-                            o.lastError?.let { Text("Last error: $it", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error) }
+                            o.lastError?.let { Text(str(R.string.compat_last_error, it), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error) }
                         }
                     }
                 }
             }
         }
         if (report.limitations.isNotEmpty()) {
-            item { SectionHeader("Known limitations") }
+            item { SectionHeader(str(R.string.compat_known_limitations)) }
             items(report.limitations, key = { "lim" + it.title }) { l ->
                 PruneCard {
                     Text(l.title, style = MaterialTheme.typography.titleSmall)
@@ -153,7 +155,7 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
             }
         }
         item {
-            Banner("Compatibility levels: Fully tested · Partially tested · Experimental · Generic · Unsupported. Prune never calls a device fully supported unless its automated tests ran on it. Share this report when you open an issue on GitHub.",
+            Banner(str(R.string.compat_levels_banner),
                 BannerKind.INFO)
         }
     }
@@ -163,18 +165,18 @@ fun CompatibilityScreen(vm: AppViewModel, nav: Nav) {
 fun DuplicatesScreen(vm: AppViewModel, nav: Nav) {
     val scan by vm.scan.collectAsStateWithLifecycle()
     val byPkg = remember(scan.apps) { scan.apps.associateBy { it.packageName } }
-    ScreenScaffold("Duplicate apps", nav, "duplicates", subtitle = "App types installed more than once") {
+    ScreenScaffold(str(R.string.dup_title), nav, "duplicates", subtitle = str(R.string.dup_subtitle)) {
         item {
-            Text("Phones often ship a manufacturer app and a Google app for the same job. Keep the one you use; the others can usually be disabled. Prune never selects them automatically.",
+            Text(str(R.string.dup_desc),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if (scan.duplicates.isEmpty()) item {
-            EmptyState("No duplicates", "Every app type is installed only once.", Icons.Outlined.CheckCircle)
+            EmptyState(str(R.string.dup_none), str(R.string.dup_none_desc), Icons.Outlined.CheckCircle)
         }
         scan.duplicates.forEach { g ->
             item(key = "h" + g.name) { SectionHeader("${g.name} (${g.packages.size})") }
             items(g.packages.mapNotNull { byPkg[it] }, key = { g.name + it.packageName }) { a ->
-                PackageRow(a, subtitle = if (a.packageName == g.defaultPackage) "Default app · ${a.classification.sourceLabel}" else a.classification.sourceLabel,
+                PackageRow(a, subtitle = if (a.packageName == g.defaultPackage) str(R.string.dup_default_app, a.classification.sourceLabel) else a.classification.sourceLabel,
                     onClick = { nav.go(Routes.app(a.packageName)) })
             }
         }

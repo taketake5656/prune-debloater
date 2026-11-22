@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Prune mark: a leaf split by a clean diagonal cut. 108dp adaptive canvas, art inside the 66dp safe zone. -->
+<!-- Prune のマーク: 斜めにすっきりと切られた葉。108dp のアダプティブキャンバスで、絵柄は 66dp のセーフゾーン内に収める。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- upper half of the leaf -->
+    <!-- 葉の上半分 -->
     <path
         android:fillColor="#3DDC97"
         android:pathData="M76,32 C76,32 54,28 41,41 C33,49 32,60 34,66 L68,40 C72,37 76,32 76,32 Z" />
-    <!-- lower half, offset along the cut -->
+    <!-- 下半分 (切り口に沿ってずらしている) -->
     <path
         android:fillColor="#7C6CFF"
         android:pathData="M79,37 C79,37 82,57 69,70 C61,78 50,79 44,77 L71,47 C75,43 79,37 79,37 Z" />

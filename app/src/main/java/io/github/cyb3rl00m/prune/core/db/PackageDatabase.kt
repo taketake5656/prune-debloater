@@ -6,7 +6,7 @@ import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
-/** Community data (UAD-ng) for one package, compact keys as written by tools/build_db.py. */
+/** 1 パッケージ分のコミュニティデータ (UAD-ng)。キーは tools/build_db.py が書き出す短縮形。 */
 @Serializable
 data class UadEntry(
     @SerialName("l") val list: String,
@@ -29,7 +29,7 @@ data class Group(
     val warning: String,
     val packages: List<String> = emptyList(),
     val prefixes: List<String> = emptyList(),
-    /** Substrings of the package name (feature tags only). */
+    /** パッケージ名に含まれる部分文字列 (featureTags のみ)。 */
     val patterns: List<String> = emptyList(),
 )
 
@@ -39,10 +39,10 @@ data class CuratedEntry(
     val risk: String,
     val note: String? = null,
     val google: Boolean = false,
-    /** Only applies on these Android versions (API levels), when set. */
+    /** 設定されている場合、この Android バージョン (API レベル) でのみ適用する。 */
     val minSdk: Int? = null,
     val maxSdk: Int? = null,
-    /** Only applies on these firmwares (for example "HyperOS"), when set. */
+    /** 設定されている場合、これらのファームウェア (例: "HyperOS") でのみ適用する。 */
     val firmware: List<String> = emptyList(),
     val consequences: String? = null,
     val recovery: String? = null,
@@ -56,7 +56,7 @@ data class PrefixEntry(
     val note: String? = null,
 )
 
-/** One rule file: core.json or a manufacturer file. */
+/** ルールファイル 1 つ分。core.json またはメーカー別ファイル。 */
 @Serializable
 data class PruneRules(
     val schema: Int,
@@ -70,18 +70,59 @@ data class PruneRules(
     val featureTags: List<Group> = emptyList(),
     val entries: Map<String, CuratedEntry> = emptyMap(),
     val prefixEntries: List<PrefixEntry> = emptyList(),
+) {
+    /** 訳文を当てたコピーを返す。訳のない項目は元の文言のまま。判定に使う値 (レベル・リスク等) は変えない。 */
+    fun localized(t: RulesTranslation): PruneRules = copy(
+        locked = locked.map { e -> t.locked[e.id]?.let { e.copy(reason = it) } ?: e },
+        lockedPrefixes = lockedPrefixes.map { e -> t.lockedPrefixes[e.prefix]?.let { e.copy(reason = it) } ?: e },
+        ecosystems = ecosystems.map { it.localized(t) },
+        featureTags = featureTags.map { it.localized(t) },
+        entries = entries.mapValues { (pkg, e) ->
+            val tr = t.entries[pkg] ?: return@mapValues e
+            e.copy(
+                note = tr.note ?: e.note,
+                consequences = tr.consequences ?: e.consequences,
+                recovery = tr.recovery ?: e.recovery,
+            )
+        },
+        prefixEntries = prefixEntries.map { e -> t.prefixEntries[e.prefix]?.let { e.copy(note = it) } ?: e },
+    )
+
+    private fun Group.localized(t: RulesTranslation): Group {
+        val tr = t.groups[key] ?: return this
+        return copy(name = tr.name ?: name, warning = tr.warning ?: warning)
+    }
+}
+
+/**
+ * ルールファイル 1 つ分の訳文 (tools/rules/<言語>/<同名ファイル>.json)。
+ * 元のルールファイルを変更せずに翻訳できるよう、ID・プレフィックス・グループキーをキーにして文言だけを持つ。
+ */
+@Serializable
+data class RulesTranslation(
+    val locked: Map<String, String> = emptyMap(),
+    val lockedPrefixes: Map<String, String> = emptyMap(),
+    val groups: Map<String, GroupTranslation> = emptyMap(),
+    val entries: Map<String, EntryTranslation> = emptyMap(),
+    val prefixEntries: Map<String, String> = emptyMap(),
 )
 
-/** A curated entry together with the rule file it came from. */
+@Serializable
+data class GroupTranslation(val name: String? = null, val warning: String? = null)
+
+@Serializable
+data class EntryTranslation(val note: String? = null, val consequences: String? = null, val recovery: String? = null)
+
+/** キュレーション済みエントリと、その出どころのルールファイル。 */
 data class SourcedEntry(val entry: CuratedEntry, val manufacturer: String)
 
-/** What the classifier needs to know about the device to apply firmware- or version-specific entries. */
+/** ファームウェアやバージョン限定のエントリを適用するために、分類器が知る必要のある端末情報。 */
 data class DeviceContext(val sdkInt: Int = Int.MAX_VALUE, val firmware: String? = null)
 
 /**
- * Prune's package knowledge: the core rules, every manufacturer's rules, and the community descriptions.
- * All manufacturer files are always loaded: a package name means the same on every device, and rebranded
- * firmware (Redmi, POCO, OnePlus, realme...) still finds its rules.
+ * Prune のパッケージ知識: コアルール、全メーカーのルール、コミュニティの説明文。
+ * メーカー別ファイルは常にすべて読み込む。パッケージ名の意味はどの端末でも同じであり、
+ * リブランドされたファームウェア (Redmi、POCO、OnePlus、realme など) でもルールが見つかるようにするため。
  */
 class PackageDatabase(val files: List<PruneRules>, val uad: Map<String, UadEntry>) {
 
@@ -91,7 +132,7 @@ class PackageDatabase(val files: List<PruneRules>, val uad: Map<String, UadEntry
         files.flatMap { f -> f.entries.map { (k, v) -> k to SourcedEntry(v, f.manufacturer) } }.toMap()
     private val prefixEntries: List<PrefixEntry> = files.flatMap { it.prefixEntries }
 
-    /** Ecosystems ("features you use"), merged by key across files. */
+    /** エコシステム (「使っている機能」)。ファイルをまたいでキーごとにマージする。 */
     val ecosystems: List<Group> = merge(files.flatMap { it.ecosystems })
     val featureTags: List<Group> = merge(files.flatMap { it.featureTags })
     val ecosystemsByKey: Map<String, Group> = ecosystems.associateBy { it.key }
@@ -101,7 +142,7 @@ class PackageDatabase(val files: List<PruneRules>, val uad: Map<String, UadEntry
     fun lockedReason(pkg: String): String? =
         lockedById[pkg] ?: lockedPrefixes.firstOrNull { pkg.startsWith(it.prefix) }?.reason
 
-    /** The curated entry for a package, if it applies to this Android version and firmware. */
+    /** パッケージのキュレーション済みエントリ。この Android バージョンとファームウェアに当てはまる場合のみ返す。 */
     fun curated(pkg: String, device: DeviceContext = DeviceContext()): SourcedEntry? {
         val s = entries[pkg] ?: return null
         val e = s.entry
@@ -125,7 +166,7 @@ class PackageDatabase(val files: List<PruneRules>, val uad: Map<String, UadEntry
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
 
-        /** Groups with the same key in several files become one group (first name and warning win). */
+        /** 複数ファイルで同じキーのグループは 1 つにまとめる (名前と警告は最初のものを採用)。 */
         private fun merge(groups: List<Group>): List<Group> = groups.groupBy { it.key }.map { (_, gs) ->
             gs.first().copy(
                 packages = gs.flatMap { it.packages }.distinct(),
@@ -136,9 +177,19 @@ class PackageDatabase(val files: List<PruneRules>, val uad: Map<String, UadEntry
 
         fun parseRules(text: String): PruneRules = json.decodeFromString(PruneRules.serializer(), text)
 
-        fun parse(rulesJson: List<String>, uadJson: String): PackageDatabase =
+        fun parseTranslation(text: String): RulesTranslation = json.decodeFromString(RulesTranslation.serializer(), text)
+
+        /**
+         * @param translations [rulesJson] と同じ順序の訳文 JSON。訳がないファイルは null。
+         *   壊れた訳文は無視して元の文言を使う (訳文のせいでルールが読めなくなることはない)。
+         */
+        fun parse(rulesJson: List<String>, uadJson: String, translations: List<String?> = emptyList()): PackageDatabase =
             PackageDatabase(
-                rulesJson.mapNotNull { runCatching { parseRules(it) }.getOrNull() },
+                rulesJson.mapIndexedNotNull { i, text ->
+                    val rules = runCatching { parseRules(text) }.getOrNull() ?: return@mapIndexedNotNull null
+                    val tr = translations.getOrNull(i)?.let { runCatching { parseTranslation(it) }.getOrNull() }
+                    if (tr == null) rules else rules.localized(tr)
+                },
                 json.decodeFromString(MapSerializer(String.serializer(), UadEntry.serializer()), uadJson),
             )
     }

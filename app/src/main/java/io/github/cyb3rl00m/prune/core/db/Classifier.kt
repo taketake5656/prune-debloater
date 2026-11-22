@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.core.db
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import io.github.cyb3rl00m.prune.core.model.Classification
 import io.github.cyb3rl00m.prune.core.model.PackageFacts
 import io.github.cyb3rl00m.prune.core.model.RecommendedAction
@@ -9,37 +11,37 @@ import io.github.cyb3rl00m.prune.core.model.Warning
 import io.github.cyb3rl00m.prune.core.oem.OemRegistry
 
 /**
- * Packages that are protected because of how this particular phone is set up right now
- * (default apps, active keyboard, device admins, missing Google services...). Read fresh on every scan.
+ * この端末の現在の設定によって保護されるパッケージ (既定のアプリ、使用中のキーボード、デバイス管理アプリ、
+ * Google サービスの有無など)。スキャンのたびに読み直す。
  */
 data class DynamicProtections(
-    /** package -> reason it must not be touched */
+    /** パッケージ -> 変更してはならない理由 */
     val locked: Map<String, String> = emptyMap(),
-    /** package -> warning that it is in use, but may be changed */
+    /** パッケージ -> 使用中である旨の警告 (変更は可能) */
     val inUse: Map<String, String> = emptyMap(),
 )
 
 /**
- * Decides risk, category, level and recommendation for one package. Manufacturer-independent: manufacturer
- * knowledge comes from the rule files and [OemRegistry].
+ * 1 つのパッケージの危険度・分類・レベル・推奨操作を決める。メーカーに依存しない。メーカー固有の知識は
+ * ルールファイルと [OemRegistry] から得る。
  *
- * Order of authority (first match wins for locking, later steps only refine):
- *  1. Prune's locked lists (core and every manufacturer file).
- *  2. Dynamic protections (this phone's launcher, dialer, SMS app, keyboard, device admins, accessibility
- *     services, and service frameworks a phone without Google services depends on).
- *  3. Persistent system apps (Android keeps them running at all times).
- *  4. Prune's curated entry (if it applies to this Android version and firmware), then curated prefix entries.
- *  5. Community data (UAD-ng tier), mapped conservatively.
- *  6. Unknown system packages: risk UNKNOWN, only offered in Custom mode, never pre-selected.
+ * 優先順位 (ロックについては最初に一致したものが勝ち、後の段階は判定を細かくするだけ):
+ *  1. Prune のロックリスト (core と全メーカーのファイル)。
+ *  2. 動的保護 (この端末のランチャー、電話アプリ、SMS アプリ、キーボード、デバイス管理アプリ、ユーザー補助サービス、
+ *     Google サービスのない端末が依存するサービスフレームワーク)。
+ *  3. 常駐 (persistent) システムアプリ (Android が常に動かし続けるもの)。
+ *  4. Prune のキュレーション済みエントリ (この Android バージョンとファームウェアに当てはまる場合)、次にプレフィックスエントリ。
+ *  5. コミュニティデータ (UAD-ng の段階)。保守的に対応付ける。
+ *  6. 不明なシステムパッケージ: 危険度 UNKNOWN。Custom モードでのみ表示し、事前選択しない。
  */
 class Classifier(private val db: PackageDatabase, private val device: DeviceContext = DeviceContext()) {
 
-    /** Never throws: a package Prune cannot analyse is treated as unknown. */
+    /** 例外を投げない。Prune が解析できないパッケージは不明として扱う。 */
     fun classify(facts: PackageFacts, dynamic: DynamicProtections = DynamicProtections()): Classification =
         runCatching { classifyUnsafe(facts, dynamic) }.getOrElse {
             Classification(
                 source = if (facts.isSystem) Source.OTHER_SYSTEM else Source.USER, risk = Risk.UNKNOWN,
-                level = if (facts.isSystem) 4 else null, description = "Prune could not analyse this package.",
+                level = if (facts.isSystem) 4 else null, description = str(R.string.cls_could_not_analyse),
                 notes = emptyList(), groups = emptySet(), warnings = emptyList(), lockedReason = null,
                 recommendedAction = RecommendedAction.REVIEW, inDatabase = false, recovery = recoveryFor(facts),
             )
@@ -66,11 +68,11 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
         val description = uad?.description?.takeIf { it.isNotBlank() } ?: curated?.note ?: defaultDescription(facts, source, manufacturer)
         if (curated?.note != null && uad?.description?.isNotBlank() == true) notes += curated.note
         prefix?.note?.let { if (uad == null) notes += it }
-        if (preloadInstaller) notes += "Installed by ${facts.installer}, a preload/partner installer: the manufacturer or carrier put it there."
+        if (preloadInstaller) notes += str(R.string.cls_note_preload_installer, facts.installer)
         val regional = REGIONAL.containsMatchIn(pkg)
-        if (regional) notes += "Region-specific variant of an app."
+        if (regional) notes += str(R.string.cls_note_regional)
 
-        dynamic.inUse[pkg]?.let { warnings += Warning("IN_USE", "In use on this phone", it) }
+        dynamic.inUse[pkg]?.let { warnings += Warning("IN_USE", str(R.string.cls_in_use_title), it) }
         val recovery = curated?.recovery ?: recoveryFor(facts)
 
         fun locked(reason: String) = Classification(
@@ -84,7 +86,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
         db.lockedReason(pkg)?.let { return locked(it) }
         dynamic.locked[pkg]?.let { return locked(it) }
         if (facts.isSystem && facts.isPersistent) {
-            return locked("Persistent system app: Android keeps it running at all times because the system needs it.")
+            return locked(str(R.string.cls_locked_persistent))
         }
 
         var risk: Risk
@@ -99,7 +101,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
                 level = prefix.level
             }
             uad != null -> {
-                val mapped = mapCommunityTier(uad) ?: return locked("Marked unsafe to remove by the community database (UAD-ng).")
+                val mapped = mapCommunityTier(uad) ?: return locked(str(R.string.cls_locked_community_unsafe))
                 risk = mapped.first
                 level = mapped.second
             }
@@ -110,17 +112,17 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
             else -> {
                 risk = Risk.UNKNOWN
                 level = 4
-                notes += "Not in Prune's database: its purpose is unknown. Change it only if you know what it does."
+                notes += str(R.string.cls_note_unknown)
             }
         }
 
-        // Packages sharing the system/phone identity get at least HIGH unless Prune curated them.
+        // system/phone の ID を共有するパッケージは、Prune がキュレーションしていない限り最低でも HIGH にする。
         if (curated == null && prefix == null && facts.sharedUserId in PRIVILEGED_SHARED_UIDS) {
             if (risk.ordinal < Risk.HIGH.ordinal) risk = Risk.HIGH
             level = 4
-            notes += "Runs with system privileges (${facts.sharedUserId})."
+            notes += str(R.string.cls_note_system_privileges, facts.sharedUserId!!)
         }
-        // Without a curated entry, ecosystem membership raises the risk floor to MODERATE.
+        // キュレーション済みエントリがない場合、エコシステムに属していれば危険度の下限を MODERATE に引き上げる。
         if (curated == null && ecosystems.isNotEmpty() && risk.ordinal < Risk.MODERATE.ordinal) risk = Risk.MODERATE
         if (risk == Risk.HIGH || risk == Risk.UNKNOWN) level = 4
 
@@ -142,7 +144,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
         )
     }
 
-    /** Maps the community tier to (risk, level). Returns null for "unsafe". Conservative on purpose. */
+    /** コミュニティの段階を (危険度, レベル) に対応付ける。"unsafe" の場合は null。意図的に保守的にしている。 */
     private fun mapCommunityTier(e: UadEntry): Pair<Risk, Int>? {
         val thirdParty = e.list == "c" || e.list == "m"
         return when (e.removal) {
@@ -157,7 +159,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
                          preloadInstaller: Boolean): Source {
         val pkg = facts.packageName
         if (!facts.isSystem) {
-            // Updated or user-installed copies of known preloads still count as preloads.
+            // 既知のプリロードを更新したもの・ユーザーが入れ直したものもプリロードとして扱う。
             return if (preloadInstaller || uad?.list == "m" || uad?.list == "c" ||
                 (curated != null && !curated.google && !oemPrefix)) Source.PRELOAD
             else Source.USER
@@ -181,26 +183,25 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
     }
 
     private fun defaultDescription(facts: PackageFacts, source: Source, manufacturer: String?): String = when {
-        !facts.isSystem && source == Source.PRELOAD -> "App preinstalled by the manufacturer, carrier or a partner. You can remove it like any other app."
-        !facts.isSystem -> "An app you installed. You can uninstall it like any other app."
-        source == Source.OEM -> "${manufacturer ?: "Manufacturer"} system component. Prune has no description for it yet."
-        source == Source.GOOGLE -> "Google system component. Prune has no description for it yet."
-        source == Source.CARRIER -> "Carrier-installed component."
-        else -> "System component. Prune has no description for it yet."
+        !facts.isSystem && source == Source.PRELOAD -> str(R.string.cls_desc_preload_user)
+        !facts.isSystem -> str(R.string.cls_desc_user)
+        source == Source.OEM -> str(R.string.cls_desc_oem, manufacturer ?: str(R.string.source_oem))
+        source == Source.GOOGLE -> str(R.string.cls_desc_google)
+        source == Source.CARRIER -> str(R.string.cls_desc_carrier)
+        else -> str(R.string.cls_desc_system)
     }
 
     private fun recoveryFor(facts: PackageFacts): String = if (facts.isSystem) {
-        "Restore it in Prune (Restore tab), or from a computer: adb shell pm install-existing ${facts.packageName} " +
-            "and adb shell pm enable ${facts.packageName}. A factory reset also brings it back."
+        str(R.string.cls_recovery_system, facts.packageName)
     } else {
-        "If disabled: enable it in Prune or Settings → Apps. If uninstalled: install it again from its app store."
+        str(R.string.cls_recovery_user)
     }
 
     private fun tierName(code: String) = when (code) {
-        "r" -> "Recommended"
-        "a" -> "Advanced"
-        "e" -> "Expert"
-        "u" -> "Unsafe"
+        "r" -> str(R.string.tier_recommended)
+        "a" -> str(R.string.tier_advanced)
+        "e" -> str(R.string.tier_expert)
+        "u" -> str(R.string.tier_unsafe)
         else -> code
     }
 
@@ -211,7 +212,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
             "android.media", "android.uid.log",
         )
 
-        /** Installers that place partner apps during setup (not app stores the user chose). */
+        /** 初期設定時にパートナーアプリを配置するインストーラ (ユーザーが選んだアプリストアではないもの)。 */
         val PRELOAD_INSTALLERS = listOf(
             "com.facebook.system", "com.aura.oobe.samsung", "com.aura.oobe.samsung.gl", "com.ironsource.appcloud.oobe",
             "com.digitalturbine.ignite", "com.dti", "com.miui.msa.global", "com.android.preinstall",
@@ -230,7 +231,7 @@ class Classifier(private val db: PackageDatabase, private val device: DeviceCont
             "com.three", "com.h3g", "com.drei", "com.a1", "com.mtel", "bg.vivacom", "com.yettel",
         )
 
-        /** Display names for the manufacturers in [OemRegistry]. */
+        /** [OemRegistry] のメーカーの表示名。 */
         fun manufacturerName(id: String): String = when (id) {
             "samsung" -> "Samsung"
             "pixel" -> "Google Pixel"

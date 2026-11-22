@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
@@ -61,7 +63,11 @@ import io.github.cyb3rl00m.prune.ui.components.SectionHeader
 import io.github.cyb3rl00m.prune.ui.components.StatusBadge
 import io.github.cyb3rl00m.prune.ui.components.daysAgo
 
-private enum class StatusFilter(val label: String) { ALL("All"), ENABLED("Enabled"), OFF("Disabled / removed"), DUPLICATES("Duplicates") }
+private enum class StatusFilter(private val labelRes: Int) {
+    ALL(R.string.apps_filter_all), ENABLED(R.string.status_enabled), OFF(R.string.apps_filter_off), DUPLICATES(R.string.apps_filter_duplicates);
+
+    val label: String get() = str(labelRes)
+}
 
 @Composable
 fun AppsScreen(vm: AppViewModel, nav: Nav) {
@@ -84,19 +90,19 @@ fun AppsScreen(vm: AppViewModel, nav: Nav) {
                 }
         }
     }
-    ScreenScaffold("Packages", null, "apps", subtitle = "${filtered.size} of ${scan.apps.size} packages") {
+    ScreenScaffold(str(R.string.tab_packages), null, "apps", subtitle = str(R.string.apps_subtitle, filtered.size, scan.apps.size)) {
         item {
             OutlinedTextField(
                 value = query, onValueChange = { query = it }, singleLine = true,
                 leadingIcon = { Icon(Icons.Outlined.Search, null) },
-                placeholder = { Text("Search name or package") },
+                placeholder = { Text(str(R.string.apps_search)) },
                 modifier = Modifier.fillMaxWidth().testTag("search"),
                 shape = MaterialTheme.shapes.large,
             )
         }
         item {
             Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(source == null, { source = null }, { Text("All sources") })
+                FilterChip(source == null, { source = null }, { Text(str(R.string.apps_all_sources)) })
                 Source.entries.forEach { s ->
                     val n = scan.apps.count { it.classification.source == s }
                     if (n > 0) FilterChip(source == s, { source = if (source == s) null else s }, { Text("${s.label} ($n)") })
@@ -110,8 +116,8 @@ fun AppsScreen(vm: AppViewModel, nav: Nav) {
                 Risk.entries.forEach { r -> FilterChip(risk == r, { risk = if (risk == r) null else r }, { Text(r.label) }) }
             }
         }
-        if (scan.scanning && scan.apps.isEmpty()) item { EmptyState("Scanning", "Reading installed packages…", Icons.Outlined.Search) }
-        else if (filtered.isEmpty()) item { EmptyState("No packages", "Nothing matches these filters.", Icons.Outlined.SearchOff) }
+        if (scan.scanning && scan.apps.isEmpty()) item { EmptyState(str(R.string.apps_scanning), str(R.string.apps_reading), Icons.Outlined.Search) }
+        else if (filtered.isEmpty()) item { EmptyState(str(R.string.apps_no_packages), str(R.string.apps_no_match), Icons.Outlined.SearchOff) }
         items(filtered, key = { it.packageName }) { a ->
             PackageRow(a, modifier = Modifier.testTag("pkg_${a.packageName}"), onClick = {
                 focus.clearFocus()
@@ -128,7 +134,7 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
     val context = LocalContext.current
     val app: AppPackage? = scan.apps.firstOrNull { it.packageName == pkg }
     if (app == null) {
-        ScreenScaffold(pkg, nav, "app") { item { Banner("This package is not installed.", BannerKind.INFO) } }
+        ScreenScaffold(pkg, nav, "app") { item { Banner(str(R.string.apps_not_installed), BannerKind.INFO) } }
         return
     }
     val c = app.classification
@@ -162,29 +168,29 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
                         Icon(Icons.Outlined.Lock, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(Modifier.width(10.dp))
                         Column {
-                            Text("Protected", style = MaterialTheme.typography.titleSmall)
+                            Text(str(R.string.risk_locked), style = MaterialTheme.typography.titleSmall)
                             Text(r, style = MaterialTheme.typography.bodyMedium)
-                            Text("Prune will not disable or remove this package.", style = MaterialTheme.typography.bodySmall,
+                            Text(str(R.string.apps_protected_desc), style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
             }
         }
-        item { SectionHeader("What it is") }
+        item { SectionHeader(str(R.string.apps_what_it_is)) }
         item {
             PruneCard {
                 Text(c.description, style = MaterialTheme.typography.bodyMedium)
                 c.notes.forEach { Spacer(Modifier.height(6.dp)); Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                 if (c.communityTier != null) {
                     Spacer(Modifier.height(8.dp))
-                    Text("Community rating (UAD-ng): ${c.communityTier}", style = MaterialTheme.typography.labelSmall,
+                    Text(str(R.string.apps_community_rating, c.communityTier), style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
         if (c.warnings.isNotEmpty()) {
-            item { SectionHeader("Before you change it") }
+            item { SectionHeader(str(R.string.apps_before_change)) }
             c.warnings.forEach { w ->
                 item {
                     PruneCard {
@@ -200,57 +206,57 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
                 }
             }
         }
-        item { SectionHeader("Details") }
+        item { SectionHeader(str(R.string.apps_details)) }
         item {
             PruneCard {
-                KeyValue("Category", c.sourceLabel)
-                app.facts.installer?.let { KeyValue("Installed by", it) }
-                app.duplicateGroup?.let { KeyValue("Same job as", "Other ${it.lowercase()} on this phone") }
-                if (c.regional) KeyValue("Variant", "Region-specific")
-                KeyValue("Status", app.status.label)
-                KeyValue("Risk", "${app.risk.label} — ${app.risk.meaning}")
-                KeyValue("Recommended", c.recommendedAction.label)
-                KeyValue("Debloat level", c.level?.let { if (it == 4) "Custom only" else "Level $it and above" } ?: "Not part of any level")
-                KeyValue("System app", if (app.facts.isSystem) (if (app.facts.isUpdatedSystem) "Yes (updated)" else "Yes") else "No")
-                app.facts.versionName?.let { KeyValue("Version", it) }
-                app.facts.sharedUserId?.let { KeyValue("Shared user", it) }
-                if (scan.usage.isNotEmpty()) KeyValue("Last opened", daysAgo(app.lastUsed))
-                if (c.dependencies.isNotEmpty()) KeyValue("Depends on", c.dependencies.joinToString("\n"))
-                if (c.neededBy.isNotEmpty()) KeyValue("Needed by", c.neededBy.joinToString("\n"))
+                KeyValue(str(R.string.apps_kv_category), c.sourceLabel)
+                app.facts.installer?.let { KeyValue(str(R.string.apps_kv_installed_by), it) }
+                app.duplicateGroup?.let { KeyValue(str(R.string.apps_kv_same_job), str(R.string.apps_kv_same_job_value, it.lowercase())) }
+                if (c.regional) KeyValue(str(R.string.apps_kv_variant), str(R.string.apps_kv_region_specific))
+                KeyValue(str(R.string.apps_kv_status), app.status.label)
+                KeyValue(str(R.string.apps_kv_risk), "${app.risk.label} — ${app.risk.meaning}")
+                KeyValue(str(R.string.apps_kv_recommended), c.recommendedAction.label)
+                KeyValue(str(R.string.apps_kv_level), c.level?.let { if (it == 4) str(R.string.apps_level_custom_only) else str(R.string.apps_level_n_above, it) } ?: str(R.string.apps_level_none))
+                KeyValue(str(R.string.apps_kv_system_app), if (app.facts.isSystem) (if (app.facts.isUpdatedSystem) str(R.string.apps_yes_updated) else str(R.string.apps_yes)) else str(R.string.apps_no))
+                app.facts.versionName?.let { KeyValue(str(R.string.apps_kv_version), it) }
+                app.facts.sharedUserId?.let { KeyValue(str(R.string.apps_kv_shared_user), it) }
+                if (scan.usage.isNotEmpty()) KeyValue(str(R.string.apps_kv_last_opened), daysAgo(app.lastUsed))
+                if (c.dependencies.isNotEmpty()) KeyValue(str(R.string.apps_kv_depends_on), c.dependencies.joinToString("\n"))
+                if (c.neededBy.isNotEmpty()) KeyValue(str(R.string.apps_kv_needed_by), c.neededBy.joinToString("\n"))
             }
         }
         c.consequences?.let { text ->
-            item { SectionHeader("Possible consequences") }
+            item { SectionHeader(str(R.string.apps_consequences)) }
             item { PruneCard { Text(text, style = MaterialTheme.typography.bodyMedium) } }
         }
         if (app.facts.isSystem || c.source == Source.PRELOAD) {
-            item { SectionHeader("How to bring it back") }
+            item { SectionHeader(str(R.string.apps_bring_back)) }
             item { PruneCard { Text(c.recovery, style = MaterialTheme.typography.bodySmall) } }
         }
-        item { SectionHeader("Actions") }
+        item { SectionHeader(str(R.string.apps_actions)) }
         item {
             PruneCard {
                 if (!app.isLocked && app.facts.isSystem || (!app.isLocked && c.source == Source.PRELOAD)) {
                     when (app.status) {
                         PackageStatus.ENABLED -> {
-                            Button(onClick = { review(ChangeType.DISABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_disable")) { Text("Disable…") }
+                            Button(onClick = { review(ChangeType.DISABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_disable")) { Text(str(R.string.apps_btn_disable)) }
                             if (app.facts.isSystem) {
                                 Spacer(Modifier.height(6.dp))
-                                OutlinedButton(onClick = { review(ChangeType.UNINSTALL_USER) }, modifier = Modifier.fillMaxWidth()) { Text("Uninstall for this user…") }
+                                OutlinedButton(onClick = { review(ChangeType.UNINSTALL_USER) }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.apps_btn_uninstall_user)) }
                             }
                         }
                         PackageStatus.DISABLED -> {
-                            Button(onClick = { review(ChangeType.ENABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_enable")) { Text("Enable…") }
+                            Button(onClick = { review(ChangeType.ENABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_enable")) { Text(str(R.string.apps_btn_enable)) }
                             if (app.facts.isSystem) {
                                 Spacer(Modifier.height(6.dp))
-                                OutlinedButton(onClick = { review(ChangeType.UNINSTALL_USER) }, modifier = Modifier.fillMaxWidth()) { Text("Uninstall for this user…") }
+                                OutlinedButton(onClick = { review(ChangeType.UNINSTALL_USER) }, modifier = Modifier.fillMaxWidth()) { Text(str(R.string.apps_btn_uninstall_user)) }
                             }
                         }
-                        PackageStatus.REMOVED -> Button(onClick = { review(ChangeType.ENABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_restore")) { Text("Reinstall and enable…") }
+                        PackageStatus.REMOVED -> Button(onClick = { review(ChangeType.ENABLE) }, modifier = Modifier.fillMaxWidth().testTag("action_restore")) { Text(str(R.string.apps_btn_reinstall)) }
                     }
                     if (!access.privileged) {
                         Spacer(Modifier.height(6.dp))
-                        Text("Needs Shizuku or root to apply, or export the change as an ADB script on the next screen.",
+                        Text(str(R.string.apps_needs_shell),
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Spacer(Modifier.height(6.dp))
@@ -261,7 +267,7 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
                             context.startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:${app.packageName}")))
                         },
                         modifier = Modifier.fillMaxWidth(),
-                    ) { Text("Uninstall app (system dialog)") }
+                    ) { Text(str(R.string.apps_btn_uninstall_app)) }
                     Spacer(Modifier.height(6.dp))
                 }
                 OutlinedButton(
@@ -271,7 +277,7 @@ fun AppDetailScreen(vm: AppViewModel, nav: Nav, pkg: String) {
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Open in Android Settings") }
+                ) { Text(str(R.string.apps_btn_open_settings)) }
             }
         }
         item { Spacer(Modifier.size(8.dp).padding(4.dp)) }

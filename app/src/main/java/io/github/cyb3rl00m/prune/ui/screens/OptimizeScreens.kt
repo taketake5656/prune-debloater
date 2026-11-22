@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -77,9 +79,9 @@ private fun iconOf(s: OptimizationSection): ImageVector = when (s) {
 
 @Composable
 fun OptimizeScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav) {
-    ScreenScaffold("Optimize", null, "optimize", subtitle = "Only changes with a real technical effect. No placebo.") {
+    ScreenScaffold(str(R.string.tab_optimize), null, "optimize", subtitle = str(R.string.optui_subtitle)) {
         item {
-            Banner("Prune does not kill processes, change CPU/GPU governors or touch thermal management. Those make phones less stable and often use more battery, not less.",
+            Banner(str(R.string.optui_banner),
                 BannerKind.INFO)
         }
         OptimizationSection.entries.forEach { s ->
@@ -128,11 +130,11 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
     ScreenScaffold(section.title, nav, "section_${section.name}") {
         item {
             PruneCard {
-                Text("Why this works", style = MaterialTheme.typography.titleSmall)
+                Text(str(R.string.optui_why), style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(4.dp))
                 Text(section.why, style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(8.dp))
-                Pill("Requires: ${section.requirement}", MaterialTheme.colorScheme.secondary)
+                Pill(str(R.string.optui_requires, section.requirement), MaterialTheme.colorScheme.secondary)
             }
         }
         if (loading) item {
@@ -143,19 +145,19 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
                 val a = state.animations
                 item {
                     PruneCard {
-                        Text("Current scales", style = MaterialTheme.typography.titleSmall)
-                        if (a != null) Text("Window ${a.window}× · Transition ${a.transition}× · Animator ${a.animator}×", style = MaterialTheme.typography.bodyMedium)
+                        Text(str(R.string.optui_current_scales), style = MaterialTheme.typography.titleSmall)
+                        if (a != null) Text(str(R.string.optui_scales_value, a.window.toString(), a.transition.toString(), a.animator.toString()), style = MaterialTheme.typography.bodyMedium)
                         Spacer(Modifier.height(12.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            listOf(1f to "1× (default)", 0.5f to "0.5×", 0f to "Off").forEach { (v, label) ->
+                            listOf(1f to str(R.string.optui_scale_default), 0.5f to "0.5×", 0f to str(R.string.optui_scale_off)).forEach { (v, label) ->
                                 FilterChip(selected = a?.uniform == v, onClick = {
-                                    review("Animation speed $label", vm.repo.optimizer.animationChanges(v))
+                                    review(str(R.string.optui_animation_speed, label), vm.repo.optimizer.animationChanges(v))
                                 }, label = { Text(label) }, modifier = Modifier.testTag("anim_$v"))
                             }
                         }
                         if (!access.privileged && !access.writeSecureSettings) {
                             Spacer(Modifier.height(8.dp))
-                            Text("Without Shizuku you can still export the change as an ADB script on the review screen.",
+                            Text(str(R.string.optui_without_shizuku),
                                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
@@ -164,30 +166,30 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
             OptimizationSection.BACKGROUND -> {
                 val list = state.background
                 if (scan.usage.isEmpty()) item {
-                    Banner("Usage access is needed to know which apps you don't use.", BannerKind.WARNING) {
-                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text("Grant usage access") }
+                    Banner(str(R.string.optui_usage_needed_unused), BannerKind.WARNING) {
+                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text(str(R.string.rec_usage_access)) }
                     }
                 } else if (!access.privileged) item {
-                    Banner("Changing background access needs Shizuku or root. You can also set each app to \"Restricted\" in Settings → Apps → app → Battery.", BannerKind.INFO)
+                    Banner(str(R.string.optui_bg_needs_shell), BannerKind.INFO)
                 }
                 if (list != null) {
-                    if (list.isEmpty() && !loading && scan.usage.isNotEmpty()) item { PruneCard { Text("No unused apps that still run in the background.") } }
-                    selectableList(list, selection.value, { selection.value = it }, subtitle = { "Last opened ${daysAgo(it.lastUsed)}" }) { ids ->
-                        review("Restrict background activity", list.filter { it.packageName in ids }.map { vm.repo.optimizer.backgroundChange(it, true) })
+                    if (list.isEmpty() && !loading && scan.usage.isNotEmpty()) item { PruneCard { Text(str(R.string.optui_no_unused)) } }
+                    selectableList(list, selection.value, { selection.value = it }, subtitle = { str(R.string.optui_last_opened, daysAgo(it.lastUsed)) }) { ids ->
+                        review(str(R.string.op_background), list.filter { it.packageName in ids }.map { vm.repo.optimizer.backgroundChange(it, true) })
                     }
                 }
             }
             OptimizationSection.BATTERY_EXEMPTIONS -> {
                 val e = state.exemptions
                 if (e != null) {
-                    item { SectionHeader("Exempt apps you can change (${e.removable.size})") }
+                    item { SectionHeader(str(R.string.optui_exempt_changeable, e.removable.size)) }
                     selectableList(e.removable, selection.value, { selection.value = it }, onOpen = { openSettings(it.packageName) }) { ids ->
-                        review("Remove battery exemptions", e.removable.filter { it.packageName in ids }.map { vm.repo.optimizer.exemptionChange(it) })
+                        review(str(R.string.optui_remove_exemptions), e.removable.filter { it.packageName in ids }.map { vm.repo.optimizer.exemptionChange(it) })
                     }
                     if (e.systemManaged.isNotEmpty()) {
-                        item { SectionHeader("Exempted by the system (${e.systemManaged.size})") }
+                        item { SectionHeader(str(R.string.optui_exempt_system, e.systemManaged.size)) }
                         item {
-                            Text("Android or the manufacturer exempt these themselves. They cannot be changed from here.",
+                            Text(str(R.string.optui_exempt_system_desc),
                                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         items(e.systemManaged, key = { "sys" + it.packageName }) { PackageRow(it) }
@@ -198,16 +200,16 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
                 item { SystemToggle(includeSystem) { vm.update { setShowSystem(it) } } }
                 val list = state.permissions
                 if (list != null) {
-                    if (list.isEmpty() && !loading) item { PruneCard { Text("No apps hold sensitive permissions.") } }
+                    if (list.isEmpty() && !loading) item { PruneCard { Text(str(R.string.optui_no_sensitive)) } }
                     items(list, key = { it.app.packageName }) { ap ->
                         PruneCard(padding = androidx.compose.foundation.layout.PaddingValues(6.dp)) {
                             PackageRow(ap.app, subtitle = ap.granted.joinToString { it.label }, showStatus = false,
                                 onClick = { openSettings(ap.app.packageName) })
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                                TextButton(onClick = { openSettings(ap.app.packageName) }) { Text("Settings") }
+                                TextButton(onClick = { openSettings(ap.app.packageName) }) { Text(str(R.string.cd_settings)) }
                                 if (access.privileged) TextButton(onClick = {
-                                    review("Revoke permissions: ${ap.app.label}", ap.granted.map { vm.repo.optimizer.revokeChange(ap.app, it) })
-                                }) { Text("Revoke all…") }
+                                    review(str(R.string.optui_revoke_perms, ap.app.label), ap.granted.map { vm.repo.optimizer.revokeChange(ap.app, it) })
+                                }) { Text(str(R.string.optui_revoke_all)) }
                             }
                         }
                     }
@@ -215,75 +217,75 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
             }
             OptimizationSection.NOTIFICATIONS -> {
                 if (Build.VERSION.SDK_INT < 33) item {
-                    Banner("Notification permission exists from Android 13. Use Settings → Notifications on this version.", BannerKind.INFO)
+                    Banner(str(R.string.optui_notif_old_android), BannerKind.INFO)
                 }
                 item { SystemToggle(includeSystem) { vm.update { setShowSystem(it) } } }
                 val list = state.notifications
                 if (list != null) {
                     selectableList(list, selection.value, { selection.value = it },
-                        subtitle = { if (scan.usage.isEmpty()) it.packageName else "Last opened ${daysAgo(it.lastUsed)}" },
+                        subtitle = { if (scan.usage.isEmpty()) it.packageName else str(R.string.optui_last_opened, daysAgo(it.lastUsed)) },
                         onOpen = { openSettings(it.packageName, notifications = true) }) { ids ->
-                        review("Turn off notifications", list.filter { it.packageName in ids }.map { vm.repo.optimizer.notificationChange(it) })
+                        review(str(R.string.op_notifications), list.filter { it.packageName in ids }.map { vm.repo.optimizer.notificationChange(it) })
                     }
                 }
             }
             OptimizationSection.STORAGE -> {
                 val s = state.storage
                 if (scan.usage.isEmpty()) item {
-                    Banner("Usage access is needed to read app sizes.", BannerKind.WARNING) {
-                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text("Grant usage access") }
+                    Banner(str(R.string.optui_usage_needed_sizes), BannerKind.WARNING) {
+                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text(str(R.string.rec_usage_access)) }
                     }
                 }
                 if (s != null) {
                     item {
                         PruneCard {
                             val used = s.totalBytes - s.freeBytes
-                            Text("${Executor.formatBytes(used)} used of ${Executor.formatBytes(s.totalBytes)}", style = MaterialTheme.typography.titleMedium)
-                            Text("${Executor.formatBytes(s.freeBytes)} free · app caches ${Executor.formatBytes(s.cacheBytes)}",
+                            Text(str(R.string.optui_used_of, Executor.formatBytes(used), Executor.formatBytes(s.totalBytes)), style = MaterialTheme.typography.titleMedium)
+                            Text(str(R.string.optui_free_caches, Executor.formatBytes(s.freeBytes), Executor.formatBytes(s.cacheBytes)),
                                 style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             Spacer(Modifier.height(10.dp))
-                            Button(onClick = { review("Clear app caches", listOf(vm.repo.optimizer.trimCachesChange())) },
-                                enabled = true, modifier = Modifier.fillMaxWidth().testTag("trim_caches")) { Text("Clear all app caches…") }
+                            Button(onClick = { review(str(R.string.change_trim_caches), listOf(vm.repo.optimizer.trimCachesChange())) },
+                                enabled = true, modifier = Modifier.fillMaxWidth().testTag("trim_caches")) { Text(str(R.string.optui_clear_all_caches)) }
                         }
                     }
-                    item { SectionHeader("Largest apps") }
+                    item { SectionHeader(str(R.string.optui_largest)) }
                     items(s.apps.take(25), key = { it.app.packageName }) { a ->
-                        PackageRow(a.app, subtitle = "${Executor.formatBytes(a.total)} · cache ${Executor.formatBytes(a.cacheBytes)}",
+                        PackageRow(a.app, subtitle = str(R.string.optui_size_cache, Executor.formatBytes(a.total), Executor.formatBytes(a.cacheBytes)),
                             showStatus = false, onClick = { openSettings(a.app.packageName) })
                     }
                 }
             }
             OptimizationSection.RESOURCES -> {
                 if (scan.usage.isEmpty()) item {
-                    Banner("Usage access is needed for screen time.", BannerKind.WARNING) {
-                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text("Grant usage access") }
+                    Banner(str(R.string.optui_usage_needed_screen), BannerKind.WARNING) {
+                        TextButton(onClick = { nav.go(Routes.SETUP) }) { Text(str(R.string.rec_usage_access)) }
                     }
                 }
                 if (!access.privileged) item {
-                    Banner("Battery estimates need Shizuku or root (they come from dumpsys batterystats).", BannerKind.INFO)
+                    Banner(str(R.string.optui_battery_needs_shell), BannerKind.INFO)
                 }
                 val list = state.resources
                 if (list != null) {
                     item {
-                        Text("Battery figures are Android's own estimate since the last full charge. They are approximate and not available on every firmware.",
+                        Text(str(R.string.optui_battery_note),
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     items(list.take(30), key = { it.app.packageName }) { r ->
                         PackageRow(r.app, showStatus = false, onClick = { nav.go(Routes.app(r.app.packageName)) },
                             subtitle = listOfNotNull(
                                 r.batteryMah?.let { String.format(java.util.Locale.US, "%.1f mAh", it) },
-                                if (r.foregroundMs7d > 0) "${formatDuration(r.foregroundMs7d)} on screen (7 days)" else null,
+                                if (r.foregroundMs7d > 0) str(R.string.optui_on_screen, formatDuration(r.foregroundMs7d)) else null,
                             ).joinToString(" · ").ifEmpty { r.app.packageName })
                     }
                 }
             }
             OptimizationSection.COMPILATION -> item {
                 PruneCard {
-                    Text("Runs the same job Android runs overnight. It can take 5–20 minutes and the phone may get warm. Best done while charging.",
+                    Text(str(R.string.optui_compile_desc),
                         style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(10.dp))
-                    Button(onClick = { review("Compile apps now", listOf(vm.repo.optimizer.dexoptChange())) },
-                        modifier = Modifier.fillMaxWidth()) { Text("Compile apps now…") }
+                    Button(onClick = { review(str(R.string.op_dexopt), listOf(vm.repo.optimizer.dexoptChange())) },
+                        modifier = Modifier.fillMaxWidth()) { Text(str(R.string.optui_compile_btn)) }
                 }
             }
         }
@@ -292,7 +294,7 @@ fun OptimizeSectionScreen(vm: AppViewModel, ovm: OptimizeViewModel, nav: Nav, se
 
 @Composable
 private fun SystemToggle(on: Boolean, onChange: (Boolean) -> Unit) {
-    OptionSwitch("Show system apps", "Off: only apps you installed and third-party preloads.", on, onChange)
+    OptionSwitch(str(R.string.optui_show_system), str(R.string.optui_show_system_desc), on, onChange)
 }
 
 private fun androidx.compose.foundation.lazy.LazyListScope.selectableList(
@@ -306,12 +308,12 @@ private fun androidx.compose.foundation.lazy.LazyListScope.selectableList(
     if (apps.isEmpty()) return
     item {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("${selected.size} selected", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
+            Text(str(R.string.optui_n_selected, selected.size), style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
             TextButton(onClick = { onSelect(if (selected.size == apps.size) emptySet() else apps.map { it.packageName }.toSet()) }) {
-                Text(if (selected.size == apps.size) "None" else "All")
+                Text(if (selected.size == apps.size) str(R.string.debloat_none) else str(R.string.apps_filter_all))
             }
             OutlinedButton(onClick = { onReview(selected) }, enabled = selected.isNotEmpty(), modifier = Modifier.testTag("review_selected")) {
-                Text("Review…")
+                Text(str(R.string.optui_review))
             }
         }
     }
@@ -321,7 +323,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.selectableList(
             onClick = { onSelect(if (on) selected - a.packageName else selected + a.packageName) },
             trailing = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (onOpen != null) TextButton(onClick = { onOpen(a) }) { Text("Settings") }
+                    if (onOpen != null) TextButton(onClick = { onOpen(a) }) { Text(str(R.string.cd_settings)) }
                     Checkbox(on, { onSelect(if (on) selected - a.packageName else selected + a.packageName) })
                 }
             })

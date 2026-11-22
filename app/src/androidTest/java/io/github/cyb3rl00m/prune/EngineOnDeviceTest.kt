@@ -18,8 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Runs Prune's real commands on the emulator as the shell user and checks the result by reading the state
- * back from Android, exactly like the app does on a phone with Shizuku.
+ * Prune の実際のコマンドをエミュレータ上で shell ユーザーとして実行し、Android から状態を読み戻して結果を確認する。
+ * Shizuku を使う実機でアプリが行うのとまったく同じ方法。
  */
 @RunWith(AndroidJUnit4::class)
 class EngineOnDeviceTest {
@@ -57,7 +57,7 @@ class EngineOnDeviceTest {
     @Test fun deviceIdentityAndCompatibilityOnEmulator() {
         runBlocking { repo.rescan() }
         val d = repo.device.value!!
-        // The CI emulator must be recognised as such, never as a Pixel or another brand.
+        // CI のエミュレータはエミュレータとして認識されなければならない。Pixel や他のブランドと誤認してはならない。
         assertEquals(io.github.cyb3rl00m.prune.core.oem.EmulatorIntegration, d.integration)
         assertTrue("getprop returned properties", d.identity.props.size > 50)
         assertTrue(d.services.gms)
@@ -66,7 +66,7 @@ class EngineOnDeviceTest {
             d.firmware, d.services, io.github.cyb3rl00m.prune.core.oem.AccessSnapshot("test", true, false, false, false, false, true, true),
             repo.history.state.value)
         assertTrue(report.operations.all { it.status == io.github.cyb3rl00m.prune.core.oem.OpStatus.AVAILABLE })
-        // Duplicate detection runs on a real PackageManager without failing.
+        // 重複検出が実際の PackageManager 上で失敗せずに動くこと。
         repo.duplicateFinder.find()
     }
 

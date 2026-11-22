@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="theme_system">システムに従う</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_light">ライト</string>
+
+    <string name="dup_browsers">ブラウザ</string>
+    <string name="dup_galleries">ギャラリー</string>
+    <string name="dup_music">音楽プレーヤー</string>
+    <string name="dup_calculators">電卓</string>
+    <string name="dup_calendars">カレンダー</string>
+    <string name="dup_email">メールアプリ</string>
+    <string name="dup_messaging">メッセージ (SMS) アプリ</string>
+    <string name="dup_contacts">連絡先アプリ</string>
+    <string name="dup_maps">地図</string>
+    <string name="dup_files">ファイルマネージャー</string>
+    <string name="dup_stores">アプリストア</string>
+    <string name="dup_video">動画プレーヤー</string>
+    <string name="dup_cameras">カメラ</string>
+    <string name="dup_keyboards">キーボード</string>
+
+    <string name="dyn_launcher">現在のホーム画面 (ランチャー) です。</string>
+    <string name="dyn_dialer">既定の電話アプリです。通話と緊急通報に必要です。</string>
+    <string name="dyn_sms">既定の SMS アプリです。</string>
+    <string name="dyn_keyboard">使用中のキーボードです。これがないと文字 (PIN を含む) を入力できません。</string>
+    <string name="dyn_accessibility">オンにしたユーザー補助サービスを持っています。</string>
+    <string name="dyn_device_admin">デバイス管理アプリです (例: 仕事用プロファイル、Find My Mobile、MDM)。</string>
+    <string name="dyn_browser">既定のブラウザです。リンクはこれで開きます。</string>
+    <string name="dyn_enabled_keyboard">この端末で有効になっているキーボードです。</string>
+    <string name="dyn_notification_access">通知へのアクセス権を持っています (例: スマートウォッチやウェアラブルのアプリ)。</string>
+    <string name="dyn_live_wallpaper">現在のライブ壁紙を提供しています。</string>
+    <string name="dyn_prune_itself">Prune 自身です。</string>
+</resources>

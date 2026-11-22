@@ -1,0 +1,25 @@
+{
+ "locked": {
+  "com.vivo.permissionmanager": "vivo の権限マネージャー。"
+ },
+ "entries": {
+  "com.iqoo.secure": {
+   "note": "vivo i Manager: セキュリティ、権限、データ使用量。"
+  },
+  "com.asus.mobilemanager": {
+   "note": "ASUS Mobile Manager: 権限と電池の管理。"
+  },
+  "com.transsion.phonemaster": {
+   "note": "Phone Master: Tecno、Infinix、itel のクリーニング、電池、権限の管理。"
+  },
+  "com.vivo.browser": {
+   "note": "vivo ブラウザ。別のブラウザがインストールされていることを確認してください。"
+  },
+  "com.transsion.carlcare": {
+   "note": "Carlcare サポート。"
+  },
+  "com.sonymobile.support": {
+   "note": "Sony サポート。"
+  }
+ }
+}

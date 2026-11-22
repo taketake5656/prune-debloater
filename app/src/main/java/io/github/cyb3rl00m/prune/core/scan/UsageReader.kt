@@ -8,7 +8,7 @@ import android.os.Process
 
 data class AppUsage(val packageName: String, val lastUsed: Long, val foregroundMs7d: Long)
 
-/** App usage from UsageStatsManager. Needs "Usage access" (PACKAGE_USAGE_STATS), granted by the user. */
+/** UsageStatsManager から得るアプリの使用状況。ユーザーが許可する「使用状況へのアクセス」(PACKAGE_USAGE_STATS) が必要。 */
 class UsageReader(private val context: Context) {
 
     @Suppress("DEPRECATION")
@@ -25,7 +25,7 @@ class UsageReader(private val context: Context) {
         } else mode == AppOpsManager.MODE_ALLOWED
     }
 
-    /** Usage over the last [days] days, keyed by package. Empty without usage access. */
+    /** 過去 [days] 日間の使用状況 (パッケージごと)。使用状況へのアクセスがなければ空。 */
     fun read(days: Int = 90): Map<String, AppUsage> {
         if (!hasAccess()) return emptyMap()
         val usm = context.getSystemService(UsageStatsManager::class.java) ?: return emptyMap()

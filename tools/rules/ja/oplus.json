@@ -1,0 +1,117 @@
+{
+ "locked": {
+  "com.oplus.notificationmanager": "通知の管理。",
+  "com.oplus.exsystemservice": "システムサービス (スクリーンショットなど)。"
+ },
+ "groups": {
+  "OPLUS_ACCOUNT": {
+   "name": "OPPO / OnePlus アカウントとクラウド",
+   "warning": "アカウントへのログイン、HeyTap/OnePlus Cloud のバックアップ、テーマストアが動作しなくなる可能性があります。"
+  },
+  "OPLUS_SHARE": {
+   "name": "OPPO / OnePlus Share",
+   "warning": "OPPO、OnePlus、realme、Xiaomi、vivo の端末とのワイヤレスファイル共有が動作しなくなります。"
+  },
+  "OPLUS_GAMES": {
+   "name": "ゲームとゲームスペース",
+   "warning": "ゲームスペース / ゲームのオーバーレイ (ゲーム中の通知非表示やパフォーマンスモード) が動作しなくなります。"
+  },
+  "UPDATES": {
+   "name": "システムアップデート",
+   "warning": "端末がセキュリティアップデートやシステムアップデートを受け取れなくなる可能性があります。アップデートを確認する前に再び有効にしてください。"
+  },
+  "DEVICE_CARE": {
+   "name": "電池とデバイスケア",
+   "warning": "電池の管理、温度管理、アプリのスリープが動作しなくなる可能性があり、多くの場合かえって電池持ちが悪くなります。"
+  }
+ },
+ "entries": {
+  "com.nearme.statistics.rom": {
+   "note": "ユーザーエクスペリエンス プログラム: 使用統計。"
+  },
+  "com.oplus.statistics.rom": {
+   "note": "ユーザーエクスペリエンス プログラム: 使用統計。"
+  },
+  "com.heytap.mcs": {
+   "note": "宣伝のシステムメッセージ。"
+  },
+  "com.oplus.metis": {
+   "note": "アプリの利用状況を記録します。"
+  },
+  "com.heytap.market": {
+   "note": "App Market。一部のアプリはこれを通して更新されます。"
+  },
+  "com.heytap.browser": {
+   "note": "ブラウザ。別のブラウザがインストールされていることを確認してください。"
+  },
+  "com.heytap.music": {
+   "note": "音楽。"
+  },
+  "com.coloros.video": {
+   "note": "動画プレーヤー。"
+  },
+  "com.oneplus.brickmode": {
+   "note": "Zen モード。"
+  },
+  "com.coloros.childrenspace": {
+   "note": "キッズスペース。"
+  },
+  "com.heytap.speechassist": {
+   "note": "Breeno アシスタント。"
+  },
+  "com.realme.link": {
+   "note": "realme Link (IoT 機器)。"
+  },
+  "com.oplus.games": {
+   "note": "ゲーム。"
+  },
+  "com.coloros.gamespaceui": {
+   "note": "ゲームスペースのオーバーレイ。"
+  },
+  "com.oneplus.gamespace": {
+   "note": "ゲームスペース。"
+  },
+  "com.coloros.findmyphone": {
+   "note": "端末を探す (盗難対策)。"
+  },
+  "com.heytap.cloud": {
+   "note": "クラウドバックアップ。"
+  },
+  "com.coloros.oshare": {
+   "note": "Share (ファイル転送)。"
+  },
+  "com.heytap.themestore": {
+   "note": "テーマストア。"
+  },
+  "com.oplus.themestore": {
+   "note": "テーマストア。"
+  },
+  "com.heytap.usercenter": {
+   "note": "クラウド、テーマストア、App Market が使うアカウントサービス。"
+  },
+  "com.oneplus.account": {
+   "note": "OnePlus アカウント。"
+  },
+  "com.oplus.cosa": {
+   "note": "アプリ強化 / パフォーマンスサービス。"
+  },
+  "com.oplus.battery": {
+   "note": "電池の管理。"
+  },
+  "com.oplus.romupdate": {
+   "note": "アップデートサービス。"
+  },
+  "com.oplus.ota": {
+   "note": "ソフトウェアアップデート。"
+  },
+  "com.oplus.sau": {
+   "note": "システムアップグレードサービス。"
+  },
+  "com.coloros.sau": {
+   "note": "システムアップグレードサービス。"
+  },
+  "com.coloros.weather2": {
+   "note": "天気。削除すると一部の端末で起動不能 (ブートループ) になると報告されています。"
+  }
+ }
+}

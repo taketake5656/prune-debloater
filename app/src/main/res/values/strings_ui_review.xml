@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="review_script_saved">Script saved.</string>
+    <string name="review_script_not_saved">Could not save the script.</string>
+    <string name="review_applying">Applying changes</string>
+    <string name="review_dont_close">Don\'t close Prune until it is finished.</string>
+    <string name="review_finished">Finished</string>
+    <string name="review_undo_all">Undo all</string>
+    <string name="review_done">Done</string>
+    <string name="review_verified">Verified by reading the state back from Android. Saved in Restore → History.</string>
+    <string name="review_not_applied_n">Not applied (%1$d)</string>
+    <string name="review_applied">Applied</string>
+    <string name="review_title_short">Review</string>
+    <string name="review_nothing">Nothing to review.</string>
+    <string name="review_title">Review changes</string>
+    <string name="review_apply_one">Apply %1$d change via %2$s</string>
+    <string name="review_apply_many">Apply %1$d changes via %2$s</string>
+    <string name="review_setup_shizuku">Set up Shizuku to apply</string>
+    <string name="review_export_script">Export as ADB script</string>
+    <string name="review_nothing_changed_yet">Nothing has been changed yet. Read the list, remove anything you want to keep, then apply.</string>
+    <string name="review_no_access">Prune has no privileged access right now. Set up Shizuku (or root) to apply directly, or export the plan as an ADB script to run from a computer.</string>
+    <string name="review_confirm_one">I understand that %1$d high-risk or unknown change can break features of this phone, and that I can undo them in Restore.</string>
+    <string name="review_confirm_many">I understand that %1$d high-risk or unknown changes can break features of this phone, and that I can undo them in Restore.</string>
+    <string name="review_not_reversible">Not reversible</string>
+    <string name="review_fallback">Fallback: uninstall for user</string>
+    <string name="cd_remove_from_plan">Remove from plan</string>
+    <string name="review_what_this_does">What this does and the exact command</string>
+    <string name="review_n_of_m_applied">%1$d of %2$d changes applied</string>
+    <string name="review_n_change">%1$d change</string>
+    <string name="review_n_changes">%1$d changes</string>
+    <string name="review_n_risk">%1$d %2$s</string>
+    <string name="review_n_warned">%1$d with warnings</string>
+</resources>

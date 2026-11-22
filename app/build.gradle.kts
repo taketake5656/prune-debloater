@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
-// Release signing comes from environment variables (set as GitHub Actions secrets).
-// Without them the release build falls back to the debug key so local builds still work.
+// リリース署名は環境変数 (GitHub Actions のシークレットで設定) から取得する。
+// 設定がなければリリースビルドは debug 鍵で署名されるので、ローカルでもビルドできる。
 val releaseKeystore: String? = System.getenv("PRUNE_KEYSTORE_FILE")
 val releaseKeystorePassword: String? = System.getenv("PRUNE_KEYSTORE_PASSWORD")
 val releaseKeyAlias: String? = System.getenv("PRUNE_KEY_ALIAS")
@@ -57,9 +56,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
     buildFeatures {
         compose = true

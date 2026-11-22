@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui.screens
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -76,10 +78,10 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
 
     ScreenScaffold(
         title = "Prune", nav = null, tag = "home",
-        subtitle = "Android debloater & optimizer",
+        subtitle = str(R.string.home_subtitle),
         actions = {
-            IconButton(onClick = { vm.rescan() }, modifier = Modifier.testTag("rescan")) { Icon(Icons.Outlined.Refresh, "Scan again") }
-            IconButton(onClick = { nav.go(Routes.SETTINGS) }, modifier = Modifier.testTag("open_settings")) { Icon(Icons.Outlined.Settings, "Settings") }
+            IconButton(onClick = { vm.rescan() }, modifier = Modifier.testTag("rescan")) { Icon(Icons.Outlined.Refresh, str(R.string.cd_scan_again)) }
+            IconButton(onClick = { nav.go(Routes.SETTINGS) }, modifier = Modifier.testTag("open_settings")) { Icon(Icons.Outlined.Settings, str(R.string.cd_settings)) }
         },
     ) {
         item {
@@ -92,13 +94,13 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Outlined.Smartphone, null, tint = MaterialTheme.colorScheme.primary)
                             Spacer(Modifier.width(8.dp))
-                            Text(device?.brandName ?: "Detecting device…",
+                            Text(device?.brandName ?: str(R.string.home_detecting_device),
                                 style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.weight(1f))
                             device?.let { Pill(it.compat.label, compatColor(it.compat)) }
                         }
                         Spacer(Modifier.height(8.dp))
-                        Text(device?.fullName ?: "Reading device…", style = MaterialTheme.typography.headlineMedium)
+                        Text(device?.fullName ?: str(R.string.home_reading_device), style = MaterialTheme.typography.headlineMedium)
                         Text(device?.model ?: "", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(Modifier.height(12.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -106,7 +108,7 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
                                 Pill("Android ${d.androidVersion}", MaterialTheme.colorScheme.onSurface)
                                 d.firmware?.takeIf { it.name != "Android" }?.let { Pill(it.toString(), MaterialTheme.colorScheme.onSurface) }
                                 d.cscCode?.let { Pill("CSC $it", MaterialTheme.colorScheme.onSurface) }
-                                if (!d.services.gms) Pill("No Google services", MaterialTheme.colorScheme.tertiary)
+                                if (!d.services.gms) Pill(str(R.string.lim_no_gms_t), MaterialTheme.colorScheme.tertiary)
                             }
                         }
                     }
@@ -119,10 +121,10 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
             item {
                 Banner(
                     if (d.compat == io.github.cyb3rl00m.prune.core.oem.CompatLevel.EXPERIMENTAL)
-                        "${d.integration.title}: experimental support. Prune has dedicated rules for this brand, but they are not tested on real hardware yet. Review every change."
-                    else "${d.brandName}: generic compatibility. Prune uses its generic Android rules and the community database for this brand. Review every change.",
+                        str(R.string.home_banner_experimental, d.integration.title)
+                    else str(R.string.home_banner_generic, d.brandName),
                     BannerKind.WARNING,
-                    action = { androidx.compose.material3.TextButton(onClick = { nav.go(Routes.COMPAT) }) { Text("Compatibility report") } },
+                    action = { androidx.compose.material3.TextButton(onClick = { nav.go(Routes.COMPAT) }) { Text(str(R.string.home_compat_report)) } },
                 )
             }
         }
@@ -133,21 +135,21 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
 
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                StatTile(if (scan.scanning && apps.isEmpty()) "…" else installed.toString(), "Installed packages", Icons.Outlined.Apps, Modifier.weight(1f))
-                StatTile(system.toString(), "System packages", Icons.Outlined.Inventory2, Modifier.weight(1f), MaterialTheme.colorScheme.secondary)
+                StatTile(if (scan.scanning && apps.isEmpty()) "…" else installed.toString(), str(R.string.home_stat_installed), Icons.Outlined.Apps, Modifier.weight(1f))
+                StatTile(system.toString(), str(R.string.home_stat_system), Icons.Outlined.Inventory2, Modifier.weight(1f), MaterialTheme.colorScheme.secondary)
             }
         }
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                StatTile(removable.toString(), "Removable (Levels 1–3)", Icons.Outlined.ContentCut, Modifier.weight(1f), MaterialTheme.colorScheme.tertiary)
-                StatTile(changed.toString(), "Disabled or removed", Icons.Outlined.CheckCircle, Modifier.weight(1f))
+                StatTile(removable.toString(), str(R.string.home_stat_removable), Icons.Outlined.ContentCut, Modifier.weight(1f), MaterialTheme.colorScheme.tertiary)
+                StatTile(changed.toString(), str(R.string.home_stat_changed), Icons.Outlined.CheckCircle, Modifier.weight(1f))
             }
         }
 
         item {
             PruneCard {
-                Text("Debloat progress", style = MaterialTheme.typography.titleMedium)
-                Text("Share of the optional packages at this level that are already off.", style = MaterialTheme.typography.bodySmall,
+                Text(str(R.string.home_progress_title), style = MaterialTheme.typography.titleMedium)
+                Text(str(R.string.home_progress_desc), style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(10.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -161,12 +163,12 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
                 LinearProgressIndicator(progress = { fraction }, modifier = Modifier.fillMaxWidth().height(10.dp).clip(RoundedCornerShape(5.dp)),
                     trackColor = MaterialTheme.colorScheme.surfaceVariant)
                 Spacer(Modifier.height(8.dp))
-                Text("$done of $total packages (${(fraction * 100).toInt()} %)", style = MaterialTheme.typography.bodyMedium)
+                Text(str(R.string.home_progress_value, done, total, (fraction * 100).toInt()), style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(12.dp))
                 Button(onClick = { nav.tab(Routes.DEBLOAT) }, modifier = Modifier.fillMaxWidth().testTag("home_debloat")) {
                     Icon(Icons.Outlined.ContentCut, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Choose a debloat level")
+                    Text(str(R.string.home_choose_level))
                 }
             }
         }
@@ -177,7 +179,7 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
                     Icon(Icons.Outlined.Apps, null, tint = MaterialTheme.colorScheme.secondary)
                     Spacer(Modifier.width(12.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("${scan.duplicates.size} app types installed more than once", style = MaterialTheme.typography.titleSmall)
+                        Text(str(R.string.home_duplicates, scan.duplicates.size), style = MaterialTheme.typography.titleSmall)
                         Text(scan.duplicates.take(3).joinToString { it.name } + if (scan.duplicates.size > 3) "…" else "",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
@@ -186,9 +188,9 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
             }
         }
 
-        item { SectionHeader("Optimization recommendations") }
+        item { SectionHeader(str(R.string.home_recommendations)) }
         if (recommendations.isEmpty()) item {
-            PruneCard { Text(if (scan.scanning) "Scanning…" else "No recommendations right now.", style = MaterialTheme.typography.bodyMedium) }
+            PruneCard { Text(if (scan.scanning) str(R.string.home_scanning) else str(R.string.home_no_recommendations), style = MaterialTheme.typography.bodyMedium) }
         }
         recommendations.forEach { r ->
             item {
@@ -205,10 +207,10 @@ fun HomeScreen(vm: AppViewModel, nav: Nav) {
                 }
             }
         }
-        scan.error?.let { e -> item { Banner("Scan failed: $e", BannerKind.ERROR) } }
+        scan.error?.let { e -> item { Banner(str(R.string.home_scan_failed, e), BannerKind.ERROR) } }
         item {
             Text(
-                if (scan.lastScan == 0L) "Scanning packages…" else "Last scan ${java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(scan.lastScan))} · database ${vm.repo.database.updated}",
+                if (scan.lastScan == 0L) str(R.string.home_scanning_packages) else str(R.string.home_last_scan, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(scan.lastScan)), vm.repo.database.updated),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp, start = 4.dp),
             )
@@ -223,14 +225,14 @@ fun AccessCard(active: AccessKind, privileged: Boolean, onSetup: () -> Unit) {
             Icon(Icons.Outlined.Shield, null, tint = if (privileged) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSecondaryContainer)
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(if (privileged) "Access: ${active.label}" else "Limited access", style = MaterialTheme.typography.titleSmall)
+                Text(if (privileged) str(R.string.home_access, active.label) else str(R.string.home_limited_access), style = MaterialTheme.typography.titleSmall)
                 Text(
-                    if (privileged) "Prune can disable, remove and restore system packages."
-                    else "Prune can scan and explain everything. To change system packages, set up Shizuku (no root needed).",
+                    if (privileged) str(R.string.home_access_full)
+                    else str(R.string.home_access_limited_desc),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
-            if (!privileged) OutlinedButton(onClick = onSetup, modifier = Modifier.testTag("setup_access")) { Text("Set up") }
+            if (!privileged) OutlinedButton(onClick = onSetup, modifier = Modifier.testTag("setup_access")) { Text(str(R.string.home_set_up)) }
         }
     }
 }

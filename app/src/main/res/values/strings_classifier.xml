@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cls_could_not_analyse">Prune could not analyse this package.</string>
+    <string name="cls_note_preload_installer">Installed by %1$s, a preload/partner installer: the manufacturer or carrier put it there.</string>
+    <string name="cls_note_regional">Region-specific variant of an app.</string>
+    <string name="cls_in_use_title">In use on this phone</string>
+    <string name="cls_locked_persistent">Persistent system app: Android keeps it running at all times because the system needs it.</string>
+    <string name="cls_locked_community_unsafe">Marked unsafe to remove by the community database (UAD-ng).</string>
+    <string name="cls_note_unknown">Not in Prune\'s database: its purpose is unknown. Change it only if you know what it does.</string>
+    <string name="cls_note_system_privileges">Runs with system privileges (%1$s).</string>
+    <string name="cls_desc_preload_user">App preinstalled by the manufacturer, carrier or a partner. You can remove it like any other app.</string>
+    <string name="cls_desc_user">An app you installed. You can uninstall it like any other app.</string>
+    <string name="cls_desc_oem">%1$s system component. Prune has no description for it yet.</string>
+    <string name="cls_desc_google">Google system component. Prune has no description for it yet.</string>
+    <string name="cls_desc_carrier">Carrier-installed component.</string>
+    <string name="cls_desc_system">System component. Prune has no description for it yet.</string>
+    <string name="cls_recovery_system">Restore it in Prune (Restore tab), or from a computer: adb shell pm install-existing %1$s and adb shell pm enable %1$s. A factory reset also brings it back.</string>
+    <string name="cls_recovery_user">If disabled: enable it in Prune or Settings → Apps. If uninstalled: install it again from its app store.</string>
+    <string name="tier_recommended">Recommended</string>
+    <string name="tier_advanced">Advanced</string>
+    <string name="tier_expert">Expert</string>
+    <string name="tier_unsafe">Unsafe</string>
+</resources>

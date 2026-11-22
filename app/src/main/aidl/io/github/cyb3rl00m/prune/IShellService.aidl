@@ -2,14 +2,14 @@ package io.github.cyb3rl00m.prune;
 
 import android.os.Bundle;
 
-// Runs inside Shizuku's process as the shell (or root) user.
+// Shizuku のプロセス内で shell (または root) ユーザーとして動く。
 interface IShellService {
-    // Shizuku calls this when the service is unbound. Transaction code is fixed by Shizuku.
+    // サービスのバインドが解除されたときに Shizuku が呼ぶ。トランザクションコードは Shizuku が固定している。
     void destroy() = 16777114;
 
-    // Runs one program with the given argv (no shell). Returns exitCode (int), stdout, stderr (String).
+    // 指定された argv でプログラムを 1 つ実行する (シェルは使わない)。exitCode (int)、stdout、stderr (String) を返す。
     Bundle exec(in String[] argv, long timeoutMillis) = 1;
 
-    // uid the service runs as: 2000 = shell (ADB/Shizuku), 0 = root.
+    // サービスが動く uid: 2000 = shell (ADB/Shizuku)、0 = root。
     int uid() = 2;
 }

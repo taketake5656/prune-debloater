@@ -15,9 +15,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PlanBuilderTest {
+    init { TestStrings.install() }
     private val all = TestData.db.ecosystems.map { it.key }.toSet()
 
-    /** A realistic Galaxy package set: every curated entry, every locked id, plus some community entries. */
+    /** 現実的な Galaxy のパッケージ構成: キュレーション済みエントリ全件、ロック ID 全件、コミュニティのエントリ数件。 */
     private val apps by lazy {
         val ids = TestData.curated.map { it.key } + TestData.locked.map { it.id } +
             TestData.db.uad.keys.filter { it.startsWith("com.samsung") || it.startsWith("com.google") }.take(400)

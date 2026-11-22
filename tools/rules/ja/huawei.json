@@ -1,0 +1,66 @@
+{
+ "locked": {
+  "com.huawei.systemmanager": "スマホマネージャー: EMUI でアプリの起動管理、権限、電池の設定を扱います。",
+  "com.huawei.android.hwouc": "システムアップデートのクライアント (OTA)。",
+  "com.huawei.lbs": "システムが使う位置情報サービス。"
+ },
+ "groups": {
+  "HUAWEI_ID": {
+   "name": "HUAWEI ID とクラウド",
+   "warning": "HUAWEI ID へのログイン、HUAWEI Cloud のバックアップ、Huawei Mobile Services を使う AppGallery のアプリが動作しなくなる可能性があります。"
+  },
+  "HUAWEI_SHARE": {
+   "name": "Huawei Share",
+   "warning": "Huawei Share によるファイル転送と画面投影が動作しなくなります。"
+  },
+  "HUAWEI_HEALTH": {
+   "name": "HUAWEI ヘルスケアとウェアラブル",
+   "warning": "HUAWEI のスマートウォッチやバンドが同期しなくなります。"
+  },
+  "HUAWEI_WALLET": {
+   "name": "Huawei Wallet",
+   "warning": "Huawei Wallet と Huawei Pay が動作しなくなります。"
+  }
+ },
+ "entries": {
+  "com.huawei.android.tips": {
+   "note": "ヒント / 機能アドバイザー。"
+  },
+  "com.huawei.intelligent": {
+   "note": "HUAWEI アシスタント (HiBoard)。"
+  },
+  "com.huawei.phoneservice": {
+   "note": "サポート / HiCare。"
+  },
+  "com.huawei.hitouch": {
+   "note": "HiTouch の物体認識。"
+  },
+  "com.huawei.hiskytone": {
+   "note": "Skytone のローミングデータサービス。"
+  },
+  "com.huawei.browser": {
+   "note": "Huawei ブラウザ。別のブラウザがインストールされていることを確認してください。"
+  },
+  "com.huawei.parentcontrol": {
+   "note": "ペアレンタルコントロール。"
+  },
+  "com.huawei.hifolder": {
+   "note": "オンラインのフォルダ提案。"
+  },
+  "com.huawei.search": {
+   "note": "検索 (設定、ファイル、連絡先)。"
+  },
+  "com.huawei.android.findmyphone": {
+   "note": "デバイスを探す (盗難対策)。"
+  },
+  "com.huawei.hwid": {
+   "note": "Huawei Mobile Services (HMS Core)。Google サービスのない端末では、アプリがこれに依存しています。"
+  },
+  "com.huawei.appmarket": {
+   "note": "AppGallery。Google サービスのない端末では唯一のアプリストアです。"
+  },
+  "com.huawei.android.thememanager": {
+   "note": "テーマ: 壁紙やアイコンの適用も行います。"
+  }
+ }
+}

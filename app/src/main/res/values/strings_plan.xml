@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="level1_title">Minimal</string>
+    <string name="level1_summary">A cleaner phone without real changes.</string>
+    <string name="level1_d1">Removes promoted apps, carrier apps and third-party preloads (Facebook, Netflix, ...)</string>
+    <string name="level1_d2">Turns off optional manufacturer extras: tips, promotion feeds, ad services, AR stickers</string>
+    <string name="level1_d3">Keeps every manufacturer ecosystem feature and all Google services</string>
+    <string name="level2_title">Balanced</string>
+    <string name="level2_summary">Noticeably lighter, ecosystem kept.</string>
+    <string name="level2_d1">Everything in Minimal</string>
+    <string name="level2_d2">Removes diagnostics and data-collection services that run in the background</string>
+    <string name="level2_d3">Removes optional manufacturer apps (game launchers, email, data-transfer helpers...)</string>
+    <string name="level2_d4">Optional: removes Google apps you don\'t need</string>
+    <string name="level2_d5">Optional: restricts background activity of apps you haven\'t used for 30 days</string>
+    <string name="level3_title">Aggressive</string>
+    <string name="level3_summary">As light as reasonably possible.</string>
+    <string name="level3_d1">Everything in Balanced, Google apps included by default</string>
+    <string name="level3_d2">Removes more manufacturer components and optional system parts</string>
+    <string name="level3_d3">Removes the parts of ecosystem features you say you don\'t use</string>
+    <string name="level3_d4">Expect to lose features: read every warning in the review</string>
+    <string name="level4_title">Extreme / Custom</string>
+    <string name="level4_summary">Every package, your choice.</string>
+    <string name="level4_d1">Lists every changeable package with its risk</string>
+    <string name="level4_d2">Starts from the Aggressive selection: you add or remove items one by one</string>
+    <string name="level4_d3">High-risk and unknown packages need an extra confirmation</string>
+    <string name="level4_d4">Protected packages stay locked, even here</string>
+
+    <string name="plan_kept_you_use">You use %1$s</string>
+    <string name="plan_kept_google_excluded">Google apps not included</string>
+    <string name="plan_note_recently_used">You opened it in the last %1$d days</string>
+    <string name="plan_note_high">High risk: select only if you are sure</string>
+    <string name="plan_note_unknown">Unknown purpose: select only if you know what it does</string>
+    <string name="plan_note_not_default">Not in the default selection</string>
+
+    <string name="script_title">%1$s - %2$d change(s)</string>
+    <string name="script_line_run">Run on a computer with ADB connected to the phone (USB debugging or wireless debugging).</string>
+    <string name="script_line_os">Linux/macOS: sh this-file.sh    Windows: copy the lines into a Command Prompt.</string>
+    <string name="script_line_independent">Every line is independent. Undo: use the restore script from Prune\'s Restore screen.</string>
+
+    <string name="inv_enable">Turns the app back on.</string>
+    <string name="inv_reinstall_enable">Reinstalls the app for this user and turns it on.</string>
+    <string name="inv_reinstall_disabled">Reinstalls the app for this user (it stays disabled, as before).</string>
+    <string name="inv_disable_again">Disables the app again.</string>
+    <string name="inv_uninstall_again">Uninstalls the app for this user again.</string>
+    <string name="inv_appop">Restores the previous background setting (%1$s).</string>
+    <string name="inv_grant">Grants the permission again.</string>
+    <string name="inv_revoke">Revokes the permission again.</string>
+    <string name="inv_deviceidle_add">Exempts the app from battery optimization again.</string>
+    <string name="inv_deviceidle_remove">Removes the battery exemption again.</string>
+    <string name="inv_setting">Restores the previous value (%1$s).</string>
+    <string name="inv_system_default">system default</string>
+</resources>

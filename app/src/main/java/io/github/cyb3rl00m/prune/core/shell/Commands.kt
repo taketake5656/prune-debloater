@@ -1,30 +1,37 @@
 package io.github.cyb3rl00m.prune.core.shell
 
-/** Result of running one command. */
+import androidx.annotation.StringRes
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
+
+/** コマンド 1 回分の実行結果。 */
 data class ShellResult(val exitCode: Int, val stdout: String, val stderr: String) {
     val output: String get() = listOf(stdout.trim(), stderr.trim()).filter { it.isNotEmpty() }.joinToString("\n")
     val ok: Boolean get() = exitCode == 0 && !OutputParsers.looksLikeFailure(output)
 }
 
-/** Ways Prune can run privileged commands. */
-enum class AccessKind(val label: String, val tier: String) {
-    SHIZUKU("Shizuku", "ADB level"),
-    ROOT("Root", "Root"),
-    ADB_SCRIPT("ADB from a computer", "ADB level (manual)"),
-    NONE("No privileged access", "Standard");
+/** Prune が特権コマンドを実行する手段。 */
+enum class AccessKind(@StringRes private val labelRes: Int, @StringRes private val tierRes: Int) {
+    SHIZUKU(R.string.access_shizuku, R.string.tier_adb),
+    ROOT(R.string.access_root, R.string.tier_root),
+    ADB_SCRIPT(R.string.access_adb_script, R.string.tier_adb_manual),
+    NONE(R.string.access_none, R.string.tier_standard);
+
+    val label: String get() = str(labelRes)
+    val tier: String get() = str(tierRes)
 }
 
-/** Something that can run commands as the shell or root user. */
+/** shell ユーザーまたは root ユーザーとしてコマンドを実行できるもの。 */
 interface PrivilegedShell {
     val kind: AccessKind
-    /** uid the commands run as: 2000 = shell, 0 = root. */
+    /** コマンドを実行する uid: 2000 = shell、0 = root。 */
     val uid: Int
     suspend fun run(argv: List<String>, timeoutMs: Long = 60_000): ShellResult
 }
 
 /**
- * Builds every command Prune runs. All inputs are validated here, and commands are passed as argv lists
- * (never through a shell string), so a package name can never inject extra commands.
+ * Prune が実行するすべてのコマンドを組み立てる。入力はすべてここで検証し、コマンドは argv リストとして渡す
+ * (シェル文字列は決して使わない)。そのため、パッケージ名から余分なコマンドを注入されることはない。
  */
 object Commands {
     private val PKG = Regex("^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)*$")
@@ -82,17 +89,17 @@ object Commands {
         return listOf("settings", "delete", "global", key)
     }
 
-    /** Asks the system to free cache space from all apps (same mechanism Android uses when storage runs low). */
+    /** 全アプリのキャッシュ領域の解放をシステムに要求する (ストレージ不足時に Android が使うのと同じ仕組み)。 */
     fun trimCaches() = listOf("pm", "trim-caches", "9999G")
 
-    /** Runs the idle-maintenance app compilation job now (ART dexopt with app profiles). */
+    /** アイドル時メンテナンスのアプリコンパイルジョブを今すぐ実行する (アプリプロファイルを使った ART dexopt)。 */
     fun backgroundDexopt() = listOf("cmd", "package", "bg-dexopt-job")
 
     fun batteryStats() = listOf("dumpsys", "batterystats")
 
     fun id() = listOf("id")
 
-    /** Quotes argv for display, ADB scripts and `su -c`. */
+    /** 表示・ADB スクリプト・`su -c` 用に argv をクォートする。 */
     fun toShell(argv: List<String>): String = argv.joinToString(" ") { quote(it) }
 
     fun quote(arg: String): String =
@@ -100,7 +107,8 @@ object Commands {
         else "'" + arg.replace("'", "'\\''") + "'"
 }
 
-/** Parses command output. Pure functions so they can be unit tested against real outputs. */
+/** コマンド出力を解析する。実際の出力でユニットテストできるよう純粋関数にしている。
+ * 照合する文字列は Android が出力する英語なので、翻訳してはならない。 */
 object OutputParsers {
 
     private val failureMarkers = listOf("Exception", "Failure", "Error:", "Unknown package", "not found",
@@ -108,31 +116,31 @@ object OutputParsers {
 
     fun looksLikeFailure(output: String): Boolean = failureMarkers.any { output.contains(it, ignoreCase = false) }
 
-    /** `pm disable-user` prints "Package X new state: disabled-user". */
+    /** `pm disable-user` は "Package X new state: disabled-user" と出力する。 */
     fun disableSucceeded(r: ShellResult) = r.exitCode == 0 && r.stdout.contains("new state: disabled")
 
-    /** `pm enable` prints "Package X new state: enabled". */
+    /** `pm enable` は "Package X new state: enabled" と出力する。 */
     fun enableSucceeded(r: ShellResult) = r.exitCode == 0 &&
         (r.stdout.contains("new state: enabled") || r.stdout.contains("new state: default"))
 
     fun uninstallSucceeded(r: ShellResult) = r.exitCode == 0 && r.stdout.trim().startsWith("Success")
 
-    /** `pm install-existing` prints "Package X installed for user: 0". */
+    /** `pm install-existing` は "Package X installed for user: 0" と出力する。 */
     fun installExistingSucceeded(r: ShellResult) = r.exitCode == 0 && r.stdout.contains("installed for user")
 
-    /** Reads the mode from `cmd appops get <pkg> <op>`: "RUN_ANY_IN_BACKGROUND: ignore; time=..." */
+    /** `cmd appops get <pkg> <op>` の出力からモードを読む: "RUN_ANY_IN_BACKGROUND: ignore; time=..." */
     fun appOpMode(output: String, op: String): String {
         val m = Regex("""\b$op: ([a-z]+)""").find(output) ?: return "default"
         return m.groupValues[1]
     }
 
-    /** `cmd appops query-op` prints one package per line (or "No operations."). */
+    /** `cmd appops query-op` は 1 行に 1 パッケージを出力する (または "No operations.")。 */
     fun appOpQueryPackages(output: String): Set<String> =
         output.lines().map { it.trim() }.filter { Commands.isValidPackage(it) }.toSet()
 
     data class IdleWhitelist(val user: Set<String>, val system: Set<String>)
 
-    /** `cmd deviceidle whitelist` prints "system-excidle,pkg,uid", "system,pkg,uid" and "user,pkg,uid" lines. */
+    /** `cmd deviceidle whitelist` は "system-excidle,pkg,uid"、"system,pkg,uid"、"user,pkg,uid" の行を出力する。 */
     fun deviceIdleWhitelist(output: String): IdleWhitelist {
         val user = mutableSetOf<String>()
         val system = mutableSetOf<String>()
@@ -148,8 +156,8 @@ object OutputParsers {
     }
 
     /**
-     * Estimated battery use per uid from `dumpsys batterystats`, section "Estimated power use (mAh)".
-     * Lines look like "UID u0a234: 12.3 ( cpu=... )" or "UID 1000: 45.6 fg: ...".
+     * `dumpsys batterystats` の "Estimated power use (mAh)" セクションから、uid ごとの推定電池使用量を得る。
+     * 行の形式は "UID u0a234: 12.3 ( cpu=... )" や "UID 1000: 45.6 fg: ..."。
      */
     fun batteryUsePerUid(output: String): Map<Int, Double> {
         val lines = output.lines()
@@ -157,7 +165,7 @@ object OutputParsers {
         if (headerIndex < 0) return emptyMap()
         fun indent(s: String) = s.length - s.trimStart().length
         val headerIndent = indent(lines[headerIndex])
-        // The section ends at the first line that is not indented deeper than its header.
+        // セクションは、見出しより深くインデントされていない最初の行で終わる。
         val section = lines.drop(headerIndex + 1).takeWhile { it.isBlank() || indent(it) > headerIndent }
         val re = Regex("""^\s*UID (u(\d+)a(\d+)|u(\d+)s(\d+)|(\d+)): ([0-9]+(?:\.[0-9]+)?)""")
         val out = HashMap<Int, Double>()
@@ -174,6 +182,6 @@ object OutputParsers {
         return out
     }
 
-    /** uid line from `id`: "uid=2000(shell) gid=..." */
+    /** `id` の uid 部分: "uid=2000(shell) gid=..." */
     fun uidOf(idOutput: String): Int? = Regex("""uid=(\d+)""").find(idOutput)?.groupValues?.get(1)?.toIntOrNull()
 }

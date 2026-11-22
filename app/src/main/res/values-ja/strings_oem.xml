@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="compat_tested">完全実装・テスト済み</string>
+    <string name="compat_tested_meaning">Prune の自動テストはこの環境で実行されています。</string>
+    <string name="compat_partial">実装済み・一部テスト済み</string>
+    <string name="compat_partial_meaning">専用ルールがあり、debloat エンジンは素の Android でテスト済みですが、このブランドの実機ではまだテストされていません。</string>
+    <string name="compat_experimental">試験的</string>
+    <string name="compat_experimental_meaning">専用ルールと既知のファームウェアの制限を組み込んでいますが、テストはシミュレートした端末のみです。想定外の動作がありえます。すべての変更を確認してください。</string>
+    <string name="compat_generic">汎用互換</string>
+    <string name="compat_generic_meaning">専用の統合はありません。汎用の Android ルールとコミュニティデータベースを使います。</string>
+    <string name="compat_unsupported">非対応</string>
+    <string name="compat_unsupported_meaning">Prune はこの環境では動作できません。</string>
+
+    <string name="default_dev_steps">設定 → デバイス情報 → ビルド番号 を 7 回タップします (PIN を入力)。開発者向けオプションは 設定 → システム に表示されます。</string>
+
+    <string name="samsung_dev_1">設定 → 端末情報 → ソフトウェア情報 → ビルド番号 を 7 回タップします (PIN を入力)。</string>
+    <string name="samsung_dev_2">開発者向けオプションは設定の一番下にあります。</string>
+    <string name="samsung_lim_disable_t">無効化できないパッケージがある</string>
+    <string name="samsung_lim_disable">最近の One UI では、一部の Samsung パッケージで `pm disable-user` がブロックされます (\"Shell cannot change component state\")。その場合 Prune は代わりに現在のユーザーからアンインストールできます。こちらも元に戻せます。</string>
+    <string name="samsung_lim_knox">Galaxy を root 化すると Knox が恒久的に作動し、Samsung Wallet、セキュリティフォルダ、Samsung Health が使えなくなります。Prune は root を必要としません。</string>
+
+    <string name="pixel_title">Google Pixel (素の Android)</string>
+    <string name="pixel_lim_google_t">ほとんどが Google アプリ</string>
+    <string name="pixel_lim_google">Pixel にはメーカー製の不要アプリがほとんどありません。削除できるパッケージの多くは Google アプリです。表示するにはプロファイルで「Google アプリを含める」をオンにしてください。</string>
+
+    <string name="xiaomi_dev_1">設定 → デバイス情報 → OS バージョン (HyperOS) または MIUI バージョン を 7 回タップします。</string>
+    <string name="xiaomi_dev_2">開発者向けオプションは 設定 → 追加設定 にあります。</string>
+    <string name="xiaomi_extra">開発者向けオプションで「USB デバッグ (セキュリティ設定)」もオンにしてください。オフのままだと、Xiaomi は ADB/Shizuku 経由の権限・バックグラウンド・アニメーションの変更をブロックします。オンにするには SIM カードと Xiaomi アカウントが必要です。</string>
+    <string name="xiaomi_lim_usb_t">USB デバッグ (セキュリティ設定)</string>
+    <string name="xiaomi_lim_usb">`pm grant/revoke`、app-ops、設定の変更に必要です。アプリの無効化と削除はこれがなくても動作します。</string>
+    <string name="lim_updates_t">アップデートでアプリが戻ることがある</string>
+    <string name="xiaomi_lim_updates">HyperOS/MIUI のアップデートで、削除したシステムアプリが再び有効化・再インストールされることがあります。アップデート後はプロファイルを再度実行してください。</string>
+    <string name="xiaomi_lim_core_t">MIUI の中核パッケージ</string>
+    <string name="xiaomi_lim_core">セキュリティアプリ、権限マネージャー、MIUI の中核パッケージを削除すると起動不能 (ブートループ) になることがあります。Prune はこれらをロックしています。</string>
+
+    <string name="huawei_title">Huawei (EMUI / Android 対応の HarmonyOS)</string>
+    <string name="lim_disable_refused_t">無効化が拒否されることが多い</string>
+    <string name="huawei_lim_disable">EMUI と HarmonyOS は多くのシステムアプリで `pm disable-user` を拒否します。その場合 Prune は現在のユーザーからのアンインストールに切り替えます (元に戻せます)。</string>
+    <string name="lim_no_gms_t">Google サービスなし</string>
+    <string name="huawei_lim_no_gms">この端末は Google Mobile Services なしで動作しています。代わりに Huawei Mobile Services (HMS Core) と AppGallery が使われているため、Prune はどちらもロックしています。</string>
+    <string name="huawei_lim_harmony">Prune は Android アプリを実行できる HarmonyOS (2.x〜4.x) で動作します。HarmonyOS NEXT では Android アプリを一切実行できません。</string>
+    <string name="huawei_protect_hms">Huawei Mobile Services: この端末には Google サービスがないため、アプリは HMS Core に依存しています。</string>
+    <string name="huawei_protect_appgallery">AppGallery: この端末で唯一のアプリストアです (Google Play なし)。</string>
+
+    <string name="honor_lim_disable">MagicOS は多くのシステムアプリで `pm disable-user` を拒否します。その場合 Prune は現在のユーザーからのアンインストールに切り替えます (元に戻せます)。</string>
+    <string name="honor_lim_no_gms">この端末では Honor Mobile Services が Google サービスの代わりに使われているため、Prune はそれらをロックしています。</string>
+    <string name="honor_protect_hms">Honor Mobile Services: この端末には Google サービスがないため、アプリはこれに依存しています。</string>
+
+    <string name="oplus_dev_1">設定 → デバイスについて → バージョン → ビルド番号 を 7 回タップします。</string>
+    <string name="oplus_dev_2">開発者向けオプションは 設定 → その他の設定 (新しいバージョンでは システム設定) にあります。</string>
+    <string name="oplus_extra">開発者向けオプションで「権限の監視を無効にする」をオンにしてください。オフのままだと、ADB/Shizuku 経由の権限とバックグラウンドの変更が拒否されます。</string>
+    <string name="oplus_lim_monitoring_t">権限の監視を無効にする</string>
+    <string name="oplus_lim_monitoring">ColorOS ベースのファームウェアは、この開発者向けオプションがオンになるまで `pm grant/revoke` と app-op の変更をブロックします。</string>
+    <string name="oplus_lim_security_t">セキュリティアプリ</string>
+    <string name="oplus_lim_security">セキュリティセンターと権限マネージャーはロックされています。削除すると権限ダイアログが壊れます。</string>
+
+    <string name="moto_lim_overlays_t">オーバーレイ</string>
+    <string name="moto_lim_overlays">Motorola は多数の設定用オーバーレイ (Wi-Fi、SIM、オーディオ) を搭載しています。これらはロックまたは高リスク扱いです。削除すると起動不能になるものがあります。</string>
+
+    <string name="generic_title">Android (汎用)</string>
+    <string name="generic_dev_1">設定 → デバイス情報 → ビルド番号 を 7 回タップします (正確な場所はメーカーにより異なります)。</string>
+    <string name="generic_dev_2">開発者向けオプションは 設定 → システム、または設定のトップに表示されます。</string>
+    <string name="emulator_title">Android エミュレータ</string>
+
+    <string name="req_standard">標準 (追加のアクセス不要)</string>
+    <string name="req_usage_access">使用状況へのアクセス</string>
+    <string name="req_shell">Shizuku または root</string>
+    <string name="req_shell_or_secure_settings">Shizuku、root、または WRITE_SECURE_SETTINGS の付与</string>
+
+    <string name="op_scan">パッケージのスキャンと分類</string>
+    <string name="op_uninstall_own">自分で入れたアプリのアンインストール (システムダイアログ)</string>
+    <string name="op_script">変更を ADB スクリプトとして書き出し</string>
+    <string name="op_usage">アプリの使用状況・未使用アプリ・アプリごとのストレージ</string>
+    <string name="op_disable">システムアプリの無効化</string>
+    <string name="op_uninstall_user">システムアプリをこのユーザーからアンインストール</string>
+    <string name="op_restore">アプリの復元と再有効化</string>
+    <string name="op_background">バックグラウンド動作の制限</string>
+    <string name="op_permissions">権限の取り消しと付与</string>
+    <string name="op_notifications">アプリの通知をオフ</string>
+    <string name="op_battery_exemptions">電池の最適化の除外を解除</string>
+    <string name="op_animations">アニメーション速度の変更</string>
+    <string name="op_caches">全アプリのキャッシュを削除</string>
+    <string name="op_dexopt">アプリを今すぐコンパイル</string>
+    <string name="op_battery_stats">アプリごとの推定電池使用量</string>
+
+    <string name="opstatus_available">利用可能</string>
+    <string name="opstatus_needs_access">Shizuku または root が必要</string>
+    <string name="opstatus_needs_usage">使用状況へのアクセスが必要</string>
+    <string name="opstatus_unsupported">この Android バージョンでは非対応</string>
+
+    <string name="report_yes">あり</string>
+    <string name="report_no">なし</string>
+    <string name="report_running">実行中</string>
+    <string name="report_installed">インストール済み</string>
+    <string name="report_not_installed">未インストール</string>
+    <string name="report_unknown">不明</string>
+    <string name="report_title">Prune %1$s 互換性レポート</string>
+    <string name="report_device">端末: %1$s</string>
+    <string name="report_manufacturer">メーカー: %1$s</string>
+    <string name="report_android">Android: %1$s (API %2$d)</string>
+    <string name="report_firmware">ファームウェア: %1$s</string>
+    <string name="report_integration">統合: %1$s — %2$s</string>
+    <string name="report_services">Google サービス: %1$s · Play ストア: %2$s · Huawei HMS: %3$s</string>
+    <string name="report_access">アクセス: %1$s · Shizuku %2$s · root %3$s · 使用状況へのアクセス %4$s</string>
+    <string name="report_operations">操作:</string>
+    <string name="report_on_this_device">(この端末での結果: 成功 %1$d 件、失敗 %2$d 件)</string>
+    <string name="report_note">注意: %1$s</string>
+    <string name="report_last_error">直近のエラー: %1$s</string>
+    <string name="report_known_limitations">既知の制限:</string>
+
+    <string name="caveat_xiaomi">Xiaomi のファームウェアでは、開発者向けオプションの「USB デバッグ (セキュリティ設定)」が必要です。</string>
+    <string name="caveat_oplus">ColorOS ベースのファームウェアでは、開発者向けオプションの「権限の監視を無効にする」が必要です。</string>
+    <string name="caveat_disable_often_refused">このファームウェアでは拒否されることが多く、その場合 Prune は代わりにこのユーザーからアンインストールします (元に戻せます)。</string>
+    <string name="caveat_samsung_disable">一部の Samsung パッケージでは拒否されます。その場合 Prune は代わりにこのユーザーからアンインストールします (元に戻せます)。</string>
+</resources>

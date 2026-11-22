@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debloat_subtitle">レベルを選んでください。実行前にすべての変更を確認できます。</string>
+    <string name="debloat_banner">どのレベルも出発点です。次の画面で、使っているメーカーや Google の機能を Prune に伝え、残したいものはチェックを外してください。</string>
+    <string name="debloat_preselected">事前選択</string>
+    <string name="debloat_packages">パッケージ</string>
+    <string name="debloat_n_selected">%1$d 個のパッケージを選択中</string>
+    <string name="debloat_review_n">%1$d 件の変更を確認</string>
+    <string name="debloat_features">使っている機能</string>
+    <string name="debloat_features_desc">チェックを付けたままの機能に関係するパッケージは選択されません。まったく使わない機能のチェックを外してください。</string>
+    <string name="debloat_options">オプション</string>
+    <string name="debloat_include_google">Google アプリを含める</string>
+    <string name="debloat_include_google_desc">YouTube、Google TV、Meet、Gemini、Google One など。Google Play 開発者サービスは常に残します。</string>
+    <string name="debloat_restrict_bg">未使用アプリのバックグラウンドを制限</string>
+    <string name="debloat_restrict_bg_needs">使用状況へのアクセスが必要です (セットアップ画面)。</string>
+    <string name="debloat_restrict_bg_count">30 日間開いていないアプリ: %1$d 個。</string>
+    <string name="debloat_method">方法</string>
+    <string name="debloat_custom_banner">カスタムモードでは、Prune が変更を許可するすべてのパッケージ (高リスクのものを含む) を表示します。保護されたパッケージ (電話機能、システム UI、セキュリティ、生体認証、Android の中核) は表示されず、選択できません。</string>
+    <string name="debloat_selected_n">選択済み (%1$d)</string>
+    <string name="debloat_none">すべて解除</string>
+    <string name="debloat_nothing_selected">何も選択されていません。このレベルの対象はすべてオフ済みか、上の回答により残されています。</string>
+    <string name="debloat_not_preselected_n">事前選択なし (%1$d)</string>
+    <string name="debloat_kept_n">回答により残すもの (%1$d)</string>
+</resources>

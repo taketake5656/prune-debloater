@@ -17,7 +17,7 @@ import rikka.shizuku.Shizuku
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-/** Runs commands through a Shizuku user service (as shell, or as root if Shizuku was started with root). */
+/** Shizuku のユーザーサービスを通してコマンドを実行する (shell として。Shizuku が root で起動されていれば root として)。 */
 class ShizukuShell(private val packageName: String) : PrivilegedShell {
 
     override val kind = AccessKind.SHIZUKU
@@ -58,7 +58,7 @@ class ShizukuShell(private val packageName: String) : PrivilegedShell {
                         }
                     }
                     connection = conn
-                    // Shizuku delivers the connection callbacks on the main thread; bind from there too.
+                    // Shizuku は接続コールバックをメインスレッドで呼ぶので、バインドもメインスレッドから行う。
                     Handler(Looper.getMainLooper()).post {
                         runCatching { Shizuku.bindUserService(args, conn) }.onFailure { e ->
                             if (cont.isActive) cont.resumeWithException(e)

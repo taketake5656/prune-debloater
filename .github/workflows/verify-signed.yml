@@ -1,7 +1,7 @@
 name: verify-signed-apk
 
-# Installs and launches the final, locally signed release APK on an emulator.
-# Trigger: push a branch named release-check that contains apk/Prune-<version>.apk.
+# ローカルで署名した最終的なリリース APK をエミュレータにインストールして起動する。
+# トリガー: apk/Prune-<version>.apk を含む release-check という名前のブランチを push する。
 on:
   push:
     branches: [release-check]

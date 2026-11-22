@@ -1,5 +1,7 @@
 package io.github.cyb3rl00m.prune.ui
 
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -78,17 +80,19 @@ object Routes {
     fun batch(id: String) = "batch/$id"
 }
 
-private data class Tab(val route: String, val label: String, val icon: ImageVector)
+private data class Tab(val route: String, val labelRes: Int, val icon: ImageVector) {
+    val label: String get() = str(labelRes)
+}
 
 private val tabs = listOf(
-    Tab(Routes.HOME, "Home", Icons.Outlined.Dashboard),
-    Tab(Routes.DEBLOAT, "Debloat", Icons.Outlined.ContentCut),
-    Tab(Routes.APPS, "Packages", Icons.Outlined.Apps),
-    Tab(Routes.OPTIMIZE, "Optimize", Icons.Outlined.AutoFixHigh),
-    Tab(Routes.RESTORE, "Restore", Icons.Outlined.History),
+    Tab(Routes.HOME, R.string.tab_home, Icons.Outlined.Dashboard),
+    Tab(Routes.DEBLOAT, R.string.tab_debloat, Icons.Outlined.ContentCut),
+    Tab(Routes.APPS, R.string.tab_packages, Icons.Outlined.Apps),
+    Tab(Routes.OPTIMIZE, R.string.tab_optimize, Icons.Outlined.AutoFixHigh),
+    Tab(Routes.RESTORE, R.string.tab_restore, Icons.Outlined.History),
 )
 
-/** Navigation helpers handed to every screen. */
+/** 各画面に渡すナビゲーション用ヘルパー。 */
 class Nav(private val controller: NavHostController) {
     fun go(route: String) = controller.navigate(route) { launchSingleTop = true }
     fun back() { controller.popBackStack() }
@@ -110,7 +114,7 @@ fun PruneRoot(vm: AppViewModel) {
     val access by vm.access.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) { vm.messages.collect { snackbar.showSnackbar(it) } }
-    // Usage access granted in Settings while Prune was in the background: rescan to load usage data.
+    // Prune がバックグラウンドにある間に設定で使用状況へのアクセスが許可された場合、使用状況を読み込むため再スキャンする。
     var hadUsageAccess by remember { mutableStateOf(access.usageAccess) }
     LaunchedEffect(access.usageAccess) {
         if (access.usageAccess && !hadUsageAccess) vm.rescan()

@@ -1,187 +1,200 @@
 <p align="center">
-  <img src="docs/icon.png" width="96" alt="Prune icon">
+  <img src="docs/icon.png" width="96" alt="Prune アイコン">
 </p>
 
 <h1 align="center">Prune</h1>
 
+<p align="center"><b>日本語</b> | <a href="README.en.md">English</a></p>
+
 <p align="center">
-  <b>Open-source Android debloater and optimizer.</b><br>
-  Remove what you don't need, keep what you use, undo anything.
+  <b>オープンソースの Android 不要アプリ整理 (debloat) &amp; 最適化ツール</b><br>
+  いらないものは消し、使うものは残し、どんな変更も元に戻せる。
 </p>
 
 <p align="center">
   <a href="https://github.com/cyb3rl00m/prune-debloater/releases/latest"><img src="https://img.shields.io/badge/release-v2.0.0-3DDC97" alt="Release"></a>
   <img src="https://img.shields.io/badge/Android-9%2B-7C6CFF" alt="Android 9+">
-  <img src="https://img.shields.io/badge/root-not%20required-0B0F17" alt="No root required">
+  <img src="https://img.shields.io/badge/root-not%20required-0B0F17" alt="root 不要">
   <img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="GPL-3.0">
   <img src="https://img.shields.io/badge/Made%20with-Claude-D97757" alt="Made with Claude">
 </p>
 
-> **Prune is evolving!** Originally developed with Samsung Galaxy devices in mind, Prune is expanding into a universal Android debloating tool. Version 2.0 detects your phone's manufacturer and firmware automatically and brings dedicated rules for Samsung, Google Pixel, Xiaomi, Redmi, POCO, Huawei, Honor, OPPO, OnePlus, realme and Motorola, plus generic support for every other Android phone. So far only the Android emulator is covered by automated tests: real phones are marked *partially tested*, *experimental* or *generic* until people confirm them on their devices. See [Compatibility](docs/COMPATIBILITY.md).
+> **このリポジトリについて:** [cyb3rl00m/prune-debloater](https://github.com/cyb3rl00m/prune-debloater) (本家) を fork し、**日本語表示に対応**させたものです。端末の言語が日本語ならアプリの画面、パッケージの説明 (Prune 独自ルール分)、警告、セットアップ手順が日本語で表示され、それ以外の言語では本家と同じ英語で表示されます。コミュニティデータベース (UAD-ng) のパッケージ説明は英語のままです。
 
-Prune is the Android counterpart of tools like Chris Titus Tech's WinUtil: it gives you control over the software on your phone. It scans every package, explains what it is, rates the risk of removing it, and lets you debloat at four levels, from "just the obvious junk" to "every package, my choice". Every change is previewed, recorded with the state before it, verified after it, and can be undone.
+> **Prune は進化中です!** もともとは Samsung Galaxy 向けに開発されましたが、Prune はあらゆる Android 端末で使える debloat ツールへと広がりつつあります。バージョン 2.0 は端末のメーカーとファームウェアを自動で検出し、Samsung、Google Pixel、Xiaomi、Redmi、POCO、Huawei、Honor、OPPO、OnePlus、realme、Motorola 向けの専用ルールに加え、その他すべての Android 端末向けの汎用サポートを備えています。現時点で自動テストの対象は Android エミュレータだけです。実機はユーザーによる動作確認が得られるまで *一部テスト済み*、*試験的*、*汎用* として扱います。詳しくは [互換性](docs/COMPATIBILITY.md) (英語) を参照してください。
+
+Prune は、Windows における Chris Titus Tech の WinUtil のような存在を Android で目指したツールで、端末のソフトウェアを自分で管理できるようにします。すべてのパッケージをスキャンし、それが何であるかを説明し、削除した場合の危険度を評価したうえで、「明らかに不要なものだけ」から「すべてのパッケージを自分で選ぶ」まで 4 段階のレベルでスリム化できます。どの変更も事前に確認でき、変更前の状態とともに記録され、変更後に検証され、元に戻すことができます。
 
 <p align="center">
-  <img src="docs/screenshots/01-home.png" width="200" alt="Home">
-  <img src="docs/screenshots/01b-compatibility.png" width="200" alt="Compatibility report">
-  <img src="docs/screenshots/13-review-disable.png" width="200" alt="Review">
-  <img src="docs/screenshots/07-optimize.png" width="200" alt="Optimize">
+  <img src="docs/screenshots/01-home.png" width="200" alt="ホーム">
+  <img src="docs/screenshots/01b-compatibility.png" width="200" alt="互換性レポート">
+  <img src="docs/screenshots/13-review-disable.png" width="200" alt="変更の確認">
+  <img src="docs/screenshots/07-optimize.png" width="200" alt="最適化">
 </p>
-<p align="center"><sub>Screenshots from the Android emulator used in CI.</sub></p>
+<p align="center"><sub>CI で使っている Android エミュレータのスクリーンショット (英語表示)。</sub></p>
 
-## Download
+## ダウンロード
 
-Get **`Prune-2.0.0.apk`** from the [latest release](https://github.com/cyb3rl00m/prune-debloater/releases/latest), open it on the phone and allow installing from your browser or file manager. The SHA-256 checksum is in `SHA256SUMS.txt` next to it.
+**日本語版 (この fork):** 現在、この fork からのリリースはありません。[ソースからビルド](#ソースからビルド) してください。
 
-**Upgrading from 1.x:** install 2.0.0 over it. It is signed with the same key, so history, settings and your "features you use" answers are kept.
+**本家の英語版:** [最新リリース](https://github.com/cyb3rl00m/prune-debloater/releases/latest) から **`Prune-2.0.0.apk`** を入手し、端末で開いて、ブラウザまたはファイルマネージャーからのインストールを許可してください。SHA-256 チェックサムは同じ場所の `SHA256SUMS.txt` にあります。
 
-## Supported manufacturers
+**1.x からのアップグレード:** 2.0.0 を上書きインストールしてください。同じ鍵で署名されているので、履歴、設定、「使っている機能」の回答は引き継がれます。
 
-Prune adapts to the detected device automatically.
+自分でビルドした APK は本家のリリースとは署名が異なるため、本家版の上に上書きインストールすることはできません (先にアンインストールが必要で、その場合は履歴と設定が失われます)。
 
-| Manufacturer | Firmware | Support level |
+## 対応メーカー
+
+Prune は検出した端末に合わせて自動で動作を切り替えます。
+
+| メーカー | ファームウェア | サポートレベル |
 |---|---|---|
-| Samsung Galaxy | One UI | Partially tested |
-| Google Pixel | Stock Android | Partially tested |
-| Xiaomi, Redmi, POCO | HyperOS, MIUI | Experimental |
-| Huawei | EMUI, HarmonyOS 2–4 | Experimental |
-| Honor | MagicOS | Experimental |
-| OPPO, OnePlus, realme | ColorOS, OxygenOS, realme UI | Experimental |
-| Motorola | My UX | Experimental |
-| Sony, Nothing, ASUS, vivo/iQOO, Tecno/Infinix/itel, Nokia/HMD, Lenovo, ZTE/nubia, LG | | Generic |
-| Any other Android 9+ phone | | Generic |
+| Samsung Galaxy | One UI | 一部テスト済み |
+| Google Pixel | 素の Android | 一部テスト済み |
+| Xiaomi、Redmi、POCO | HyperOS、MIUI | 試験的 |
+| Huawei | EMUI、HarmonyOS 2〜4 | 試験的 |
+| Honor | MagicOS | 試験的 |
+| OPPO、OnePlus、realme | ColorOS、OxygenOS、realme UI | 試験的 |
+| Motorola | My UX | 試験的 |
+| Sony、Nothing、ASUS、vivo/iQOO、Tecno/Infinix/itel、Nokia/HMD、Lenovo、ZTE/nubia、LG | | 汎用 |
+| その他すべての Android 9 以降の端末 | | 汎用 |
 
-- **Partially tested:** dedicated rules; the debloat engine is tested on stock Android, but not on this brand's hardware.
-- **Experimental:** dedicated rules and known firmware limitations, tested only with simulated devices.
-- **Generic:** generic Android rules plus the community database.
+- **一部テスト済み:** 専用ルールあり。debloat エンジンは素の Android でテスト済みですが、このブランドの実機ではテストされていません。
+- **試験的:** 専用ルールと既知のファームウェアの制限を組み込み済み。テストはシミュレートした端末のみです。
+- **汎用:** 汎用の Android ルールとコミュニティデータベースを使います。
 
-Details, per-brand limitations and how to help move a brand up: [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
+詳細、ブランドごとの制限、サポートレベルを上げるための協力方法は [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) (英語) を参照してください。
 
-**Requirements:** Android 9 (API 28) or newer. HarmonyOS NEXT cannot run Android apps, so Prune cannot run there.
+**動作条件:** Android 9 (API 28) 以降。HarmonyOS NEXT は Android アプリを実行できないため、Prune は動作しません。
 
-## What Prune does
+## Prune でできること
 
-**Debloat levels**
+**スリム化のレベル**
 
-| Level | For | What it selects |
+| レベル | 対象 | 選択されるもの |
 |---|---|---|
-| 1 Minimal | A cleaner phone without real changes | Promoted apps, ad and analytics services, carrier apps, third-party preloads (Facebook, Netflix, ...), optional manufacturer extras. Manufacturer ecosystem features and Google services untouched. |
-| 2 Balanced | A noticeably lighter phone | Level 1, plus diagnostics and data-collection services, optional manufacturer apps, optionally Google apps, and background restriction for apps unused for 30 days. |
-| 3 Aggressive | As light as reasonably possible | Level 2, plus more manufacturer components and Google apps by default. Read the warnings. |
-| 4 Extreme / Custom | Experienced users | Every changeable package with its risk. Starts from the Level 3 selection; high-risk and unknown packages need an extra confirmation. |
+| 1 最小 | 実質的な変更なしで、すっきりした端末にしたい人 | 宣伝アプリ、広告・分析サービス、キャリアアプリ、サードパーティ製プリインストール (Facebook、Netflix など)、メーカーの任意の追加機能。メーカーのエコシステム機能と Google サービスには触れません。 |
+| 2 バランス | 目に見えて軽くしたい人 | レベル 1 に加えて、診断・データ収集サービス、メーカーの任意アプリ、任意で Google アプリ、30 日間使っていないアプリのバックグラウンド制限。 |
+| 3 積極的 | 無理のない範囲でできるだけ軽くしたい人 | レベル 2 に加えて、メーカーのコンポーネントをさらに多く、Google アプリも既定で対象。警告を必ず読んでください。 |
+| 4 エクストリーム / カスタム | 上級者 | 変更可能なすべてのパッケージを危険度付きで表示。レベル 3 の選択から始まり、高リスクと不明なパッケージには追加の確認が必要です。 |
 
-Before anything is selected you tell Prune which features you use. The list adapts to the phone: Samsung Wallet, Galaxy Watch, DeX and Bixby on a Galaxy; Xiaomi Cloud, Xiaomi Share and Mi Pay on Xiaomi; Huawei ID and Huawei Share on Huawei; and so on. Packages behind those features are never selected. Apps you opened in the last 14 days are never pre-selected either.
+何かを選択する前に、どの機能を使っているかを Prune に伝えます。この一覧は端末に合わせて変わります。Galaxy なら Samsung Wallet、Galaxy Watch、DeX、Bixby、Xiaomi なら Xiaomi Cloud、Xiaomi Share、Mi Pay、Huawei なら HUAWEI ID、Huawei Share といった具合です。これらの機能に関係するパッケージは決して選択されません。過去 14 日以内に開いたアプリも事前選択されません。
 
-**Package manager.** Every package with its name, package id, description, manufacturer, category (manufacturer, Google, carrier, preload, Android core, other system, yours), installer, status, risk, recommended action, possible consequences and how to bring it back. Search, filter (including duplicates), and act on single packages.
+**パッケージマネージャー。** すべてのパッケージについて、名前、パッケージ名、説明、メーカー、分類 (メーカー、Google、キャリア、プリインストール、Android コア、その他のシステム、ユーザーがインストール)、インストール元、状態、危険度、推奨操作、起こりうる影響、元に戻す方法を表示します。検索、絞り込み (重複を含む)、個別パッケージへの操作ができます。
 
-**Package identification.** Prune combines package names, labels, application flags, the installing app (so partner preloads installed during setup are recognised), the manufacturer, the Android version, Prune's own rule files and the community database. Packages Prune knows nothing about are marked **Unknown**, never "safe".
+**パッケージの識別。** Prune はパッケージ名、ラベル、アプリケーションフラグ、インストール元のアプリ (初期設定時に入れられたパートナーのプリインストールも識別)、メーカー、Android のバージョン、Prune 独自のルールファイル、コミュニティデータベースを組み合わせて判断します。Prune が何も知らないパッケージは **不明** と表示し、決して「安全」とはしません。
 
-**Duplicate apps.** Two browsers, two galleries, three keyboards: Prune lists app types installed more than once, using Android's standard app categories.
+**重複アプリ。** ブラウザが 2 つ、ギャラリーが 2 つ、キーボードが 3 つ。Android 標準のアプリカテゴリを使って、複数インストールされているアプリの種類を一覧にします。
 
-**Compatibility report.** Manufacturer, model, Android version, firmware, Google/Huawei services, available methods, supported and unsupported operations, required permissions, Shizuku and root status, known limitations, and what has already succeeded or failed on this device. Shareable as text.
+**互換性レポート。** メーカー、モデル、Android のバージョン、ファームウェア、Google/Huawei のサービス、使える方法、対応・非対応の操作、必要な権限、Shizuku と root の状態、既知の制限、この端末ですでに成功・失敗した操作を表示します。テキストとして共有できます。
 
-**Optimization center.** Only changes with a real technical effect, each explained in the app: animation scales, background restriction for unused apps, battery-optimization exemptions, sensitive-permission and notification audits, storage per app and cache trimming (free space measured), screen time and Android's own battery estimates, and app compilation. Prune does not kill processes, change CPU/GPU governors, or touch thermal management.
+**最適化センター。** 実際に技術的な効果がある変更だけを、アプリ内で説明付きで提供します: アニメーション倍率、未使用アプリのバックグラウンド制限、電池の最適化の除外、機密性の高い権限と通知の見直し、アプリごとのストレージとキャッシュの削減 (空いた容量を実測)、画面時間と Android 自身による推定電池使用量、アプリのコンパイル。Prune はプロセスの強制終了、CPU/GPU ガバナーの変更、熱管理への干渉は行いません。
 
-**Restore center.** Full history with the state before and after each change, undo per change or per batch, "restore original state", a list of every system package currently disabled or removed (by any tool), and an emergency ADB restore script.
+**復元センター。** 各変更の前後の状態を含む完全な履歴、変更ごと・まとめての取り消し、「元の状態に戻す」、現在無効化・削除されているすべてのシステムパッケージの一覧 (どのツールによるものも含む)、緊急用の ADB 復元スクリプト。
 
-## Permission levels
+## 権限レベル
 
-Android does not let a normal app disable or remove system packages. Prune is built around that, not against it:
+Android では、通常のアプリはシステムパッケージを無効化・削除できません。Prune はこの仕組みに逆らわず、それを前提に作られています。
 
-| Tier | How you get it | What works |
+| 段階 | 入手方法 | できること |
 |---|---|---|
-| Standard | Install the app | Scanning, classification, explanations, duplicates, compatibility report, usage and storage (with usage access), opening app settings, uninstalling apps you installed |
-| ADB level | [Shizuku](https://shizuku.rikka.app/) via wireless debugging (no computer, no root) | Disable, uninstall for user, restore, background restriction, permissions, notifications, battery exemptions, animations, cache trimming, compilation, battery estimates |
-| Root | Magisk / KernelSU / APatch (optional) | The same operations through `su`. Prune never needs root. |
+| 標準 | アプリをインストールするだけ | スキャン、分類、説明、重複、互換性レポート、使用状況とストレージ (使用状況へのアクセスが必要)、アプリ設定を開く、自分で入れたアプリのアンインストール |
+| ADB レベル | ワイヤレスデバッグ経由の [Shizuku](https://shizuku.rikka.app/) (パソコン不要、root 不要) | 無効化、ユーザーからのアンインストール、復元、バックグラウンド制限、権限、通知、電池の最適化の除外、アニメーション、キャッシュ削減、コンパイル、推定電池使用量 |
+| root | Magisk / KernelSU / APatch (任意) | 同じ操作を `su` 経由で実行。Prune が root を必要とすることはありません。 |
 
-No Shizuku and no root? Every plan can be exported as an ADB script and run from a computer. Prune records it and checks afterwards which changes are in effect.
+Shizuku も root もない場合は? どのプランも ADB スクリプトとして書き出し、パソコンから実行できます。Prune はそれを記録し、後でどの変更が反映されたかを確認します。
 
-## Set up Shizuku (one time, about 3 minutes)
+## Shizuku の設定 (初回のみ、約 3 分)
 
-Prune shows these steps adapted to your phone under **Home → Set up**.
+Prune の **ホーム → 設定する** に、端末に合わせた手順が表示されます。
 
-1. Install Shizuku from Google Play or [GitHub](https://github.com/RikkaApps/Shizuku/releases).
-2. Turn on Developer options: **Settings → About phone →** tap **Build number** 7 times. (Galaxy: *Software information → Build number*. Xiaomi: *OS version* or *MIUI version*. OPPO/OnePlus/realme: *About device → Version → Build number*.)
-3. Connect to Wi-Fi. In **Developer options** turn on **Wireless debugging**.
-4. Open Shizuku → **Start via Wireless debugging → Pairing**. In Wireless debugging tap **Pair device with pairing code** and type the code into Shizuku's notification.
-5. Tap **Start** in Shizuku, then in Prune: **Home → Set up → Authorize Prune in Shizuku**.
-6. Optional: **Grant both** on the same screen gives Prune usage access and the animation permission.
+1. Google Play または [GitHub](https://github.com/RikkaApps/Shizuku/releases) から Shizuku をインストールします。
+2. 開発者向けオプションをオンにします: **設定 → デバイス情報 →** **ビルド番号** を 7 回タップします。(Galaxy: *端末情報 → ソフトウェア情報 → ビルド番号*。Xiaomi: *OS バージョン* または *MIUI バージョン*。OPPO/OnePlus/realme: *デバイスについて → バージョン → ビルド番号*。)
+3. Wi-Fi に接続します。**開発者向けオプション** で **ワイヤレス デバッグ** をオンにします。
+4. Shizuku を開き、**ワイヤレスデバッグ経由で起動 → ペアリング** をタップします。ワイヤレス デバッグで **ペア設定コードによるデバイスのペア設定** をタップし、表示されたコードを Shizuku の通知に入力します。
+5. Shizuku で **起動** をタップし、Prune で **ホーム → 設定する → Shizuku で Prune を許可する** をタップします。
+6. 任意: 同じ画面の **両方を許可** で、Prune に使用状況へのアクセスとアニメーション用の権限を与えられます。
 
-Extra switch on some firmwares:
+一部のファームウェアでは追加の設定が必要です:
 
-- **Xiaomi, Redmi, POCO:** also turn on *USB debugging (Security settings)* (needs a SIM card and a Xiaomi account). Without it permission, background and animation changes are refused.
-- **OPPO, OnePlus, realme:** turn on *Disable permission monitoring*. Without it permission and background changes are refused.
+- **Xiaomi、Redmi、POCO:** *USB デバッグ (セキュリティ設定)* もオンにしてください (SIM カードと Xiaomi アカウントが必要)。オフのままだと、権限・バックグラウンド・アニメーションの変更が拒否されます。
+- **OPPO、OnePlus、realme:** *権限の監視を無効にする* をオンにしてください。オフのままだと、権限とバックグラウンドの変更が拒否されます。
 
-After a reboot open Shizuku and tap **Start** again.
+端末を再起動したら、Shizuku を開いてもう一度 **起動** をタップしてください。
 
-## Safety model
+(ボタン名などは端末・アプリのバージョンや言語設定によって多少異なる場合があります。)
 
-- **Locked packages.** Telephony and emergency calling, IMS (VoLTE/VoWiFi), System UI, Settings, the shell, permission controllers, package installers, content providers, the network stack, Bluetooth, NFC and the secure element, biometrics, Google Play Services and WebView can never be selected, not even in Custom mode. Each manufacturer file adds its own critical apps: for example One UI Home, Knox Guard and Knox attestation on Samsung; the Security app, permission manager and updater on Xiaomi; Phone Manager and the updater on Huawei; Security Center and the permission manager on OPPO/OnePlus/realme.
-- **Locked for this phone.** Your current launcher, phone app, SMS app and keyboard, apps with an accessibility service you turned on, device administrators, persistent system apps, and the service framework and app store a phone without Google services depends on (HMS Core and AppGallery on Huawei).
-- **Prune's rules win.** The community database marks for example Find My Mobile, Auto Blocker and Samsung Pay as "Recommended" to remove. Prune's own rules override that.
-- **Unknown means unknown.** Packages that are in no database get the risk *Unknown*: never pre-selected, Custom mode only, extra confirmation.
-- **Reversible by default.** "Disable" and "Uninstall for this user" both keep the original APK in the system partition. `pm install-existing` brings any package back, and a factory reset restores everything.
-- **Verified.** After every command Prune reads the real state back from Android. A change only counts as applied if Android confirms it. Operations a firmware refuses are reported as failed, with the firmware's own error.
-- **Commands are argv lists**, never shell strings; package names, app-ops, permissions and settings are validated against strict patterns or whitelists.
+## 安全のしくみ
 
-## Troubleshooting
+- **ロックされたパッケージ。** 電話機能と緊急通報、IMS (VoLTE/VoWiFi)、システム UI、設定、シェル、権限コントローラー、パッケージインストーラー、コンテンツプロバイダ、ネットワークスタック、Bluetooth、NFC とセキュアエレメント、生体認証、Google Play 開発者サービス、WebView は、カスタムモードでも決して選択できません。メーカーごとのファイルが独自の重要アプリを追加します。たとえば Samsung では One UI ホーム、Knox Guard、Knox 構成証明、Xiaomi ではセキュリティアプリ、権限マネージャー、アップデーター、Huawei ではスマホマネージャーとアップデーター、OPPO/OnePlus/realme ではセキュリティセンターと権限マネージャーです。
+- **この端末でロックされるもの。** 現在のランチャー、電話アプリ、SMS アプリ、キーボード、オンにしたユーザー補助サービスを持つアプリ、デバイス管理アプリ、常駐システムアプリ、そして Google サービスのない端末が依存するサービスフレームワークとアプリストア (Huawei の HMS Core と AppGallery)。
+- **Prune のルールが優先。** コミュニティデータベースは、たとえば Find My Mobile、自動ブロッカー、Samsung Pay を削除「推奨」としていますが、Prune 独自のルールがそれを上書きします。
+- **不明は不明のまま。** どのデータベースにも載っていないパッケージの危険度は *不明* です。事前選択されず、カスタムモードでのみ表示され、追加の確認が必要です。
+- **既定で元に戻せる。** 「無効化」と「このユーザーからアンインストール」のどちらも、元の APK はシステム領域に残ります。`pm install-existing` でどのパッケージも元に戻せ、初期化すればすべて元に戻ります。
+- **検証済み。** Prune はコマンドを実行するたびに、Android から実際の状態を読み戻します。変更が適用されたとみなすのは Android が確認した場合だけです。ファームウェアが拒否した操作は、ファームウェア自身のエラーとともに失敗として報告します。
+- **コマンドは argv リスト** として渡し、シェル文字列は使いません。パッケージ名、app-ops、権限、設定は厳密なパターンまたはホワイトリストで検証します。
 
-| Problem | What to do |
+## トラブルシューティング
+
+| 問題 | 対処 |
 |---|---|
-| "Shell cannot change component state" | The firmware refuses to disable that package. Keep "Fallback to uninstall-for-user" on (Settings), or uninstall it for the user from the package screen. |
-| Permission or background changes fail on Xiaomi | Turn on *USB debugging (Security settings)* in Developer options. |
-| Permission or background changes fail on OPPO/OnePlus/realme | Turn on *Disable permission monitoring* in Developer options. |
-| An app came back after a system update | Some firmwares restore system apps during updates. Run your profile again. |
-| Prune says "Limited access" after a reboot | Shizuku stops on reboot: open Shizuku and tap Start. |
-| The phone misbehaves after a change | **Restore → History → Undo**. If the phone cannot be used normally, connect it to a computer and run the emergency restore script, or `adb shell pm install-existing --user 0 <package>` and `adb shell pm enable --user 0 <package>`. |
+| 「Shell cannot change component state」と表示される | ファームウェアがそのパッケージの無効化を拒否しています。設定の「ユーザーからのアンインストールで代替」をオンのままにするか、パッケージ画面からこのユーザーからアンインストールしてください。 |
+| Xiaomi で権限やバックグラウンドの変更が失敗する | 開発者向けオプションで *USB デバッグ (セキュリティ設定)* をオンにしてください。 |
+| OPPO/OnePlus/realme で権限やバックグラウンドの変更が失敗する | 開発者向けオプションで *権限の監視を無効にする* をオンにしてください。 |
+| システムアップデート後にアプリが戻ってきた | ファームウェアによってはアップデート時にシステムアプリを復元します。プロファイルをもう一度実行してください。 |
+| 再起動後に「アクセス制限あり」と表示される | Shizuku は再起動で停止します。Shizuku を開いて「起動」をタップしてください。 |
+| 変更後に端末の動作がおかしい | **復元 → 履歴 → 取り消し** を開いてください。端末を通常どおり使えない場合は、パソコンに接続して緊急復元スクリプトを実行するか、`adb shell pm install-existing --user 0 <パッケージ名>` と `adb shell pm enable --user 0 <パッケージ名>` を実行してください。 |
 
-## Known limitations
+## 既知の制限
 
-- Manufacturer rule files are curated by hand and cover the best-known packages; the rest relies on the community database or is marked Unknown.
-- Package names can change between firmware versions and regions. Prune never assumes that apps with similar names are the same.
-- Battery estimates come from `dumpsys batterystats`, whose format differs between firmwares; they can be missing.
-- Prune works on the current Android user only (not Secure Folder, Second Space or work profiles).
+- メーカー別のルールファイルは手作業で管理しており、よく知られたパッケージだけを対象にしています。それ以外はコミュニティデータベースに頼るか、不明として表示されます。
+- パッケージ名はファームウェアのバージョンや地域によって変わることがあります。Prune は名前が似ているだけのアプリを同じものとはみなしません。
+- 推定電池使用量は `dumpsys batterystats` から取得しますが、その形式はファームウェアによって異なるため、表示されないことがあります。
+- Prune が対象とするのは現在の Android ユーザーだけです (セキュリティフォルダ、セカンドスペース、仕事用プロファイルは対象外)。
+- 日本語訳があるのはアプリの画面と Prune 独自ルールの説明だけです。コミュニティデータベース由来のパッケージ説明は英語で表示されます。
 
-## What has been tested
+## テスト状況
 
-| Area | How | Status |
+| 対象 | 方法 | 状況 |
 |---|---|---|
-| Classification, levels, safety rules, every rule file, command building, output parsers | JVM unit tests on every build | Verified |
-| Manufacturer detection and firmware parsing for Samsung, Pixel, Xiaomi (HyperOS/MIUI), Redmi, POCO, Huawei (EMUI/HarmonyOS), Honor, OnePlus, OPPO, realme, Motorola, vivo, Tecno and unknown brands | Unit tests with simulated devices (mock properties) | Verified with mocks only, **not** on hardware |
-| Real `pm disable-user`, `pm enable`, `pm uninstall -k --user`, `pm install-existing`, app-ops, `deviceidle`, `settings` | Run as the shell user (same uid as Shizuku) on an Android 15 emulator, result read back from Android | Verified on emulator |
-| Device identity, rule loading, duplicate detection, compatibility report on a real Android system | Instrumented tests on the emulator | Verified on emulator |
-| Full UI flow: every screen, disable a package and undo it through the UI | Compose UI tests with screenshots on the emulator | Verified on emulator |
-| Signed release APK installs and launches | Emulator smoke test | Verified on emulator |
-| Shizuku user service binding, root through `su`, manufacturer-specific behaviour | Needs real phones | **Needs device testing** |
+| 分類、レベル、安全規則、全ルールファイル、コマンドの組み立て、出力パーサ、英語/日本語の文字列リソースとルール訳文の整合性 | ビルドごとの JVM ユニットテスト | 検証済み |
+| Samsung、Pixel、Xiaomi (HyperOS/MIUI)、Redmi、POCO、Huawei (EMUI/HarmonyOS)、Honor、OnePlus、OPPO、realme、Motorola、vivo、Tecno、不明なブランドのメーカー検出とファームウェアの解析 | シミュレートした端末 (モックのプロパティ) によるユニットテスト | モックでのみ検証済み。実機では **未検証** |
+| 実際の `pm disable-user`、`pm enable`、`pm uninstall -k --user`、`pm install-existing`、app-ops、`deviceidle`、`settings` | Android 15 エミュレータ上で shell ユーザー (Shizuku と同じ uid) として実行し、結果を Android から読み戻す | エミュレータで検証済み |
+| 実際の Android システム上での端末識別、ルールの読み込み、重複検出、互換性レポート | エミュレータ上の instrumented テスト | エミュレータで検証済み |
+| UI の全体の流れ: 全画面の表示、UI からパッケージを無効化して取り消す | エミュレータ上でスクリーンショット付きの Compose UI テスト | エミュレータで検証済み |
+| 署名済みリリース APK のインストールと起動 | エミュレータでのスモークテスト | エミュレータで検証済み |
+| Shizuku のユーザーサービスへのバインド、`su` 経由の root、メーカー固有の挙動 | 実機が必要 | **実機での検証が必要** |
 
-## Build from source
+## ソースからビルド
 
-Requirements: JDK 17, Android SDK 35.
+必要なもの: JDK 17 以上 (JDK 25 まで動作確認済み)、Android SDK 35。
 
 ```
-git clone https://github.com/cyb3rl00m/prune-debloater.git
+git clone https://github.com/taketake5656/prune-debloater.git
 cd prune-debloater
 ./gradlew testDebugUnitTest assembleDebug
 ```
 
-The package database is built from `tools/rules/*.json` and the community list:
+Windows では `./gradlew` の代わりに `gradlew.bat` を使ってください。デバッグ版の APK は `app/build/outputs/apk/debug/app-debug.apk` に出力されます。
+
+パッケージデータベースは `tools/rules/*.json` (日本語訳は `tools/rules/ja/*.json`) とコミュニティのリストから生成します:
 
 ```
 python3 tools/build_db.py
 ```
 
-Adding or improving a manufacturer: see [CONTRIBUTING.md](CONTRIBUTING.md).
+メーカーの追加や改善については [CONTRIBUTING.md](CONTRIBUTING.md) (英語) を参照してください。
 
-## Credits
+## クレジット
 
-- Package descriptions and community removal tiers: [Universal Android Debloater Next Generation](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation) (GPL-3.0). Prune bundles its manufacturer, Google, AOSP, carrier and preload lists.
-- [Shizuku](https://github.com/RikkaApps/Shizuku) by RikkaApps for ADB-level access without root.
-- Built by cyb3rl00m with help from Claude by Anthropic.
+- パッケージの説明とコミュニティの削除段階: [Universal Android Debloater Next Generation](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation) (GPL-3.0)。Prune はそのメーカー、Google、AOSP、キャリア、プリインストールのリストを同梱しています。
+- root なしで ADB レベルのアクセスを提供する RikkaApps の [Shizuku](https://github.com/RikkaApps/Shizuku)。
+- 開発: cyb3rl00m (Anthropic の Claude の協力のもと)。日本語対応: この fork。
 
-## Disclaimer
+## 免責事項
 
-Prune changes system software. It is designed to be safe and reversible, but you use it at your own risk. Prune is not affiliated with any phone manufacturer or with Google. Brand and product names are trademarks of their owners.
+Prune はシステムソフトウェアを変更します。安全で元に戻せるように設計されていますが、ご利用は自己責任でお願いします。Prune はどの端末メーカーとも Google とも提携していません。ブランド名と製品名は各所有者の商標です。
 
-## License
+## ライセンス
 
-[GPL-3.0-or-later](LICENSE).
+[GPL-3.0-or-later](LICENSE)。

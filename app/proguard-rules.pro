@@ -1,4 +1,4 @@
-# Shizuku starts the shell service by class name in a separate process.
+# Shizuku はシェルサービスをクラス名で別プロセスに起動する。
 -keep class io.github.cyb3rl00m.prune.core.shell.ShellService { *; }
 -keep class io.github.cyb3rl00m.prune.IShellService { *; }
 -keep class io.github.cyb3rl00m.prune.IShellService$* { *; }

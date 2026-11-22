@@ -9,8 +9,9 @@ import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 /**
- * Runs in a separate process started by Shizuku, as the shell user (uid 2000) or root.
- * It runs exactly the argv it receives with ProcessBuilder: no shell is involved.
+ * Shizuku が起動する別プロセスで、shell ユーザー (uid 2000) または root として動く。
+ * 受け取った argv をそのまま ProcessBuilder で実行する。シェルは一切介在しない。
+ * このプロセスでは I18n が初期化されないため、メッセージは英語のまま返す。
  */
 class ShellService : IShellService.Stub() {
 
@@ -62,7 +63,7 @@ class ShellService : IShellService.Stub() {
         const val KEY_EXIT = "exit"
         const val KEY_OUT = "out"
         const val KEY_ERR = "err"
-        /** Binder transactions are limited to ~1 MB; dumpsys output is cut well below that. */
+        /** Binder のトランザクションは約 1 MB に制限されるため、dumpsys の出力はそれより十分小さく切り詰める。 */
         const val MAX_OUTPUT = 400_000
     }
 }

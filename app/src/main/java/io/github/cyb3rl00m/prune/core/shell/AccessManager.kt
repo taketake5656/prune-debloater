@@ -2,6 +2,8 @@ package io.github.cyb3rl00m.prune.core.shell
 
 import android.Manifest
 import android.content.Context
+import io.github.cyb3rl00m.prune.R
+import io.github.cyb3rl00m.prune.core.i18n.str
 import android.content.pm.PackageManager
 import io.github.cyb3rl00m.prune.core.scan.UsageReader
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +17,12 @@ data class AccessState(
     val shizukuRunning: Boolean = false,
     val shizukuPermission: Boolean = false,
     val shizukuTooOld: Boolean = false,
-    /** 0 if Shizuku was started with root, 2000 if started through ADB / wireless debugging. */
+    /** Shizuku が root で起動されていれば 0、ADB / ワイヤレスデバッグで起動されていれば 2000。 */
     val shizukuUid: Int? = null,
     val rootGranted: Boolean = false,
     val usageAccess: Boolean = false,
     val writeSecureSettings: Boolean = false,
-    /** User preference: use root even when Shizuku is available. */
+    /** ユーザー設定: Shizuku が使える場合でも root を使う。 */
     val preferRoot: Boolean = false,
 ) {
     val active: AccessKind
@@ -33,7 +35,7 @@ data class AccessState(
     val privileged: Boolean get() = active == AccessKind.SHIZUKU || active == AccessKind.ROOT
 }
 
-/** Tracks which permission tier is available right now and hands out the matching shell. */
+/** 現在使える権限の段階を追跡し、それに合ったシェルを渡す。 */
 class AccessManager(private val context: Context) {
 
     private val _state = MutableStateFlow(AccessState())
@@ -41,7 +43,7 @@ class AccessManager(private val context: Context) {
 
     private val shizukuShell = ShizukuShell(context.packageName)
 
-    /** Instrumented tests inject a shell backed by UiAutomation (uid 2000, like Shizuku). Never set in the app. */
+    /** instrumented テストが UiAutomation によるシェル (Shizuku と同じ uid 2000) を注入する。アプリ本体では決して設定しない。 */
     @Volatile
     @androidx.annotation.VisibleForTesting
     var testShell: PrivilegedShell? = null
@@ -97,7 +99,7 @@ class AccessManager(private val context: Context) {
 
     fun setPreferRoot(prefer: Boolean) = _state.update { it.copy(preferRoot = prefer) }
 
-    /** The shell for the active tier, or null when only standard Android permissions are available. */
+    /** 有効な段階のシェル。Android の標準権限しかない場合は null。 */
     fun shell(): PrivilegedShell? = when (_state.value.active) {
         AccessKind.SHIZUKU -> testShell ?: shizukuShell
         AccessKind.ROOT -> rootShell
@@ -105,9 +107,9 @@ class AccessManager(private val context: Context) {
     }
 
     /**
-     * With a privileged shell available, Prune grants itself the two extra permissions it uses:
-     * usage access (app usage and storage stats) and WRITE_SECURE_SETTINGS (animation scales).
-     * Both are visible and revocable in Android Settings.
+     * 特権シェルが使える場合、Prune は自分が使う 2 つの追加権限を自分に付与する:
+     * 使用状況へのアクセス (アプリの使用状況とストレージ統計) と WRITE_SECURE_SETTINGS (アニメーション倍率)。
+     * どちらも Android の設定で確認・取り消しできる。
      */
     suspend fun grantSelfPermissions(): List<String> {
         val shell = shell() ?: return emptyList()
@@ -115,11 +117,11 @@ class AccessManager(private val context: Context) {
         val user = android.os.Process.myUid() / 100_000
         if (!_state.value.usageAccess &&
             shell.run(Commands.appOpSet(context.packageName, "GET_USAGE_STATS", "allow", user)).exitCode == 0) {
-            done += "Usage access"
+            done += str(R.string.perm_usage_access)
         }
         if (!_state.value.writeSecureSettings &&
             shell.run(Commands.grant(context.packageName, Manifest.permission.WRITE_SECURE_SETTINGS, user)).exitCode == 0) {
-            done += "Write secure settings"
+            done += str(R.string.perm_write_secure_settings)
         }
         refresh()
         return done
