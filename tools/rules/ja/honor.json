@@ -1,0 +1,22 @@
+{
+ "locked": {
+  "com.hihonor.ouc": "システムアップデートのクライアント (OTA)。"
+ },
+ "groups": {
+  "HONOR_ID": {
+   "name": "Honor ID とクラウド",
+   "warning": "Honor ID へのログイン、Honor Cloud、Honor Mobile Services を使うアプリが動作しなくなる可能性があります。"
+  }
+ },
+ "entries": {
+  "com.hihonor.phoneservice": {
+   "note": "My Honor (サポート)。"
+  },
+  "com.hihonor.appmarket": {
+   "note": "Honor App Market。ここからインストールしたアプリは更新されなくなります。"
+  },
+  "com.hihonor.id": {
+   "note": "Honor Mobile Services: Honor のストアのアプリはこれに依存しています。"
+  }
+ }
+}

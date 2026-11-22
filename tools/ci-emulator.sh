@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Runs inside the Android emulator job on GitHub Actions.
-#  1. Instrumented tests (debug build): engine tests that run Prune's real pm/appops/settings
-#     commands as the shell user, plus UI tests that walk every screen and take screenshots.
-#  2. Smoke test of the minified, signed release APK: install, launch, check for crashes.
+# GitHub Actions の Android エミュレータジョブ内で実行する。
+#  1. instrumented テスト (debug ビルド): Prune の実際の pm/appops/settings コマンドを shell ユーザーとして
+#     実行するエンジンのテストと、全画面を巡回してスクリーンショットを撮る UI テスト。
+#  2. 難読化・署名済みのリリース APK のスモークテスト: インストール、起動、クラッシュの確認。
 set -u
 APKS="${1:-apks}"
 OUT="emulator-results"

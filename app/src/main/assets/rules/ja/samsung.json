@@ -1,0 +1,445 @@
+{
+ "locked": {
+  "com.samsung.android.incallui": "Samsung の通話画面。電話の発着信に必要です。",
+  "com.samsung.android.app.telephonyui": "Samsung の電話機能 UI: SIM、ネットワーク、通話の設定。",
+  "com.sec.imsservice": "IMS サービス: VoLTE、VoWiFi、4G/5G での緊急通報。",
+  "com.sec.epdg": "Wi-Fi 通話のゲートウェイ。",
+  "com.samsung.android.emergency": "Samsung の緊急モードと緊急 SOS。",
+  "com.sec.android.app.launcher": "One UI ホーム。ランチャーがないとホーム画面が表示されません。",
+  "com.samsung.android.biometrics.app.setting": "指紋認証と顔認証によるロック解除。",
+  "com.samsung.android.bio.face.service": "ロック解除用の顔認識サービス。",
+  "com.samsung.android.kgclient": "Knox Guard: キャリアや分割払いプランが使う端末ロック。触れると端末がロックされることがあります。",
+  "com.samsung.klmsagent": "Knox ライセンスエージェント: Knox に依存する機能に必要です。",
+  "com.samsung.android.knox.attestation": "Knox 構成証明: Samsung Wallet や銀行アプリが端末の完全性を確認するのに使います。",
+  "com.samsung.android.providers.context": "予約済み: 一部のファームウェアで連絡先/カレンダーの同期に使われます。",
+  "com.sec.android.app.servicemodeapp": "サービスモード: キャリアや修理で使うネットワーク診断。",
+  "com.samsung.android.dialer": "Samsung の電話アプリ: 通話、留守番電話、緊急通報。",
+  "com.samsung.android.app.contacts": "Samsung の連絡先: 電話アプリの連絡先画面も兼ねています。",
+  "com.samsung.android.wifi.resources": "Wi-Fi の設定。",
+  "com.samsung.android.networkstack": "ネットワークスタック。",
+  "com.samsung.android.timezone.updater": "タイムゾーンのルール。"
+ },
+ "lockedPrefixes": {
+  "com.samsung.android.biometrics": "指紋認証と顔認証によるロック解除。",
+  "com.samsung.ims": "IMS: VoLTE、VoWiFi、緊急通報。",
+  "com.samsung.android.ims": "IMS: VoLTE、VoWiFi、緊急通報。",
+  "com.samsung.android.wifi.": "Samsung の Wi-Fi フレームワーク。"
+ },
+ "groups": {
+  "WALLET": {
+   "name": "Samsung Wallet / Pay",
+   "warning": "Samsung Wallet、タッチ決済、デジタルキー、搭乗券、ポイントカードが動作しなくなります。"
+  },
+  "PASS": {
+   "name": "Samsung Pass",
+   "warning": "Samsung Pass によるログイン、保存したパスワード、Web サイトやアプリへの生体認証ログインが動作しなくなります。"
+  },
+  "WEARABLE": {
+   "name": "Galaxy Watch と Buds",
+   "warning": "Galaxy Watch、Galaxy Buds などのアクセサリが切断されたり、同期しなくなったりする可能性があります。"
+  },
+  "SMARTTHINGS": {
+   "name": "SmartThings と SmartTag",
+   "warning": "SmartThings、SmartTag による追跡、近くのデバイスのセットアップ、スマートホームの操作が動作しなくなります。"
+  },
+  "DEX": {
+   "name": "Samsung DeX",
+   "warning": "Samsung DeX (モニターやテレビでのデスクトップモード) が動作しなくなります。"
+  },
+  "LINK_WINDOWS": {
+   "name": "Windows にリンク / マルチコントロール",
+   "warning": "Windows にリンク (スマートフォン連携)、他のデバイスでの通話/メッセージ、マルチコントロールが動作しなくなります。"
+  },
+  "QUICK_SHARE": {
+   "name": "クイック共有と Smart View",
+   "warning": "クイック共有によるファイル送信、Smart View による画面キャスト、ニアバイシェアが動作しなくなります。"
+  },
+  "BIXBY": {
+   "name": "Bixby",
+   "warning": "Bixby の音声操作、Bixby Vision、音声による Bixby ルーチンが動作しなくなります。サイドキーは代わりに電源メニューに設定できます。"
+  },
+  "HEALTH": {
+   "name": "Samsung Health",
+   "warning": "Samsung Health、歩数計測、Galaxy Watch からの睡眠・心拍データが動作しなくなります。"
+  },
+  "ACCOUNT": {
+   "name": "Samsung アカウントとクラウド",
+   "warning": "Samsung アカウントへのログイン、Samsung Cloud のバックアップ、およびアカウントが必要なすべての機能 (端末を探す、Wallet、Pass、テーマ、Galaxy Store) が壊れる可能性があります。"
+  },
+  "SECURE_FOLDER": {
+   "name": "セキュリティフォルダと仕事用プロファイル",
+   "warning": "セキュリティフォルダと Knox の仕事用プロファイルが開けなくなります。先にセキュリティフォルダの中身を移動してください。"
+  },
+  "SPEN": {
+   "name": "S ペンと Samsung Notes",
+   "warning": "S ペンの機能 (エアコマンド、画面オフメモ、Notes) が動作しなくなります。"
+  },
+  "GAMING": {
+   "name": "Gaming Hub と Game Booster",
+   "warning": "Gaming Hub、Game Booster (ゲーム中の通知非表示、パフォーマンスプロファイル) が動作しなくなります。"
+  },
+  "GALAXY_AI": {
+   "name": "Galaxy AI",
+   "warning": "Galaxy AI の機能 (通訳、リアルタイム通訳、文章アシスト、写真アシスト) が動作しなくなる可能性があります。"
+  },
+  "THEMES": {
+   "name": "テーマと壁紙",
+   "warning": "Galaxy テーマ、アイコンパック、ロック画面の壁紙サービス、AOD のスタイルが動作しなくなる可能性があります。"
+  },
+  "EDGE": {
+   "name": "エッジパネル",
+   "warning": "エッジパネルのハンドルとそのパネル (アプリ、タスク、クリップボード、連絡先) が動作しなくなります。"
+  },
+  "UPDATES": {
+   "name": "システムアップデート",
+   "warning": "端末がセキュリティアップデートやシステムアップデートを受け取れなくなる可能性があります。アップデートを確認する前に再び有効にしてください。"
+  },
+  "SECURITY": {
+   "name": "セキュリティ",
+   "warning": "セキュリティ保護を取り除きます。何から守っているのか理解している場合のみ行ってください。"
+  },
+  "DEVICE_CARE": {
+   "name": "電池とデバイスケア",
+   "warning": "デバイスケアは電池の保護、高温の警告、アプリのスリープを担当しています。無効にすると、電池持ちが良くなるどころか悪くなることがあります。"
+  }
+ },
+ "entries": {
+  "com.samsung.android.app.tips": {
+   "note": "端末の機能に関するヒント。依存しているものはありません。"
+  },
+  "com.samsung.android.app.spage": {
+   "note": "ホーム画面の Samsung Free / Samsung News フィード。"
+  },
+  "com.samsung.android.mapsagent": {
+   "note": "宣伝アプリを提案・インストールします。"
+  },
+  "com.samsung.preloadapp": {
+   "note": "おすすめ (宣伝) アプリをインストールします。"
+  },
+  "com.samsung.discover": {
+   "note": "アプリを宣伝するホーム画面のパネル。"
+  },
+  "com.samsung.android.tvplus": {
+   "note": "Samsung TV Plus のストリーミングアプリ。"
+  },
+  "com.samsung.android.kidsinstaller": {
+   "note": "Samsung Kids のインストーラ。"
+  },
+  "com.samsung.android.voc": {
+   "note": "Samsung Members (サポートコミュニティ、診断)。"
+  },
+  "com.samsung.oh": {
+   "note": "Samsung Members (旧版)。"
+  },
+  "com.samsung.android.arzone": {
+   "note": "AR Zone (AR カメラのおもちゃ)。"
+  },
+  "com.samsung.android.livestickers": {
+   "note": "Deco Pic (カメラのステッカー)。"
+  },
+  "com.samsung.android.aremoji": {
+   "note": "AR 絵文字のカメラモード。"
+  },
+  "com.samsung.android.aremojieditor": {
+   "note": "AR 絵文字エディター。"
+  },
+  "com.samsung.android.emojiupdater": {
+   "note": "AR 絵文字のアップデーター。"
+  },
+  "com.samsung.android.service.livedrawing": {
+   "note": "ライブメッセージ (動く手書きメッセージ)。"
+  },
+  "com.samsung.android.hmt.vrshell": {
+   "note": "Gear VR (提供終了)。"
+  },
+  "com.samsung.android.hmt.vrsvc": {
+   "note": "Gear VR (提供終了)。"
+  },
+  "com.samsung.android.app.watchmanagerstub": {
+   "note": "Galaxy Wearable をダウンロードするだけのスタブ。"
+  },
+  "com.samsung.android.ststub": {
+   "note": "SmartThings をダウンロードするだけのスタブ。"
+  },
+  "com.samsung.android.drivelink.stub": {
+   "note": "カーモード用のスタブ。"
+  },
+  "com.samsung.android.bixby.agent": {
+   "note": "Bixby 音声アシスタント。"
+  },
+  "com.samsung.android.svoiceime": {
+   "note": "Samsung 音声入力 (Bixby)。"
+  },
+  "com.samsung.android.app.parentalcare": {
+   "note": "ペアレンタルコントロール。"
+  },
+  "com.samsung.android.game.gamehome": {
+   "note": "Gaming Hub (ゲームランチャー)。"
+  },
+  "com.samsung.android.game.gametools": {
+   "note": "Game Booster のオーバーレイ。"
+  },
+  "com.samsung.android.forest": {
+   "note": "Samsung の Digital Wellbeing (スクリーンタイム、集中モード)。"
+  },
+  "com.samsung.android.app.reminder": {
+   "note": "Samsung リマインダー。"
+  },
+  "com.samsung.android.email.provider": {
+   "note": "Samsung メール。"
+  },
+  "com.samsung.android.da.daagent": {
+   "note": "デュアルメッセンジャー。"
+  },
+  "com.samsung.android.smartcallprovider": {
+   "note": "Smart Call の発信者 ID と迷惑電話情報。"
+  },
+  "com.samsung.android.callbgprovider": {
+   "note": "通話の背景画像。"
+  },
+  "com.samsung.android.stickercenter": {
+   "note": "キーボードとカメラ用のステッカーのダウンロード。"
+  },
+  "com.samsung.android.icecone": {
+   "note": "キーボードのコンテンツセンター (ステッカー、GIF)。"
+  },
+  "com.samsung.android.smartswitchassistant": {
+   "note": "Smart Switch の補助。他の端末とのデータ移行が終わるまでは残してください。"
+  },
+  "com.sec.android.easyMover": {
+   "note": "Smart Switch。他の端末とのデータ移行が終わるまでは残してください。"
+  },
+  "com.samsung.android.coldwalletservice": {
+   "note": "Samsung Blockchain Keystore。"
+  },
+  "com.samsung.android.app.ledbackcover": {
+   "note": "LED カバーのサポート。Samsung の LED カバーを使う場合のみ必要です。"
+  },
+  "com.samsung.app.highlightplayer": {
+   "note": "ギャラリーのストーリー動画エディター。"
+  },
+  "com.samsung.android.dqagent": {
+   "note": "端末品質エージェント: 診断情報を Samsung に送信します。"
+  },
+  "com.sec.android.diagmonagent": {
+   "note": "診断モニタリング: ログを Samsung に送信します。"
+  },
+  "com.samsung.android.dsms": {
+   "note": "診断ログの記録。"
+  },
+  "com.samsung.android.radiobasedlocation": {
+   "note": "携帯電話の電波によるバックグラウンドの位置追跡。"
+  },
+  "com.samsung.attribution": {
+   "note": "広告の効果測定 / データ収集。"
+  },
+  "com.samsung.android.networkdiagnostic": {
+   "note": "ネットワーク診断情報の収集。"
+  },
+  "com.samsung.android.app.omcagent": {
+   "note": "キャリア/地域のおすすめアプリをインストールします。一部の CSC の更新も適用します。"
+  },
+  "com.samsung.android.app.cocktailbarservice": {
+   "note": "エッジパネルのサービス。"
+  },
+  "com.samsung.android.app.notes": {
+   "note": "Samsung Notes。アンインストールするとメモが削除されます。先にバックアップしてください。"
+  },
+  "com.sec.android.app.sbrowser": {
+   "note": "Samsung Internet ブラウザ。削除するとブックマークと保存したログイン情報が失われます。"
+  },
+  "com.samsung.android.themestore": {
+   "note": "Galaxy テーマ。インストールしたテーマやアイコンパックが既定に戻ることがあります。"
+  },
+  "com.samsung.android.app.dressroom": {
+   "note": "壁紙とスタイルの選択。"
+  },
+  "com.samsung.android.rubin.app": {
+   "note": "カスタマイズサービス: 使い方を学習して提案をパーソナライズします。"
+  },
+  "com.samsung.android.offline.languagemodel": {
+   "note": "Galaxy AI とキーボードが使う端末内の言語モデル。"
+  },
+  "com.samsung.android.spay": {
+   "note": "Samsung Wallet / Pay アプリ。"
+  },
+  "com.samsung.android.spayfw": {
+   "note": "Samsung Pay のフレームワーク。"
+  },
+  "com.samsung.android.samsungpass": {
+   "note": "Samsung Pass。Pass に保存したパスワードが使えなくなります。"
+  },
+  "com.samsung.android.authfw": {
+   "note": "Pass、Wallet、一部のアプリの生体認証ダイアログが使う認証フレームワーク。"
+  },
+  "com.samsung.android.app.watchmanager": {
+   "note": "Galaxy Wearable アプリ。"
+  },
+  "com.samsung.android.waterplugin": {
+   "note": "Galaxy Watch のプラグイン。"
+  },
+  "com.samsung.android.easysetup": {
+   "note": "近くの Samsung デバイスをセットアップするためのポップアップ。"
+  },
+  "com.samsung.android.uwb": {
+   "note": "超広帯域無線 (UWB): SmartTag の正確な位置検索と車のデジタルキー。"
+  },
+  "com.samsung.android.ipsgeofence": {
+   "note": "Samsung Visit In (屋内位置情報)。"
+  },
+  "com.sec.android.app.desktoplauncher": {
+   "note": "DeX のホーム画面。"
+  },
+  "com.samsung.desktopsystemui": {
+   "note": "DeX のシステム UI。"
+  },
+  "com.sec.android.desktopmode.uiservice": {
+   "note": "DeX モードのサービス。"
+  },
+  "com.microsoft.appmanager": {
+   "note": "Windows にリンク。"
+  },
+  "com.samsung.android.mdx": {
+   "note": "Windows にリンクのサービス。"
+  },
+  "com.samsung.android.mdecservice": {
+   "note": "他の Samsung デバイスでの通話とメッセージ。"
+  },
+  "com.samsung.android.mcfds": {
+   "note": "連携サービス (他のデバイスでアプリを続けて使う)。"
+  },
+  "com.samsung.android.app.sharelive": {
+   "note": "クイック共有。"
+  },
+  "com.samsung.android.mdx.kit": {
+   "note": "クイック共有と Windows にリンクが使うマルチデバイスのフレームワーク。"
+  },
+  "com.samsung.android.aware.service": {
+   "note": "クイック共有が使う近くのデバイスの検出。"
+  },
+  "com.samsung.android.smartmirroring": {
+   "note": "Smart View による画面キャスト。"
+  },
+  "com.samsung.android.app.simplesharing": {
+   "note": "大きなファイルのリンク共有。"
+  },
+  "com.sec.android.app.shealth": {
+   "note": "Samsung Health。アンインストールすると、Samsung Cloud に同期していないデータは失われます。"
+  },
+  "com.samsung.android.service.health": {
+   "note": "ヘルスケアの基盤: Samsung Health とウォッチのための歩数計測とセンサーデータ。"
+  },
+  "com.osp.app.signin": {
+   "note": "Samsung アカウント。"
+  },
+  "com.samsung.android.scloud": {
+   "note": "Samsung Cloud のバックアップと同期。"
+  },
+  "com.samsung.android.mobileservice": {
+   "note": "Samsung Experience Service: Samsung アプリの共通機能 (共有、ファミリー、アカウント)。"
+  },
+  "com.samsung.android.fmm": {
+   "note": "端末を探す (Find My Mobile、盗難対策)。"
+  },
+  "com.samsung.knox.securefolder": {
+   "note": "セキュリティフォルダ。中身も一緒に削除されるので、先に移動してください。"
+  },
+  "com.samsung.android.knox.containercore": {
+   "note": "Knox コンテナの中核: セキュリティフォルダと仕事用プロファイルはこれの上で動作します。"
+  },
+  "com.samsung.android.service.aircommand": {
+   "note": "S ペンのエアコマンド。"
+  },
+  "com.samsung.android.app.smartcapture": {
+   "note": "スクリーンショットのツールバーとスマートセレクト。"
+  },
+  "com.samsung.android.app.talkback": {
+   "note": "スクリーンリーダー。"
+  },
+  "com.samsung.android.accessibility.talkback": {
+   "note": "スクリーンリーダー。"
+  },
+  "com.samsung.accessibility": {
+   "note": "Samsung のユーザー補助フレームワーク。"
+  },
+  "com.samsung.android.rampart": {
+   "note": "自動ブロッカー: マルウェアのインストールと USB 経由の攻撃をブロックします。"
+  },
+  "com.samsung.android.securitylogagent": {
+   "note": "セキュリティログエージェント: 許可されていないシステムの変更を報告・ブロックします。"
+  },
+  "com.samsung.android.server.wifi.mobilewips": {
+   "note": "悪意のある Wi-Fi ネットワークを検出します。"
+  },
+  "com.wssyncmldm": {
+   "note": "ファームウェアアップデートのクライアント (FOTA)。"
+  },
+  "com.sec.android.soagent": {
+   "note": "ソフトウェアアップデートのエージェント。"
+  },
+  "com.samsung.sdm": {
+   "note": "ソフトウェアアップデート。"
+  },
+  "com.samsung.android.lool": {
+   "note": "デバイスケア: 電池の保護、高温の警告、アプリのスリープ。"
+  },
+  "com.samsung.android.game.gos": {
+   "note": "Game Optimizing Service: ゲームのパフォーマンスと発熱の管理。最近の One UI では Samsung が無効化をブロックしています。"
+  },
+  "com.sec.android.app.samsungapps": {
+   "note": "Galaxy Store: Samsung 自身のアプリ (Good Lock、テーマ、Notes、ギャラリー) を更新します。"
+  },
+  "com.sec.android.app.billing": {
+   "note": "Samsung の決済: Galaxy Store とテーマでの購入。"
+  },
+  "com.samsung.android.honeyboard": {
+   "note": "Samsung キーボード。先に別のキーボードをインストールしてください。"
+  },
+  "com.samsung.android.messaging": {
+   "note": "Samsung メッセージ。先に別のアプリを既定の SMS アプリにしてください。"
+  },
+  "com.sec.android.app.camera": {
+   "note": "Samsung カメラ。"
+  },
+  "com.sec.android.gallery3d": {
+   "note": "ギャラリー: カメラで撮った写真はこれで開きます。"
+  },
+  "com.sec.android.mimage.photoretouching": {
+   "note": "ギャラリーが使う写真エディター。"
+  },
+  "com.sec.android.app.myfiles": {
+   "note": "マイファイル: 多くのアプリのファイル選択画面も兼ねています。"
+  },
+  "com.sec.android.app.clockpackage": {
+   "note": "時計: アラームとタイマー。"
+  },
+  "com.samsung.android.themecenter": {
+   "note": "テーマとアイコンをシステム全体に適用します。"
+  },
+  "com.samsung.android.app.galaxyfinder": {
+   "note": "Finder: アプリと設定の検索。"
+  },
+  "com.samsung.android.scs": {
+   "note": "Samsung Core Services: 検索と AI の機能。"
+  },
+  "com.samsung.android.app.routines": {
+   "note": "モードとルーチン (睡眠、運転、仕事のモード)。"
+  },
+  "com.sec.android.daemonapp": {
+   "note": "Samsung 天気: ロック画面とウィジェットの天気表示にも使われています。"
+  },
+  "com.sec.android.app.voicenote": {
+   "note": "ボイスレコーダー。通話録音にも使われます。"
+  },
+  "com.samsung.android.calendar": {
+   "note": "Samsung カレンダー。"
+  },
+  "com.hiya.star": {
+   "note": "Smart Call が使う Hiya の発信者 ID。"
+  }
+ },
+ "prefixEntries": {
+  "com.samsung.android.app.camera.sticker.": "カメラのステッカー。",
+  "com.samsung.android.bixby.": "Bixby のコンポーネント。"
+ }
+}

@@ -1,9 +1,9 @@
 name: publish-release
 
-# Publishes a GitHub release from a signed APK.
-# Release APKs are signed outside CI (the signing key is not stored on GitHub).
-# To release: push a branch named release-publish that contains
-#   apk/Prune-<version>.apk and apk/SHA256SUMS.txt, and docs/release-notes/v<version>.md
+# 署名済み APK から GitHub リリースを公開する。
+# リリース APK は CI の外で署名する (署名鍵は GitHub に保存しない)。
+# リリース方法: 次を含む release-publish という名前のブランチを push する
+#   apk/Prune-<version>.apk と apk/SHA256SUMS.txt、および docs/release-notes/v<version>.md
 on:
   push:
     branches: [release-publish]

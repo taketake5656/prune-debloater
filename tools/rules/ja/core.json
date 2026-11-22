@@ -1,0 +1,120 @@
+{
+ "locked": {
+  "android": "Android フレームワーク本体です。",
+  "com.android.systemui": "システム UI: ステータスバー、通知、ナビゲーション、ロック画面。",
+  "com.android.settings": "設定アプリ。ほとんどの変更を元に戻すのに必要です。",
+  "com.android.shell": "ADB シェル。Shizuku と Prune の復元機能はこれを通して動作します。",
+  "com.android.phone": "電話機能: 通話、モバイルデータ、緊急通報。",
+  "com.android.server.telecom": "通話の振り分け: これがないと緊急通報を含め一切の通話ができません。",
+  "com.android.mms.service": "SMS/MMS の送受信。",
+  "com.android.stk": "SIM ツールキット: SIM カードに保存されたキャリアサービス。",
+  "com.android.emergency": "緊急情報と緊急通報。",
+  "com.android.carrierconfig": "キャリア設定: VoLTE、APN、ネットワーク設定。",
+  "com.android.ims": "IMS フレームワーク: VoLTE と緊急通報。",
+  "com.android.ons": "Opportunistic Network Service: SIM のネットワーク選択。",
+  "com.android.permissioncontroller": "権限ダイアログと権限マネージャー。",
+  "com.google.android.permissioncontroller": "権限ダイアログと権限マネージャー。",
+  "com.android.packageinstaller": "アプリのインストールとアンインストール。",
+  "com.google.android.packageinstaller": "アプリのインストールとアンインストール。",
+  "com.android.externalstorage": "内部ストレージと SD カードへのアクセス。",
+  "com.android.inputdevices": "キーボードレイアウトと入力デバイス。",
+  "com.android.location.fused": "すべてのアプリが使う位置情報プロバイダ。",
+  "com.android.keychain": "証明書と鍵の保管。",
+  "com.android.nfc": "NFC: タッチ決済とカードの読み取り。",
+  "com.android.se": "セキュアエレメント: NFC 決済とデジタルキーに必要です。",
+  "com.android.wifi.resources": "Wi-Fi の設定。",
+  "com.android.server.NetworkPermissionConfig": "ネットワーク権限。",
+  "com.android.localtransport": "システムが使うバックアップの転送手段。",
+  "com.android.ext.services": "中核のシステムサービス (通知のランク付け、自動入力)。",
+  "com.google.android.ext.services": "中核のシステムサービス (通知のランク付け、自動入力)。",
+  "com.android.ext.shared": "共有システムライブラリ。",
+  "com.google.android.ext.shared": "共有システムライブラリ。",
+  "com.google.android.gms": "Google Play 開発者サービス。ほぼすべてのアプリと Google へのログインがこれに依存しています。",
+  "com.google.android.gsf": "Google Services Framework: プッシュ通知とアカウント同期。",
+  "com.google.android.webview": "Android System WebView: 多くのアプリがこれを通して Web コンテンツを表示します。",
+  "moe.shizuku.privileged.api": "Shizuku: Prune が変更を元に戻すために必要です。",
+  "com.topjohnwu.magisk": "Magisk の root マネージャー。",
+  "io.github.cyb3rl00m.prune": "Prune 自身です。",
+  "io.github.cyb3rl00m.prune.debug": "Prune 自身です。"
+ },
+ "lockedPrefixes": {
+  "com.android.providers.": "コンテンツプロバイダ: 連絡先、SMS、メディア、設定、ダウンロード。",
+  "com.google.android.providers.": "コンテンツプロバイダ: メディアとストレージ。",
+  "com.android.networkstack": "ネットワークスタック: Wi-Fi とモバイルデータの接続。",
+  "com.google.android.networkstack": "ネットワークスタック: Wi-Fi とモバイルデータの接続。",
+  "com.android.cellbroadcast": "緊急速報と行政からの警報。",
+  "com.google.android.cellbroadcast": "緊急速報と行政からの警報。",
+  "com.android.internal.": "フレームワークのオーバーレイ。",
+  "com.android.systemui.": "システム UI のコンポーネント。",
+  "com.android.wifi.": "Wi-Fi フレームワーク。"
+ },
+ "groups": {
+  "ACCESSIBILITY": {
+   "name": "ユーザー補助ツール",
+   "warning": "ユーザー補助機能 (スクリーンリーダー、拡大鏡、スイッチ アクセス、音声検出) が動作しなくなります。あなたやこの端末を使う人が必要としている場合は残してください。"
+  },
+  "CAR": {
+   "name": "Android Auto と車の機能",
+   "warning": "Android Auto と車との接続機能が動作しなくなります。"
+  },
+  "FIND_MY": {
+   "name": "端末を探す",
+   "warning": "紛失・盗難時に、この端末の位置確認、音を鳴らす、ロック、データ消去をリモートで行えなくなります。"
+  },
+  "CAMERA": {
+   "name": "カメラ",
+   "warning": "カメラアプリやカメラの機能 (撮影モード、ステッカー、AR、スキャン) に影響する可能性があります。"
+  },
+  "NOTIFICATIONS": {
+   "name": "通知とロック画面",
+   "warning": "通知、Always On Display、ロック画面に影響する可能性があります。"
+  }
+ },
+ "entries": {
+  "com.google.android.apps.photos": {
+   "note": "Google フォト。写真が希望どおりにバックアップされているか確認してください。"
+  },
+  "com.google.ar.core": {
+   "note": "ARCore: AR アプリと一部のカメラ機能に必要です。"
+  },
+  "com.google.android.apps.restore": {
+   "note": "初期設定時に別の端末からデータを復元する機能。"
+  },
+  "com.google.android.apps.turbo": {
+   "note": "デバイス ヘルス サービス: 電池残り時間の予測。"
+  },
+  "com.google.android.googlequicksearchbox": {
+   "note": "Google アプリ: アシスタント、Lens、検索ウィジェット、かこって検索。"
+  },
+  "com.google.android.as": {
+   "note": "Android System Intelligence: 自動字幕起こし、スマートテキスト選択、かこって検索。"
+  },
+  "com.google.android.tts": {
+   "note": "テキスト読み上げエンジン。"
+  },
+  "com.android.vending": {
+   "note": "Google Play ストア: アプリの更新と購入。"
+  },
+  "com.google.android.inputmethod.latin": {
+   "note": "Gboard。先に別のキーボードを有効にしておいてください。"
+  },
+  "com.google.android.trichromelibrary": {
+   "note": "Chrome と WebView が使う共有ライブラリ。"
+  },
+  "com.android.chrome": {
+   "note": "Chrome。端末によっては WebView の提供元として使われています。"
+  },
+  "com.facebook.appmanager": {
+   "note": "プリインストールされた Facebook アプリをバックグラウンドで更新します。"
+  },
+  "com.facebook.services": {
+   "note": "Facebook のバックグラウンドサービス。"
+  },
+  "com.facebook.system": {
+   "note": "Facebook アプリのインストーラ。"
+  },
+  "com.touchtype.swiftkey": {
+   "note": "SwiftKey キーボード。使用中のキーボードなら残してください。"
+  }
+ }
+}

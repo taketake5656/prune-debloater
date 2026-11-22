@@ -2,18 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Level 1 (standard): see every installed package, including system packages. -->
+    <!-- レベル 1 (標準): システムパッケージを含むすべてのインストール済みパッケージを参照する。 -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-    <!-- Level 1 (standard): uninstall normal apps through the system's own confirmation dialog. -->
+    <!-- レベル 1 (標準): システム自身の確認ダイアログを通して通常のアプリをアンインストールする。 -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <!-- Special access the user grants in Settings (or Prune grants itself via Shizuku):
-         app usage times and per-app storage sizes. -->
+    <!-- ユーザーが設定で許可する (または Prune が Shizuku 経由で自分に付与する) 特別なアクセス:
+         アプリの使用時間とアプリごとのストレージサイズ。 -->
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!-- Development permission, only grantable through ADB/Shizuku/root: change animation scales. -->
+    <!-- ADB/Shizuku/root からしか付与できない開発用の権限: アニメーション倍率を変更する。 -->
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Shizuku hands its binder to Prune through this provider. -->
+        <!-- Shizuku はこのプロバイダを通して Prune に binder を渡す。 -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"

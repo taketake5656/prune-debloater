@@ -1,0 +1,37 @@
+{
+ "groups": {
+  "PIXEL_SAFETY": {
+   "name": "緊急情報サービス",
+   "warning": "交通事故の検出、緊急時の情報共有、安全確認が動作しなくなります。"
+  }
+ },
+ "entries": {
+  "com.google.android.apps.tips": {
+   "note": "Pixel のヒント。"
+  },
+  "com.google.android.apps.pixel.support": {
+   "note": "Pixel のトラブルシューティング。"
+  },
+  "com.google.android.apps.pixelmigrate": {
+   "note": "古い端末からのデータ移行。データを移行している間は残してください。"
+  },
+  "com.google.android.apps.recorder": {
+   "note": "レコーダー。データとともに録音も削除されます。"
+  },
+  "com.google.android.apps.carrier.log": {
+   "note": "キャリアアプリのログ記録。"
+  },
+  "com.google.android.apps.diagnosticstool": {
+   "note": "診断ツール。"
+  },
+  "com.google.android.apps.safetyhub": {
+   "note": "緊急情報サービス: 交通事故の検出と緊急時の機能。"
+  },
+  "com.google.android.apps.scone": {
+   "note": "接続の自動調整: 5G と LTE を切り替えます。"
+  },
+  "com.google.android.apps.wallpaper": {
+   "note": "壁紙とスタイルの選択。"
+  }
+ }
+}

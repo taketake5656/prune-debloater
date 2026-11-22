@@ -1,0 +1,142 @@
+{
+ "locked": {
+  "com.miui.securitycenter": "MIUI/HyperOS のセキュリティアプリ: アプリの権限、自動起動、権限の確認ダイアログを扱います。無効にすると権限が壊れ、起動不能 (ブートループ) になることがあります。",
+  "com.android.updater": "Xiaomi のシステムアップデーター。削除すると一部の端末で起動不能になると報告されています。",
+  "com.miui.securityadd": "セキュリティアプリの一部。削除すると起動不能になると報告されています。",
+  "com.xiaomi.misettings": "Xiaomi の設定コンポーネント。"
+ },
+ "lockedPrefixes": {
+  "com.miui.rom": "MIUI の中核パッケージ。",
+  "com.miui.system": "MIUI/HyperOS の中核システムリソース。"
+ },
+ "groups": {
+  "XIAOMI_CLOUD": {
+   "name": "Xiaomi アカウントとクラウド",
+   "warning": "Xiaomi Cloud のバックアップと同期 (写真、連絡先、メモ)、Xiaomi アカウントへのログインが動作しなくなります。"
+  },
+  "XIAOMI_SHARE": {
+   "name": "Xiaomi Share とキャスト",
+   "warning": "Xiaomi Share (Xiaomi、OPPO、vivo の端末とのファイル共有) と画面のキャストが動作しなくなります。"
+  },
+  "XIAOMI_PAY": {
+   "name": "Mi Pay と Xiaomi ウォレット",
+   "warning": "Mi Pay、交通系カード、Xiaomi ウォレットの機能が動作しなくなります。"
+  },
+  "UPDATES": {
+   "name": "システムアップデート",
+   "warning": "端末がセキュリティアップデートやシステムアップデートを受け取れなくなる可能性があります。アップデートを確認する前に再び有効にしてください。"
+  },
+  "DEVICE_CARE": {
+   "name": "電池とデバイスケア",
+   "warning": "電池の管理、温度管理、アプリのスリープが動作しなくなる可能性があり、多くの場合かえって電池持ちが悪くなります。"
+  },
+  "SECURITY": {
+   "name": "セキュリティ",
+   "warning": "セキュリティ保護を取り除きます。何から守っているのか理解している場合のみ行ってください。"
+  }
+ },
+ "entries": {
+  "com.miui.msa.global": {
+   "note": "MIUI System Ads: Xiaomi のシステムアプリに広告を表示します。"
+  },
+  "com.miui.analytics": {
+   "note": "Xiaomi の分析 / データ収集。"
+  },
+  "com.miui.daemon": {
+   "note": "端末の使用データをバックグラウンドで収集します。"
+  },
+  "com.miui.bugreport": {
+   "note": "Mi フィードバック / バグレポート。"
+  },
+  "com.miui.miservice": {
+   "note": "サービスとフィードバック。"
+  },
+  "com.miui.hybrid": {
+   "note": "クイックアプリ (ミニ Web アプリ、広告)。"
+  },
+  "com.miui.android.fashiongallery": {
+   "note": "壁紙カルーセル / Glance のロック画面壁紙。"
+  },
+  "com.mi.android.globalminusscreen": {
+   "note": "App Vault (ホーム画面の左ページ)。"
+  },
+  "com.miui.yellowpage": {
+   "note": "イエローページ (企業の発信者 ID)。"
+  },
+  "com.xiaomi.mipicks": {
+   "note": "GetApps (Xiaomi のアプリストア)。一部の Xiaomi アプリはこれを通して更新されます。"
+  },
+  "com.mi.globalbrowser": {
+   "note": "Mi ブラウザ。別のブラウザがインストールされていることを確認してください。"
+  },
+  "com.miui.cleanmaster": {
+   "note": "クリーナー (サードパーティ製エンジン)。"
+  },
+  "com.xiaomi.scanner": {
+   "note": "スキャナー (QR コード、書類)。"
+  },
+  "com.miui.fm": {
+   "note": "FM ラジオ。"
+  },
+  "com.miui.compass": {
+   "note": "コンパス。"
+  },
+  "com.facemoji.lite.xiaomi": {
+   "note": "Facemoji キーボード。使用中のキーボードなら残してください。"
+  },
+  "com.miui.notes": {
+   "note": "メモ。端末内にだけ保存されたメモは、データとともに削除されます。"
+  },
+  "com.miui.weather2": {
+   "note": "天気: 天気ウィジェットにもデータを提供しています。"
+  },
+  "com.miui.backup": {
+   "note": "ローカルのバックアップと復元。"
+  },
+  "com.xiaomi.account": {
+   "note": "Xiaomi アカウント: クラウド、デバイスを探す、テーマストアがこれに依存しています。"
+  },
+  "com.miui.cloudservice": {
+   "note": "Xiaomi Cloud の同期。"
+  },
+  "com.miui.cloudbackup": {
+   "note": "Xiaomi Cloud のバックアップ。"
+  },
+  "com.miui.micloudsync": {
+   "note": "Xiaomi Cloud の同期。"
+  },
+  "com.miui.mishare.connectivity": {
+   "note": "Xiaomi Share のファイル転送。"
+  },
+  "com.milink.service": {
+   "note": "画面キャストのサービス。"
+  },
+  "com.xiaomi.finddevice": {
+   "note": "デバイスを探す (盗難対策)。"
+  },
+  "com.miui.powerkeeper": {
+   "note": "電池とパフォーマンスの管理。"
+  },
+  "com.xiaomi.joyose": {
+   "note": "ゲーム / パフォーマンスの調整プロファイル。"
+  },
+  "com.xiaomi.xmsf": {
+   "note": "Xiaomi Service Framework: プッシュメッセージと Xiaomi アカウントのサービス。"
+  },
+  "com.miui.guardprovider": {
+   "note": "セキュリティアプリが使うセキュリティスキャンエンジン。"
+  },
+  "com.miui.securitycore": {
+   "note": "セカンドスペース、アプリロック、セキュリティの中核機能。"
+  },
+  "com.miui.gallery": {
+   "note": "ギャラリー: カメラで撮った写真はこれで開きます。"
+  },
+  "com.android.thememanager": {
+   "note": "テーマ: 壁紙やアイコンの適用も行います。"
+  },
+  "com.xiaomi.discover": {
+   "note": "システムアプリのアップデーター。"
+  }
+ }
+}
