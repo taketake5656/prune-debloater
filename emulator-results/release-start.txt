@@ -1,0 +1,7 @@
+Starting: Intent { cmp=io.github.cyb3rl00m.prune/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: io.github.cyb3rl00m.prune/.MainActivity
+TotalTime: 1991
+WaitTime: 1993
+Complete
